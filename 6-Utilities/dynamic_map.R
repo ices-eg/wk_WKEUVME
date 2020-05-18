@@ -126,19 +126,19 @@ outdir <- paste(pathdir_nogit,"mapdynamic",sep="/")
                 stroke = FALSE, fillOpacity = 1, smoothFactor = 0.5,fillColor =  "#35978f") %>%
     addPolygons(data = SteepSlopes_on_Ridges, group = "SteepSlopes_on_Ridges",
                 stroke = FALSE, fillOpacity = 1, smoothFactor = 0.5,fillColor =  "purple") %>%
-    addPolygons(data = VME_low, group = "VME - low precaution",
+    addPolygons(data = VME_low, group = "VME - low",
                 stroke = FALSE, fillOpacity = 1, smoothFactor = 0.5,fillColor =  "red") %>%
-    addPolygons(data = VME_medium, group = "VME - medium precaution",
+    addPolygons(data = VME_medium, group = "VME - medium",
                 stroke = FALSE, fillOpacity = 1, smoothFactor = 0.5,fillColor =  "blue") %>%
-    addPolygons(data = VME_high, group = "VME - high precaution",
+    addPolygons(data = VME_high, group = "VME - high",
                 stroke = FALSE, fillOpacity = 1, smoothFactor = 0.5,fillColor =   "#df65b0") %>%
     
     # Layers control
     addLayersControl(
       overlayGroups = c("Depth 400-800 m", "Canyons", "ContinentalSlope",
                         "Escarpments","Flanks","GlacialTroughs",
-                        "Guyots", "Ridges","Seamounts","SteepSlopes_on_Ridges","VME - low",
-                        "VME - medium", "VME - high"),
+                        "Guyots", "Ridges","Seamounts","SteepSlopes_on_Ridges","VME - low precaution",
+                        "VME - medium precaution", "VME - high precaution"),
       options = layersControlOptions(collapsed = FALSE)
     )
   
@@ -156,18 +156,18 @@ outdir <- paste(pathdir_nogit,"mapdynamic",sep="/")
                 stroke = FALSE, fillOpacity = 0.5, smoothFactor = 0.5,fillColor =  "green") %>%
     addPolygons(data = fishing_refStatic, group = "Static 2009-2011",
                 stroke = FALSE, fillOpacity = 0.5, smoothFactor = 0.5,fillColor =  "purple") %>%
-    addPolygons(data = VME_low, group = "VME - low precaution",
+    addPolygons(data = VME_low, group = "VME - low",
                 stroke = FALSE, fillOpacity = 1, smoothFactor = 0.5,fillColor =  "yellow") %>%
-    addPolygons(data = VME_medium, group = "VME - medium precaution",
+    addPolygons(data = VME_medium, group = "VME - medium",
                 stroke = FALSE, fillOpacity = 1, smoothFactor = 0.5,fillColor =  "orange") %>%
-    addPolygons(data = VME_high, group = "VME - high precaution",
+    addPolygons(data = VME_high, group = "VME - high",
                 stroke = FALSE, fillOpacity = 1, smoothFactor = 0.5,fillColor =   "black") %>%
     
     # Layers control
     addLayersControl(
       overlayGroups = c("Depth 400-800 m", "Fishing 2009-2011", "Fishing 2012-2018",
-                        "MBCG 2009-2011","Static 2009-2011","VME - low",
-                        "VME - medium", "VME - high"),
+                        "MBCG 2009-2011","Static 2009-2011","VME - low precaution",
+                        "VME - medium precaution", "VME - high precaution"),
       options = layersControlOptions(collapsed = FALSE)
     )
   
@@ -183,22 +183,22 @@ outdir <- paste(pathdir_nogit,"mapdynamic",sep="/")
                 stroke = FALSE, fillOpacity = 0.5, smoothFactor = 0.5,fillColor =  "green") %>%
     addPolygons(data = fishing_refStatic, group = "Static 2009-2011",
                 stroke = FALSE, fillOpacity = 0.5, smoothFactor = 0.5,fillColor =  "purple") %>%
-    addPolygons(data = VME_low, group = "VME - low precaution",
+    addPolygons(data = VME_low, group = "VME - low",
                 stroke = FALSE, fillOpacity = 1, smoothFactor = 0.5,fillColor =  "yellow") %>%
-    addPolygons(data = VME_medium, group = "VME - medium precaution",
+    addPolygons(data = VME_medium, group = "VME - medium",
                 stroke = FALSE, fillOpacity = 1, smoothFactor = 0.5,fillColor =  "orange") %>%
-    addPolygons(data = VME_high, group = "VME - high precaution",
+    addPolygons(data = VME_high, group = "VME - high",
                 stroke = FALSE, fillOpacity = 1, smoothFactor = 0.5,fillColor =   "black") %>%
     
     # Layers control
     addLayersControl(
       overlayGroups = c("Depth 400-800 m", "Fishing 2009-2011", "Fishing 2012-2018",
-                        "MBCG 2009-2011","Static 2009-2011","VME - low",
-                        "VME - medium", "VME - high"),
+                        "MBCG 2009-2011","Static 2009-2011","VME - low precaution",
+                        "VME - medium precaution", "VME - high precaution"),
       options = layersControlOptions(collapsed = FALSE)
     )
   
-setwd(paste(pathdir,"7-mapdynamic",sep="/"))
+setwd(outdir)
 #saveWidget(mfs, file="map_satelite.html")
 saveWidget(m, file="map_map.html")
 saveWidget(mele, file="map_vmeElements.html")
