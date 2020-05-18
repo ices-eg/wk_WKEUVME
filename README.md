@@ -1,2 +1,2 @@
-# wk_WKEUVME
+# WKEUVME
 Scripts and data products for the workshop EUVME.  
