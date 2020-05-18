@@ -1,2 +1,2 @@
 # WKEUVME
-Scripts and data products for the workshop EUVME.  
+Scripts and data products for the ICES workshop EUVME.  
