@@ -99,6 +99,7 @@ outdir <- paste(pathdir_nogit,"mapdynamic",sep="/")
   VME_high   <- subset(VMEdepth,VMEdepth@data$VME_Class == 0)
   
 # add VME elements
+ # unzip the VME elements in folder before running script
  source(paste(pathdir,"6-Utilities/Code_vme_elements.R",sep="/"))
 
 # plot VME elements and VME data
@@ -126,11 +127,11 @@ outdir <- paste(pathdir_nogit,"mapdynamic",sep="/")
                 stroke = FALSE, fillOpacity = 1, smoothFactor = 0.5,fillColor =  "#35978f") %>%
     addPolygons(data = SteepSlopes_on_Ridges, group = "SteepSlopes_on_Ridges",
                 stroke = FALSE, fillOpacity = 1, smoothFactor = 0.5,fillColor =  "purple") %>%
-    addPolygons(data = VME_low, group = "VME - low",
+    addPolygons(data = VME_low, group = "VME - low precaution",
                 stroke = FALSE, fillOpacity = 1, smoothFactor = 0.5,fillColor =  "red") %>%
-    addPolygons(data = VME_medium, group = "VME - medium",
+    addPolygons(data = VME_medium, group = "VME - medium precaution",
                 stroke = FALSE, fillOpacity = 1, smoothFactor = 0.5,fillColor =  "blue") %>%
-    addPolygons(data = VME_high, group = "VME - high",
+    addPolygons(data = VME_high, group = "VME - high precaution",
                 stroke = FALSE, fillOpacity = 1, smoothFactor = 0.5,fillColor =   "#df65b0") %>%
     
     # Layers control
@@ -156,11 +157,11 @@ outdir <- paste(pathdir_nogit,"mapdynamic",sep="/")
                 stroke = FALSE, fillOpacity = 0.5, smoothFactor = 0.5,fillColor =  "green") %>%
     addPolygons(data = fishing_refStatic, group = "Static 2009-2011",
                 stroke = FALSE, fillOpacity = 0.5, smoothFactor = 0.5,fillColor =  "purple") %>%
-    addPolygons(data = VME_low, group = "VME - low",
+    addPolygons(data = VME_low, group = "VME - low precaution",
                 stroke = FALSE, fillOpacity = 1, smoothFactor = 0.5,fillColor =  "yellow") %>%
-    addPolygons(data = VME_medium, group = "VME - medium",
+    addPolygons(data = VME_medium, group = "VME - medium precaution",
                 stroke = FALSE, fillOpacity = 1, smoothFactor = 0.5,fillColor =  "orange") %>%
-    addPolygons(data = VME_high, group = "VME - high",
+    addPolygons(data = VME_high, group = "VME - high precaution",
                 stroke = FALSE, fillOpacity = 1, smoothFactor = 0.5,fillColor =   "black") %>%
     
     # Layers control
@@ -183,11 +184,11 @@ outdir <- paste(pathdir_nogit,"mapdynamic",sep="/")
                 stroke = FALSE, fillOpacity = 0.5, smoothFactor = 0.5,fillColor =  "green") %>%
     addPolygons(data = fishing_refStatic, group = "Static 2009-2011",
                 stroke = FALSE, fillOpacity = 0.5, smoothFactor = 0.5,fillColor =  "purple") %>%
-    addPolygons(data = VME_low, group = "VME - low",
+    addPolygons(data = VME_low, group = "VME - low precaution",
                 stroke = FALSE, fillOpacity = 1, smoothFactor = 0.5,fillColor =  "yellow") %>%
-    addPolygons(data = VME_medium, group = "VME - medium",
+    addPolygons(data = VME_medium, group = "VME - medium precaution",
                 stroke = FALSE, fillOpacity = 1, smoothFactor = 0.5,fillColor =  "orange") %>%
-    addPolygons(data = VME_high, group = "VME - high",
+    addPolygons(data = VME_high, group = "VME - high precaution",
                 stroke = FALSE, fillOpacity = 1, smoothFactor = 0.5,fillColor =   "black") %>%
     
     # Layers control

@@ -1,5 +1,7 @@
 
-# downloads and crops the VME elements
+# unzip the VME elements in folder before running script
+
+# crop the VME elements
 
   pathelements <- paste(pathdir_nogit,"VME data repository/VME elements",sep="/")
   Canyons <- readOGR(dsn = pathelements, layer="Canyons_ICES_Ecoregion") 
