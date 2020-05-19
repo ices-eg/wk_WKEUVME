@@ -34,7 +34,7 @@ outdir <- paste(pathdir_nogit,"mapdynamic",sep="/")
   vmsreg$refSAR[vmsreg$refSAR > 0] <- 1
   
   # Static in ref period
-  nam <- paste("Static",afteryear, sep="_")
+  nam <- paste("Static",refyear, sep="_")
   indexcol <- which(names(vmsreg) %in% nam) 
   vmsreg$refStatic <- rowSums(vmsreg[indexcol])
   vmsreg$refStatic[vmsreg$refStatic > 0] <- 1
@@ -61,7 +61,7 @@ outdir <- paste(pathdir_nogit,"mapdynamic",sep="/")
   vmsreg2$refSAR[vmsreg2$refSAR > 0] <- 1
   
   # Static in ref period
-  nam <- paste("Static",afteryear, sep="_")
+  nam <- paste("Static",refyear, sep="_")
   indexcol <- which(names(vmsreg2) %in% nam) 
   vmsreg2$refStatic <- rowSums(vmsreg2[indexcol])
   vmsreg2$refStatic[vmsreg2$refStatic > 0] <- 1
