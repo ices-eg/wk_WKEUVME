@@ -143,9 +143,21 @@ figmap2 <- figmap2 +  geom_polygon(data = shapeReg, aes(x = long, y = lat, group
 print(figmap2)
 dev.off() 
 
+dat$adjacent.cells <- as.numeric(dat$adjacent.cells)
+
+# add total fishing footprint in scenario 2 and 3 to .rds file
+names(dat)
+dat$scenario_2 <- 0
+dat$scenario_2[dat$adjacent.cells > 1] <- 1
+dat$scenario_3 <- 0
+dat$scenario_3[dat$adjacent.cells > 2] <- 1
+
+fig6b <- dat %>% 
+        select(-adjacent.cells)
+
+saveRDS(fig6b,  paste(pathdir,"3-Data analysis",EcoReg,"fig6b.rds",sep="/"))
 
 ## scenario 2 a cell must touch one other cell (on an edge or vertex)
-dat$adjacent.cells <- as.numeric(dat$adjacent.cells)
 
 scen_2 <- dat %>% 
   filter(adjacent.cells > 1) %>% 
