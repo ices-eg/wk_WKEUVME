@@ -61,8 +61,14 @@
 #### table 3
   tab3 <- readRDS(file = "tab3.rds")
   tab3 <- cbind(tab3[[1]],tab3[[2]])
-  tab3 <- tab3[c(1:5,12,6:11),]
+  tab3 <- tab3[, c(1, 4, 2, 5, 3,6)]
+  tab3 <- tab3[c(1:5,12,6:11,13:15),]
   write.csv(tab3, paste(outdir,"Table_3.csv",sep="/"))
+
+#### table 3a 
+  tab3a <- readRDS(file = "tab3a.rds") 
+  write.csv(tab3a, paste(outdir,"Table_3a.csv",sep="/")) 
+
  
 #### figure 6
   fig6 <- readRDS(file = "fig6.rds") 
@@ -91,7 +97,32 @@
   figmap2 <- figmap2 +  geom_polygon(data = shapeReg, aes(x = long, y = lat, group = group),color="black",fill=NA)
   print(figmap2)
   dev.off() 
+
+#### figure 6b - c-squares with multiple fishing gears #HH
   
+  jpeg(file = paste(outdir,"Figure_6b.jpeg",sep="/"), width=fig_width, height=fig_length,units ='in', res = 300) 
+  figmap <- ggplot() + geom_point(data=subset(fig6,ref_count > 0), aes(x=long, y=lat , col=as.factor(ref_count)),
+                                  shape=15,size=0.5,na.rm=T)  
+  figmap <- figmap +  geom_polygon(data = worldMap, aes(x = long, y = lat, group = group),color="grey",fill="grey")
+  figmap <- figmap +  theme(plot.background=element_blank(), 
+                            panel.background=element_blank(),
+                            axis.text.y   = element_text(size=16),
+                            axis.text.x   = element_text(size=16),
+                            axis.title.y  = element_text(size=16),
+                            axis.title.x  = element_text(size=16),
+                            panel.border  = element_rect(colour = "grey", size=.5,fill=NA), 
+                            legend.text   = element_text(size=11), 
+                            legend.title  = element_text(size=11), 
+                            legend.position ="bottom") + 
+    scale_x_continuous(breaks=coordxmap, name = "longitude") + 
+    scale_y_continuous(breaks=coordymap, name = "latitude")  + 
+    coord_cartesian(xlim=c(coordslim[1], coordslim[2]), ylim=c(coordslim[3],coordslim[4])) 
+  figmap <- figmap +  labs(col="gears count") 
+  figmap2 <- figmap +  geom_polygon(data = shapeEEZ, aes(x = long, y = lat, group = group),color="grey",fill=NA) 
+  figmap2 <- figmap2 +  geom_polygon(data = shapeReg, aes(x = long, y = lat, group = group),color="black",fill=NA)
+  print(figmap2) 
+  dev.off()  
+ 
 #### figure 7
   fig7 <- readRDS(file = "fig7.rds") 
   
