@@ -18,6 +18,7 @@
 # metiers
   Gear_metier         <- c("Otter","Dredge","Beam","Seine")
   Gear_metier_benthis <- c("OT_CRU","OT_DMF","OT_MIX","OT_MIX_CRU_DMF","OT_MIX_DMF_BEN","OT_SPF")
+  Gear_static <- c("FPO","LLS","GNS")
 
 # get VMS data per gear, year and region and combine all data per region (gear and year in columns)
   for (j in 1:length(Ecoreg)){
@@ -58,8 +59,19 @@
         colnames(Static)[1] <- c(paste("Static",year[yy],sep="_"))
       }
       
+      # get all static metier categories
+       for (mes in 1: length(Gear_static)){ 
+         Smetier <- get_passive_footprint(Ecoreg[j], year[yy],metier_level4 = Gear_static[mes]) 
+       if (length(Smetier)>0){ 
+         Smetier <- Smetier[,c(2:7)]
+         colnames(Smetier)[1] <- c(paste("Static",Gear_static[mes],year[yy],sep="_"))
+         Smetier[,1] <- 1
+         }
+       assign(paste(Gear_static[mes]),Smetier)
+      }
+
       Reg <- dplyr::bind_rows(Otter, Dredge, Beam, Seine, Static, total, OT_CRU, OT_DMF,OT_MIX,
-                              OT_MIX_CRU_DMF,OT_MIX_DMF_BEN,OT_SPF)
+                              OT_MIX_CRU_DMF,OT_MIX_DMF_BEN,OT_SPF,,FPO,GNS,LLS)
       Reg <- aggregate(Reg[,c(1,7:ncol(Reg))],
                        Reg[,c(2:6)],FUN = sum,na.rm=TRUE)
       assign(paste("Region",year[yy],sep="_"),Reg)
@@ -73,7 +85,7 @@
                         Region[,c(1:5)],FUN = sum,na.rm=TRUE)
     
     saveRDS(Region,  paste(Ecoreg[j],"VMS.rds",sep="_"))
-    rm(list=ls()[! ls() %in% c("year","Ecoreg","Gear_metier","Gear_metier_benthis")])
+    rm(list=ls()[! ls() %in% c("year","Ecoreg","Gear_metier","Gear_metier_benthis","Gear_static")])
   }
 
 rm(list=ls()[! ls() %in% c("pathdir")])     
