@@ -126,7 +126,7 @@
   print(figmap2)
   dev.off()
 
-#### figure 6c - c-squares with multiple fishing gears #HH
+#### figure 6c - c-squares with multiple fishing gears 
   
   jpeg(file = paste(outdir,"Figure_6c.jpeg",sep="/"), width=fig_width, height=fig_length,units ='in', res = 300) 
   figmap <- ggplot() + geom_point(data=subset(fig6,ref_count > 0), aes(x=long, y=lat , col=as.factor(ref_count)),
