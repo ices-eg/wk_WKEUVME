@@ -100,7 +100,11 @@
 
 #### figure 6b - (scenario 2 - removal of satellite c-squares)  
   fig6b <- readRDS(file = "fig6b.rds") 
-  
+  unfished <- fig6[fig6$ref==0,] 
+  unfished$scenario_2 <- 0 
+  unfished$scenario_3 <- 0 
+  fig6b <- rbind(fig6b,unfished)
+
   jpeg(file = paste(outdir,"Figure_6b.jpeg",sep="/"), width=fig_width, height=fig_length,units ='in', res = 300)
   figmap <- ggplot() + geom_point(data=fig6b, aes(x=long, y=lat , col=as.factor(scenario_2)),
                                   shape=15,size=0.5,na.rm=T) 
