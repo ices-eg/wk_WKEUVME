@@ -98,9 +98,37 @@
   print(figmap2)
   dev.off() 
 
-#### figure 6b - c-squares with multiple fishing gears #HH
+#### figure 6b - (scenario 2 - removal of satellite c-squares)  
+  fig6b <- readRDS(file = "fig6b.rds") 
   
-  jpeg(file = paste(outdir,"Figure_6b.jpeg",sep="/"), width=fig_width, height=fig_length,units ='in', res = 300) 
+  jpeg(file = paste(outdir,"Figure_6b.jpeg",sep="/"), width=fig_width, height=fig_length,units ='in', res = 300)
+  figmap <- ggplot() + geom_point(data=fig6b, aes(x=long, y=lat , col=as.factor(scenario_2)),
+                                  shape=15,size=0.5,na.rm=T) 
+  figmap <- figmap +  scale_color_manual(values = c("#bcbddc","#54278f"),name ="",labels=c("unfished","fished"))      
+  figmap <- figmap +  geom_polygon(data = worldMap, aes(x = long, y = lat, group = group),color="grey",fill="grey")
+  figmap <- figmap +  theme(plot.background=element_blank(),
+                            panel.background=element_blank(),
+                            axis.text.y   = element_text(size=16),
+                            axis.text.x   = element_text(size=16),
+                            axis.title.y  = element_text(size=16),
+                            axis.title.x  = element_text(size=16),
+                            panel.border  = element_rect(colour = "grey", size=.5,fill=NA),
+                            legend.text   = element_text(size=11),
+                            legend.title  = element_text(size=11),
+                            legend.position ="bottom") +
+    scale_x_continuous(breaks=coordxmap, name = "longitude") +
+    scale_y_continuous(breaks=coordymap, name = "latitude")  +
+    coord_cartesian(xlim=c(coordslim[1], coordslim[2]), ylim=c(coordslim[3],coordslim[4]))
+  figmap<- figmap +   guides(colour = guide_legend(override.aes = list(size=5),nrow=2,byrow=TRUE))
+  
+  figmap2 <- figmap +  geom_polygon(data = shapeEEZ, aes(x = long, y = lat, group = group),color="grey",fill=NA)
+  figmap2 <- figmap2 +  geom_polygon(data = shapeReg, aes(x = long, y = lat, group = group),color="black",fill=NA)
+  print(figmap2)
+  dev.off()
+
+#### figure 6c - c-squares with multiple fishing gears #HH
+  
+  jpeg(file = paste(outdir,"Figure_6c.jpeg",sep="/"), width=fig_width, height=fig_length,units ='in', res = 300) 
   figmap <- ggplot() + geom_point(data=subset(fig6,ref_count > 0), aes(x=long, y=lat , col=as.factor(ref_count)),
                                   shape=15,size=0.5,na.rm=T)  
   figmap <- figmap +  geom_polygon(data = worldMap, aes(x = long, y = lat, group = group),color="grey",fill="grey")
