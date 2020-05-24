@@ -42,7 +42,7 @@
   vmsreg$after <- rowSums(vmsreg[indexcol])
   vmsreg$after[vmsreg$after > 0] <- 1
 
-  # total static fishing footprint (static, FPO, GNS, LLS) in period 2009-2011  #HH
+  # total static fishing footprint (static, FPO, GNS, LLS) in period 2009-2011 
   for(id in 1:length(metier_static)){ 
     nam <- c(paste(metier_static[id],refyear,sep="_")) 
     indexcol <- which(names(vmsreg) %in% nam) 
@@ -51,7 +51,7 @@
     vmsreg[ , paste("ref", metier_static[id],sep="_")]   <- dat
   }
  
-  # total number of sub-gears per c-square in period 2009-2011 #HH
+  # total number of sub-gears per c-square in period 2009-2011
   vmssub <- vmsreg 
   subg <- c("SAR_OT_CRU","SAR_OT_DMF","SAR_OT_MIX","SAR_OT_MIX_CRU_DMF","SAR_OT_MIX_DMF_BEN", 
             "SAR_OT_SPF","Static_FPO","Static_GNS","Static_LLS") 
@@ -76,6 +76,33 @@
   IREG$ref_Static_GNS[is.na(IREG$ref_Static_GNS)] <- 0 
   
   fig6 <- IREG
+                                
+  # calculate number of adjacent csquares for fishery footprint scenarios
+  dat <- fig6[fig6$ref==1,]
+  dat$long <- round(dat$long,3)
+  dat$lat <- round(dat$lat,3)
+  lonlats <- paste(dat$long, dat$lat, sep=":")
+  
+  for(i in (1:dim(dat)[1])){
+    
+    nw  <- paste(dat$long[i]-0.05, dat$lat[i]+0.05, sep=":")
+    nn  <- paste(dat$long[i]+0.00, dat$lat[i]+0.05, sep=":")
+    ne  <- paste(dat$long[i]+0.05, dat$lat[i]+0.05, sep=":")
+    ee  <- paste(dat$long[i]+0.05, dat$lat[i]+0.00, sep=":")
+    se  <- paste(dat$long[i]+0.05, dat$lat[i]-0.05, sep=":")
+    ss  <- paste(dat$long[i]+0.00, dat$lat[i]-0.05, sep=":")
+    sw  <- paste(dat$long[i]-0.05, dat$lat[i]-0.05, sep=":")
+    ww  <- paste(dat$long[i]-0.05, dat$lat[i]+0.00, sep=":")
+    
+    dat$adjacent.cells[i] <- sum(nw %in% lonlats[-i], nn %in% lonlats[-i], ne %in% lonlats[-i],
+                                 ee %in% lonlats[-i], se %in% lonlats[-i], ss %in% lonlats[-i],
+                                 sw %in% lonlats[-i], ww %in% lonlats[-i])
+  }
+  table(dat$adjacent.cells)
+  
+  fig6 <- merge(x = fig6, y = dat[ , c("csquares", "adjacent.cells")], by = "csquares", all.x=TRUE)
+  fig6$adjacent.cells[is.na(fig6$adjacent.cells)] <- 0
+
   saveRDS(fig6,  paste(outdir,"fig6.rds",sep="/"))
   
 # Table 2 - total numbers of C-squares and numbers of C-squares fished per EEZ within 400-800 m depth range
@@ -137,7 +164,8 @@
     } else{
       tt <- rep(0,length(unique(IREG_met$EEZ)))
       tab3 <- cbind(tab3,tt)
-  }
+    }
+   }
   
   tab3[is.na(tab3)] <- 0
   coln <- as.character(tab3[,1])
@@ -202,6 +230,7 @@
       tt <- rep(0,length(unique(Allreg_met$EEZ)))
       tab3all <- cbind(tab3all,tt)
     }
+   }
   
   tab3all[is.na(tab3all)] <- 0
   coln <- as.character(tab3all[,1])
