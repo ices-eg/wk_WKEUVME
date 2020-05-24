@@ -23,7 +23,7 @@
   metier_mbcg  <- c("Otter","Beam","Dredge","Seine", 
                     "OT_CRU","OT_DMF","OT_MIX","OT_MIX_CRU_DMF",
                     "OT_MIX_DMF_BEN","OT_SPF")
-  metier_static <- "Static"
+  metier_static <- c("Static","Static_FPO","Static_GNS","Static_LLS")
   
 # figure 1 - depth c-squares 400-800 per ecoregion
   fig1 <- as.data.frame(depthreg)
@@ -41,10 +41,39 @@
   indexcol <- which(names(vmsreg) %in% nam) 
   vmsreg$after <- rowSums(vmsreg[indexcol])
   vmsreg$after[vmsreg$after > 0] <- 1
-  
-  IREG <- cbind(IREG, vmsreg[match(IREG$csquares,vmsreg$c_square), c("ref","after")])
+
+  # total static fishing footprint (static, FPO, GNS, LLS) in period 2009-2011  #HH
+  for(id in 1:length(metier_static)){ 
+    nam <- c(paste(metier_static[id],refyear,sep="_")) 
+    indexcol <- which(names(vmsreg) %in% nam) 
+    dat <- rowSums(vmsreg[indexcol])
+    dat[dat > 0] <- 1 
+    vmsreg[ , paste("ref", metier_static[id],sep="_")]   <- dat
+  }
+ 
+  # total number of sub-gears per c-square in period 2009-2011 #HH
+  vmssub <- vmsreg 
+  subg <- c("SAR_OT_CRU","SAR_OT_DMF","SAR_OT_MIX","SAR_OT_MIX_CRU_DMF","SAR_OT_MIX_DMF_BEN", 
+            "SAR_OT_SPF","Static_FPO","Static_GNS","Static_LLS") 
+  vmssub$ref_count <- 0 
+  for (id in 1:length(subg)){ 
+    nam <- c(paste(subg[id],refyear,sep="_")) 
+    indexcol <- which(names(vmsreg) %in% nam) 
+    vmssub[,indexcol] <- sapply(vmssub[,indexcol],function(x) ifelse(x>0,1,x)) 
+    vmssub$ref_subSAR <- rowSums(vmssub[indexcol])
+    vmssub$ref_subSAR <- sapply(vmssub$ref_subSAR,function(x) ifelse(x>0,1,x))
+    vmssub$ref_count <- rowSums(vmssub[,c("ref_count", "ref_subSAR")]) 
+  }
+  vmsreg$ref_count <- vmssub$ref_count 
+
+  IREG <- cbind(IREG, vmsreg[match(IREG$csquares,vmsreg$c_square), c("ref","after","ref_count","ref_Static","ref_Static_FPO","ref_Static_LLS","ref_Static_GNS")])
   IREG$ref[is.na(IREG$ref)] <- 0
   IREG$after[is.na(IREG$after)] <- 0
+  IREG$ref_count[is.na(IREG$ref_count)] <- 0 
+  IREG$ref_Static[is.na(IREG$Static)] <- 0 
+  IREG$ref_Static_FPO[is.na(IREG$ref_Static_FPO)] <- 0 
+  IREG$ref_Static_LLS[is.na(IREG$ref_Static_LLS)] <- 0   
+  IREG$ref_Static_GNS[is.na(IREG$ref_Static_GNS)] <- 0 
   
   fig6 <- IREG
   saveRDS(fig6,  paste(outdir,"fig6.rds",sep="/"))
@@ -95,18 +124,19 @@
   }
 
   # get estimate for static gears
-  nam <- paste(metier_static[1],refyear,sep="_")
-  indexcol <- which(names(vmssub) %in% nam) 
-  vmssub$ref_substat <- rowMeans(vmssub[indexcol],na.rm=T)
-  IREG_met <- cbind(IREG, vmssub[match(IREG$csquares,vmssub$c_square), c("ref_substat")])
-  colnames(IREG_met)[ncol(IREG_met)] <- "ref_substat"
-  ref_substat <- subset(IREG_met,IREG_met$ref_substat > 0)
-  if (nrow(ref_substat) > 0){
-    tt <- aggregate(ref_substat$csquares,by=list(ref_substat$EEZ),length)
-    tab3 <- cbind(tab3, tt[match(tab3[,1],tt[,1]), c(2)])
-  } else{
-    tt <- rep(0,length(unique(IREG_met$EEZ)))
-    tab3 <- cbind(tab3,tt)
+  for (id in 1:length(metier_static)){
+    nam <- paste(metier_static[id],refyear,sep="_") 
+    indexcol <- which(names(vmssub) %in% nam) 
+    vmssub$ref_substat <- rowMeans(vmssub[indexcol],na.rm=T)
+    IREG_met <- cbind(IREG, vmssub[match(IREG$csquares,vmssub$c_square), c("ref_substat")])
+    colnames(IREG_met)[ncol(IREG_met)] <- "ref_substat"
+    ref_substat <- subset(IREG_met,IREG_met$ref_substat > 0)
+    if (nrow(ref_substat) > 0){
+      tt <- aggregate(ref_substat$csquares,by=list(ref_substat$EEZ),length)
+      tab3 <- cbind(tab3, tt[match(tab3[,1],tt[,1]), c(2)])
+    } else{
+      tt <- rep(0,length(unique(IREG_met$EEZ)))
+      tab3 <- cbind(tab3,tt)
   }
   
   tab3[is.na(tab3)] <- 0
@@ -114,7 +144,18 @@
   tab3 <- t(tab3[,2:ncol(tab3)])
   rownames(tab3) <- c("400-800 (footprint)",metier_mbcg,metier_static)
   colnames(tab3) <- coln
-  
+    
+  # estimate c-squares have multiple fishing gears
+  tab3a <- data.frame(unclass(table(IREG$ref_count,IREG$EEZ))) 
+  tab3a <- cbind(rownames(tab3a), data.frame(tab3a, row.names=NULL)) 
+  names(tab3a)[1] <- "Number of Sub-gears" 
+  tab3a <- tab3a[-1,]  
+  total <- colSums(tab3a[,2:4])
+  total2 <- data.frame("total",total[1],total[2],total[3]) 
+  colnames(total2) <- colnames(tab3a) 
+  tab3a <- rbind(tab3a,total2) 
+  saveRDS(tab3a,  paste(outdir,"tab3a.rds",sep="/")) 
+ 
   # estimate number of c-squares fished all depths
   tab3all <- as.data.frame(matrix(data=NA, nrow =length(unique(IREG$EEZ)),ncol=1))
   tab3all[,1] <- unique(IREG$EEZ)
@@ -146,19 +187,21 @@
   }
   
   # get estimate for static gears all depths
-  nam <- paste(metier_static[1],refyear,sep="_")
-  indexcol <- which(names(vmssub) %in% nam) 
-  vmssub$ref_substat <- rowMeans(vmssub[indexcol],na.rm=T)
-  Allreg_met <- cbind(depthreg@data, vmssub[match(depthreg@data$csquares,vmssub$c_square), c("ref_substat")])
-  colnames(Allreg_met)[ncol(Allreg_met)] <- "ref_substat"
-  ref_substat <- subset(Allreg_met,Allreg_met$ref_substat > 0)
-  if (nrow(ref_substat) > 0){
-    tt <- aggregate(ref_substat$csquares,by=list(ref_substat$EEZ),length)
-    tab3all <- cbind(tab3all, tt[match(tab3all[,1],tt[,1]), c(2)])
-  } else{
-    tt <- rep(0,length(unique(Allreg_met$EEZ)))
-    tab3all <- cbind(tab3all,tt)
-  }
+  vmssub <- vmsreg 
+  for (id in 1:length(metier_static)){ 
+    nam <- paste(metier_static[id],refyear,sep="_") 
+    indexcol <- which(names(vmssub) %in% nam) 
+    vmssub$ref_substat <- rowMeans(vmssub[indexcol],na.rm=T)
+    Allreg_met <- cbind(depthreg@data, vmssub[match(depthreg@data$csquares,vmssub$c_square), c("ref_substat")])
+    colnames(Allreg_met)[ncol(Allreg_met)] <- "ref_substat"
+    ref_substat <- subset(Allreg_met,Allreg_met$ref_substat > 0)
+    if (nrow(ref_substat) > 0){
+      tt <- aggregate(ref_substat$csquares,by=list(ref_substat$EEZ),length)
+      tab3all <- cbind(tab3all, tt[match(tab3all[,1],tt[,1]), c(2)])
+    } else{
+      tt <- rep(0,length(unique(Allreg_met$EEZ)))
+      tab3all <- cbind(tab3all,tt)
+    }
   
   tab3all[is.na(tab3all)] <- 0
   coln <- as.character(tab3all[,1])
