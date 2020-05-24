@@ -42,7 +42,7 @@
   EcoReg <-  "Celtic Seas"  # "Celtic Seas" or "Bay of Biscay and the Iberian Coast"
   source(paste(pathdir,"3-Data analysis/Code_to_get_data_figures_tables_per_ecoregion.R",sep="/"))
 
-#### make plots and tables
+#### make plots and tables with VMS and VME
   library(rgdal)
   library(sp)
   library(ggplot2)
@@ -55,6 +55,13 @@
 
   source(paste(pathdir,"4-Code for figures and tables/Producing figures and tables.R",sep="/"))
 
+#### assess consequences of closure options
+  library(maptools)
+  library(raster)
+  library(gridExtra)
+  
+  source(paste(pathdir,"6-Utilities/Assessment of closures.R",sep="/"))
+  
 #### make interactive maps
   library(leaflet)
   library(htmlwidgets)
