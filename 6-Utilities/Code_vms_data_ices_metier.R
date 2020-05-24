@@ -71,7 +71,7 @@
       }
 
       Reg <- dplyr::bind_rows(Otter, Dredge, Beam, Seine, Static, total, OT_CRU, OT_DMF,OT_MIX,
-                              OT_MIX_CRU_DMF,OT_MIX_DMF_BEN,OT_SPF,,FPO,GNS,LLS)
+                              OT_MIX_CRU_DMF,OT_MIX_DMF_BEN,OT_SPF,FPO,GNS,LLS)
       Reg <- aggregate(Reg[,c(1,7:ncol(Reg))],
                        Reg[,c(2:6)],FUN = sum,na.rm=TRUE)
       assign(paste("Region",year[yy],sep="_"),Reg)
