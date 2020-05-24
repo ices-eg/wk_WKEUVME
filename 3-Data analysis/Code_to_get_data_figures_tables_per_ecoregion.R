@@ -177,29 +177,7 @@
   saveRDS(fig7,  paste(outdir,"fig7.rds",sep="/"))
 
 # figure 8 look at otter trawl fishing intensity
-  fig8 <- IREG
-
-  nam <- paste("SAR_Otter",refyear,sep="_")
-  indexcol <- which(names(vmsreg) %in% nam) 
-  vmsreg$otrefyear <- rowMeans(vmsreg[indexcol])  
-  fig8 <- cbind(fig8, vmsreg[match(fig8$csquares,vmsreg$c_square), c("otrefyear")])
-  colnames(fig8)[ncol(fig8)] <- "Otter_intensity"
-  fig8$Otter_intensity[is.na(fig8$Otter_intensity)] <- 0
-  
-  # thresholds to be determined during the workshop
-  fig8$Otter_cat <- NA
-  fig8$Otter_cat[fig8$Otter_intensity == 0] <- "unfished"
-  fig8$Otter_cat[fig8$Otter_intensity > 0 & fig8$Otter_intensity < 0.5] <- "low"
-  fig8$Otter_cat[fig8$Otter_intensity >= 0.5 & fig8$Otter_intensity < 2] <- "medium"
-  fig8$Otter_cat[fig8$Otter_intensity >= 2] <- "high"
-  
-  # save without intensity information per c-square
-  fig8a <- fig8$Otter_intensity
-  indexcol <- which(names(fig8) %in% "Otter_intensity") 
-  fig8b <- fig8[,-(indexcol)]
-  
-  saveRDS(fig8a,  paste(outdir,"fig8a.rds",sep="/"))
-  saveRDS(fig8b,  paste(outdir,"fig8b.rds",sep="/"))
+  # not saved as data is restricted
   
 # Table 4 VME occurences per ecoregion
   VME <- read.csv(paste(pathdir_nogit,

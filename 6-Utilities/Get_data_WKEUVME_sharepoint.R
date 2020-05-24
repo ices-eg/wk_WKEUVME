@@ -2,7 +2,7 @@
 
 # get data from ICES sharepoint --> WKEUVME
 
-  # now create different folders to store all data
+  # now create different folders to store all VMS data 
   dir.create(paste(pathdir_nogit,"VMS data repository",sep="/"))
   fisheries_path <- paste(pathdir_nogit,"VMS data repository",sep="/")
   
@@ -11,7 +11,7 @@
     spgetfile(fname, destdir = fisheries_path)
   }
   
-  # now create different folders to store all data
+  # now create different folders to store all VME data
   dir.create(paste(pathdir_nogit,"VME data repository",sep="/"))
   dir.create(paste(pathdir_nogit,"VME data repository/VME weighted csquares",sep="/"))
   VME_path <- paste(pathdir_nogit,"VME data repository/VME weighted csquares",sep="/")
@@ -28,6 +28,16 @@
   for (fname in fnames) {
     spgetfile(fname, destdir = VME_element_path)
   }
+  
+  # now create different folders to store all closed area options data
+  dir.create(paste(pathdir_nogit,"Closure options",sep="/"))
+  closure_path <- paste(pathdir_nogit,"Closure options",sep="/")
+  
+  fnames <- spfiles("2020 Meeting Docs/06. Data/Closure options", full = TRUE)
+  for (fname in fnames) {
+    spgetfile(fname, destdir = closure_path)
+  }
+  
   
   # SP_clearpassword() # which just calls 
   keyring::key_delete("icesSharePoint", ices_username)
