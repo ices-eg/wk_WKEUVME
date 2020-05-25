@@ -31,6 +31,15 @@
   saveRDS(fig1,  paste(outdir,"fig1.rds",sep="/"))
 
 # figure 6 - fishing footprint whole area
+  # fix for static gear column not coming through
+  for(yy in 1:length(allyears)){
+   vmssub <- vmsreg[grep(allyears[yy],names(vmsreg))]
+    nam <- names(vmssub[grep("Static",names(vmssub))])
+    dat <- rowSums(vmssub[nam]) #HH
+    dat[dat > 0] <- 1 
+    vmsreg[nam[1]] <- dat
+  }
+
   # total fishing footprint in reference period
   nam <- c(paste("SAR_total",refyear,sep="_"),paste(metier_static[1],refyear, sep="_"))
   indexcol <- which(names(vmsreg) %in% nam) 
