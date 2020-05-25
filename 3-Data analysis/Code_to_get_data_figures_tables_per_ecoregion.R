@@ -20,6 +20,7 @@
 # define few params
   refyear <- 2009:2011
   afteryear <- 2012:2019
+  allyears <- 2009:2019
   metier_mbcg  <- c("Otter","Beam","Dredge","Seine", 
                     "OT_CRU","OT_DMF","OT_MIX","OT_MIX_CRU_DMF",
                     "OT_MIX_DMF_BEN","OT_SPF")
@@ -48,7 +49,8 @@
     indexcol <- which(names(vmsreg) %in% nam) 
     dat <- rowSums(vmsreg[indexcol])
     dat[dat > 0] <- 1 
-    vmsreg[ , paste("ref", metier_static[id],sep="_")]   <- dat
+    vmsreg$dat <- dat #HH
+    colnames(vmsreg)[ncol(vmsreg)] <- paste("ref",metier_static[id],sep="_") #HH
   }
  
   # total number of sub-gears per c-square in period 2009-2011
