@@ -395,7 +395,11 @@
       
       temp <- rbind(temp,tab4EEZ)
     } else {
-      
+      temp[nrow(temp)+1,] <- temp[nrow(temp),]
+      temp$low_fished[nrow(temp)] <- 0
+      temp$medium_fished[nrow(temp)] <- 0
+      temp$high_fished[nrow(temp)] <- 0
+      temp$subgear[nrow(temp)] <- metier_comb[i]
     }
   }
   
