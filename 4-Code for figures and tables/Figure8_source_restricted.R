@@ -44,14 +44,15 @@ fig8 <- cbind(fig8, vmsreg[match(fig8$csquares,vmsreg$c_square), c("otrefyear")]
 colnames(fig8)[ncol(fig8)] <- "Otter_intensity"
 fig8$Otter_intensity[is.na(fig8$Otter_intensity)] <- 0
 fig8 <- subset(fig8,fig8$Otter_intensity > 0)
-fig8 <- fig8[order(fig8$Otter_intensity),]
+fig8 <- fig8[order(-fig8$Otter_intensity),]
 fig8$perc <- cumsum(fig8$Otter_intensity) / sum(fig8$Otter_intensity)*100
 
-quat <- seq(0, 100, by=1)
+quat <- seq(0, 100, by=2)
 fig8$cat <- cut(fig8$perc,c(quat))
 area <- aggregate(fig8$area_sqkm,list(fig8$cat),sum)
 area <- cumsum(area[,2]/1000)/(sum(area[,2]/1000)) *100
 area <- c(0,area)
 
-quat2 <- c(0, 10,  100)
+
+quat2 <- c(0, 90,  100)
 fig8$cat2 <- cut(fig8$perc,c(quat2))

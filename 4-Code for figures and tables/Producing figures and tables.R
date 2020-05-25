@@ -218,7 +218,7 @@
   setwd(paste(pathdir,"3-Data analysis",EcoReg,sep="/")) 
   outdir <- paste(pathdir,"5-Output",EcoReg,sep="/") 
   
-  jpeg(file = paste(outdir,"Figure_8a.jpeg",sep="/"), width=fig_width, height=fig_length,units ='in', res = 300)
+  jpeg(file = paste(outdir,"Figure_8a.jpeg",sep="/"), width=fig_width, height=fig_length*0.75,units ='in', res = 300)
   par(mar = c(5, 4, 4, 4) + 0.3)              # Additional space for second y-axis
   plot(area~quat,type="l", lwd=2,ylab="Cumulative area (%)",
        xlab="Percentiles of total grid cell SAR",las=1)              # Create first plot

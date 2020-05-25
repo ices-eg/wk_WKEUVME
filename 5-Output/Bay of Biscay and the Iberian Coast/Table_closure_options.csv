@@ -2,22 +2,22 @@ X1,X2,X3,X4,X5,X6,X7
 ,Scenario 1,,Scenario 2 option 1,,Scenario 2 option 2,
 ,within closure,outside closures,within closure,outside closures,within closure,outside closures
 VME protection,,,,,,
-nb of c-squares with VME habitat,25,0,25,0,19,6
+nb of c-squares with VME habitat,25,0,25,0,25,0
 nb of c-squares with VME index high,0,0,0,0,0,0
-nb of c-squares with VME index medium,18,0,18,0,11,7
-nb of c-squares with VME index low,6,15,14,7,15,6
+nb of c-squares with VME index medium,18,0,18,0,15,3
+nb of c-squares with VME index low,6,15,14,7,14,7
 ,,,,,,
 VME protection and fishing impact threshold,,,,,,
-nb of c-squares with VME habitat/index below SAR 0.43 threshold (2009-2019),41,7,41,7,41,7
-nb of c-squares with closed VME habitat/index above SAR 0.43 threshold (2009-2019),5,7,5,7,5,7
+nb of c-squares with VME habitat/index below SAR 0.43 threshold (2009-2019),44,8,52,0,52,0
+nb of c-squares with closed VME habitat/index above SAR 0.43 threshold (2009-2019),5,7,5,7,2,10
 ,,,,,,
 Fisheries consequences (total footprint),,,,,,
-nb of c-squares part of fishing footprint (all gears) (2009-2011),250,1472,283,1439,189,1533
-nb of c-squares with static bottom fishing (present) (2009-2011),236,1273,252,1257,162,1347
-nb of c-squares with mobile bottom fishing (SAR > 0) (2009-2011),204,1151,228,1127,142,1213
+nb of c-squares part of fishing footprint (all gears) (2009-2011),250,1472,283,1439,265,1457
+nb of c-squares with static bottom fishing (present) (2009-2011),236,1273,252,1257,241,1268
+nb of c-squares with mobile bottom fishing (SAR > 0) (2009-2011),204,1151,228,1127,211,1144
 ,,,,,,
 Fisheries consequences (core fishing ground),,,,,,
-nb of c-squares that form core fishing area based on SAR (2009-2011) (method 1),55,541,60,536,28,568
+nb of c-squares that form core fishing area based on SAR (2009-2011) (method 1),55,541,60,536,51,545
 nb of c-squares that form core fishing area based on kw/h fished (2009-2011) (method 2),NA,NA,NA,NA,NA,NA
-fraction of total SAR (2009-2011),0.09,0.91,0.1,0.9,0.05,0.95
+fraction of total SAR (2009-2011),0.09,0.91,0.1,0.9,0.07,0.93
 fraction of total kw/h (2009-2011),NA,NA,NA,NA,NA,NA

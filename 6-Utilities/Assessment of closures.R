@@ -45,7 +45,7 @@ outdir <- paste(pathdir,"5-Output",EcoReg,sep="/")
   sce2a <- sce2a[c(which(inout == TRUE)),]
 
   # scenario 2 - option 2
-  scenario2b <- st_read(paste(pathdir_nogit,"Closure options/VME_buffer_Scenario2_Opt2_2020May22_v1.shp",sep="/"))
+  scenario2b <- st_read(paste(pathdir_nogit,"Closure options/VME_buffer_Scenario2_Opt2_2020May25_v2.shp",sep="/"))
   sce2b <- as_Spatial(scenario2b)
   sce2b_df <- as.data.frame(sce2b)
   sce2b <-SpatialPolygonsDataFrame(sce2b,sce2b_df)
@@ -171,6 +171,7 @@ outdir <- paste(pathdir,"5-Output",EcoReg,sep="/")
   
   depthreg <- cbind(depthreg, vmsreg[match(depthreg@data$csquares,vmsreg$c_square), c("threshold")])
   colnames(depthreg@data)[ncol(depthreg@data)] <- "threshold"
+  depthreg@data$threshold[is.na(depthreg@data$threshold)] <- 0
   
   # get core fishing ground otter trawling
   # get region within 400-800 meter
@@ -252,18 +253,18 @@ outdir <- paste(pathdir,"5-Output",EcoReg,sep="/")
   # vme habitat /index closed and below threshold
   tablenew [10,2] <- length(which(depthwithin$clos1 == 1 & depthwithin$threshold == 0 & !(is.na(depthwithin$VME_Class))))
   tablenew [10,3] <- length(which(depthwithin$clos1 == 0 & depthwithin$threshold == 0 & !(is.na(depthwithin$VME_Class))))
-  tablenew [10,4] <- length(which(depthwithin$clos1 == 1 & depthwithin$threshold == 0 & !(is.na(depthwithin$VME_Class))))
-  tablenew [10,5] <- length(which(depthwithin$clos1 == 0 & depthwithin$threshold == 0 & !(is.na(depthwithin$VME_Class))))
-  tablenew [10,6] <- length(which(depthwithin$clos1 == 1 & depthwithin$threshold == 0 & !(is.na(depthwithin$VME_Class))))
-  tablenew [10,7] <- length(which(depthwithin$clos1 == 0 & depthwithin$threshold == 0 & !(is.na(depthwithin$VME_Class))))
+  tablenew [10,4] <- length(which(depthwithin$clos2a == 1 & depthwithin$threshold == 0 & !(is.na(depthwithin$VME_Class))))
+  tablenew [10,5] <- length(which(depthwithin$clos2a == 0 & depthwithin$threshold == 0 & !(is.na(depthwithin$VME_Class))))
+  tablenew [10,6] <- length(which(depthwithin$clos2b == 1 & depthwithin$threshold == 0 & !(is.na(depthwithin$VME_Class))))
+  tablenew [10,7] <- length(which(depthwithin$clos2b == 0 & depthwithin$threshold == 0 & !(is.na(depthwithin$VME_Class))))
 
   # vme habitat /index closed and above threshold
   tablenew [11,2] <- length(which(depthwithin$clos1 == 1 & depthwithin$threshold == 1 & !(is.na(depthwithin$VME_Class))))
   tablenew [11,3] <- length(which(depthwithin$clos1 == 0 & depthwithin$threshold == 1 & !(is.na(depthwithin$VME_Class))))
-  tablenew [11,4] <- length(which(depthwithin$clos1 == 1 & depthwithin$threshold == 1 & !(is.na(depthwithin$VME_Class))))
-  tablenew [11,5] <- length(which(depthwithin$clos1 == 0 & depthwithin$threshold == 1 & !(is.na(depthwithin$VME_Class))))
-  tablenew [11,6] <- length(which(depthwithin$clos1 == 1 & depthwithin$threshold == 1 & !(is.na(depthwithin$VME_Class))))
-  tablenew [11,7] <- length(which(depthwithin$clos1 == 0 & depthwithin$threshold == 1 & !(is.na(depthwithin$VME_Class))))
+  tablenew [11,4] <- length(which(depthwithin$clos2a == 1 & depthwithin$threshold == 1 & !(is.na(depthwithin$VME_Class))))
+  tablenew [11,5] <- length(which(depthwithin$clos2a == 0 & depthwithin$threshold == 1 & !(is.na(depthwithin$VME_Class))))
+  tablenew [11,6] <- length(which(depthwithin$clos2b == 1 & depthwithin$threshold == 1 & !(is.na(depthwithin$VME_Class))))
+  tablenew [11,7] <- length(which(depthwithin$clos2b == 0 & depthwithin$threshold == 1 & !(is.na(depthwithin$VME_Class))))
 
   # c-squares part of fishing footprint
   tablenew [14,2] <- length(which(depthwithin$clos1 == 1 & depthwithin$Footprint == 1 ))
