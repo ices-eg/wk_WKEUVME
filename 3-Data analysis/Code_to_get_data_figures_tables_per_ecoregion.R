@@ -20,6 +20,7 @@
 # define few params
   refyear <- 2009:2011
   afteryear <- 2012:2019
+  allyears <- 2009:2019
   metier_mbcg  <- c("Otter","Beam","Dredge","Seine", 
                     "OT_CRU","OT_DMF","OT_MIX","OT_MIX_CRU_DMF",
                     "OT_MIX_DMF_BEN","OT_SPF")
@@ -30,6 +31,15 @@
   saveRDS(fig1,  paste(outdir,"fig1.rds",sep="/"))
 
 # figure 6 - fishing footprint whole area
+  # fix for static gear column not coming through
+  for(yy in 1:length(allyears)){
+   vmssub <- vmsreg[grep(allyears[yy],names(vmsreg))]
+    nam <- names(vmssub[grep("Static",names(vmssub))])
+    dat <- rowSums(vmssub[nam]) #HH
+    dat[dat > 0] <- 1 
+    vmsreg[nam[1]] <- dat
+  }
+
   # total fishing footprint in reference period
   nam <- c(paste("SAR_total",refyear,sep="_"),paste(metier_static[1],refyear, sep="_"))
   indexcol <- which(names(vmsreg) %in% nam) 
@@ -48,7 +58,8 @@
     indexcol <- which(names(vmsreg) %in% nam) 
     dat <- rowSums(vmsreg[indexcol])
     dat[dat > 0] <- 1 
-    vmsreg[ , paste("ref", metier_static[id],sep="_")]   <- dat
+    vmsreg$dat <- dat #HH
+    colnames(vmsreg)[ncol(vmsreg)] <- paste("ref",metier_static[id],sep="_") #HH
   }
  
   # total number of sub-gears per c-square in period 2009-2011
@@ -105,11 +116,15 @@
 
   saveRDS(fig6,  paste(outdir,"fig6.rds",sep="/"))
   
+  IREG <- cbind(IREG, fig6[match(IREG$csquares,fig6$csquares), c("adjacent.cells")])
+  names(IREG)[ncol(IREG)] <- "adjacent.cells"
+  IREG$adjacent.cells[is.na(IREG$adjacent.cells)] <- 0
+
 # Table 2 - total numbers of C-squares and numbers of C-squares fished per EEZ within 400-800 m depth range
   tab2 <- table(droplevels(IREG$EEZ))
   
   # link footprint to depth region and estimate number of c-squares fished
-  tab2 <- cbind(tab2,table(droplevels(IREG$EEZ[IREG$ref > 0]))) 
+  tab2 <- cbind(tab2,table(droplevels(IREG$EEZ[IREG$adjacent.cells > 0]))) 
   tab2 <- data.frame(rownames(tab2),tab2)
   rownames(tab2) <- c()
   colnames(tab2) <- c("EEZ","csquares in depth range","fished c-squares in depth range")
@@ -140,7 +155,7 @@
     vmssub$ref_subSAR <- rowMeans(vmssub[indexcol])
     IREG_met <- cbind(IREG, vmssub[match(IREG$csquares,vmssub$c_square), c("ref_subSAR")])
     colnames(IREG_met)[ncol(IREG_met)] <- "ref_subSAR"
-    refsubsar <- subset(IREG_met,IREG_met$ref_subSAR > 0)
+    refsubsar <- subset(IREG_met,IREG_met$ref_subSAR > 0 & IREG_met$adjacent.cells > 0)
     if (nrow(refsubsar) > 0){
       tt <- aggregate(refsubsar$csquares,by=list(refsubsar$EEZ),length)
       tab3 <- cbind(tab3, tt[match(tab3[,1],tt[,1]), c(2)])
@@ -157,7 +172,7 @@
     vmssub$ref_substat <- rowMeans(vmssub[indexcol],na.rm=T)
     IREG_met <- cbind(IREG, vmssub[match(IREG$csquares,vmssub$c_square), c("ref_substat")])
     colnames(IREG_met)[ncol(IREG_met)] <- "ref_substat"
-    ref_substat <- subset(IREG_met,IREG_met$ref_substat > 0)
+    ref_substat <- subset(IREG_met,IREG_met$ref_substat > 0 & IREG_met$adjacent.cells > 0)
     if (nrow(ref_substat) > 0){
       tt <- aggregate(ref_substat$csquares,by=list(ref_substat$EEZ),length)
       tab3 <- cbind(tab3, tt[match(tab3[,1],tt[,1]), c(2)])
@@ -174,10 +189,9 @@
   colnames(tab3) <- coln
     
   # estimate c-squares have multiple fishing gears
-  tab3a <- data.frame(unclass(table(IREG$ref_count,IREG$EEZ))) 
+  tab3a <- data.frame(unclass(table(IREG$ref_count[IREG$adjacent.cells>0],IREG$EEZ[IREG$adjacent.cells>0]))) 
   tab3a <- cbind(rownames(tab3a), data.frame(tab3a, row.names=NULL)) 
   names(tab3a)[1] <- "Number of Sub-gears" 
-  tab3a <- tab3a[-1,]  
   total <- colSums(tab3a[,2:4])
   total2 <- data.frame("total",total[1],total[2],total[3]) 
   colnames(total2) <- colnames(tab3a) 
