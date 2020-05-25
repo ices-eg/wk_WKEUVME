@@ -116,11 +116,15 @@
 
   saveRDS(fig6,  paste(outdir,"fig6.rds",sep="/"))
   
+  IREG <- cbind(IREG, fig6[match(IREG$csquares,fig6$csquares), c("adjacent.cells")])
+  names(IREG)[ncol(IREG)] <- "adjacent.cells"
+  IREG$adjacent.cells[is.na(IREG$adjacent.cells)] <- 0
+
 # Table 2 - total numbers of C-squares and numbers of C-squares fished per EEZ within 400-800 m depth range
   tab2 <- table(droplevels(IREG$EEZ))
   
   # link footprint to depth region and estimate number of c-squares fished
-  tab2 <- cbind(tab2,table(droplevels(IREG$EEZ[IREG$ref > 0]))) 
+  tab2 <- cbind(tab2,table(droplevels(IREG$EEZ[IREG$adjacent.cells > 0]))) 
   tab2 <- data.frame(rownames(tab2),tab2)
   rownames(tab2) <- c()
   colnames(tab2) <- c("EEZ","csquares in depth range","fished c-squares in depth range")
