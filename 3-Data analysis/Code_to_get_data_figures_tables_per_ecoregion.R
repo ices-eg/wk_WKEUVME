@@ -151,7 +151,7 @@
     vmssub$ref_subSAR <- rowMeans(vmssub[indexcol])
     IREG_met <- cbind(IREG, vmssub[match(IREG$csquares,vmssub$c_square), c("ref_subSAR")])
     colnames(IREG_met)[ncol(IREG_met)] <- "ref_subSAR"
-    refsubsar <- subset(IREG_met,IREG_met$ref_subSAR > 0)
+    refsubsar <- subset(IREG_met,IREG_met$ref_subSAR > 0 & IREG_met$adjacent.cells > 0)
     if (nrow(refsubsar) > 0){
       tt <- aggregate(refsubsar$csquares,by=list(refsubsar$EEZ),length)
       tab3 <- cbind(tab3, tt[match(tab3[,1],tt[,1]), c(2)])
@@ -168,7 +168,7 @@
     vmssub$ref_substat <- rowMeans(vmssub[indexcol],na.rm=T)
     IREG_met <- cbind(IREG, vmssub[match(IREG$csquares,vmssub$c_square), c("ref_substat")])
     colnames(IREG_met)[ncol(IREG_met)] <- "ref_substat"
-    ref_substat <- subset(IREG_met,IREG_met$ref_substat > 0)
+    ref_substat <- subset(IREG_met,IREG_met$ref_substat > 0 & IREG_met$adjacent.cells > 0)
     if (nrow(ref_substat) > 0){
       tt <- aggregate(ref_substat$csquares,by=list(ref_substat$EEZ),length)
       tab3 <- cbind(tab3, tt[match(tab3[,1],tt[,1]), c(2)])
