@@ -233,7 +233,7 @@
 
   copl <- c("#045a8d","#2b8cbe","#74a9cf","#a6bddb","#d9f0a3","#addd8e","#78c679","#31a354","#d95f0e","#993404")
   
-  jpeg(file = paste(outdir,"Figure_8cd.jpeg",sep="/"), width=fig_width, height=fig_length,units ='in', res = 300)
+  jpeg(file = paste(outdir,"Figure_8c.jpeg",sep="/"), width=fig_width, height=fig_length,units ='in', res = 300)
   
   figmap <- ggplot() + geom_point(data=fig8, aes(x=long, y=lat , col=rev(cat3)),
                                   shape=15,size=0.5,na.rm=T) 
