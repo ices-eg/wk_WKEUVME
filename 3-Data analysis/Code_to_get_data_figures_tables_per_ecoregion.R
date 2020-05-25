@@ -399,9 +399,10 @@
     }
   }
   
-  # sort by mpg
+  # sort by EEZ
   temp <- temp[order(temp$Region),]
-  
+  temp[, 2:8][is.na(temp[, 2:8])] <- 0
+
   tab4a     <- temp
   saveRDS(tab4a,  paste(outdir,"tab4a.rds",sep="/"))
 
