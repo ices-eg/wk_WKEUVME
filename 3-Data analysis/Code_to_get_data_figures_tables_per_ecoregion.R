@@ -62,6 +62,16 @@
     colnames(vmsreg)[ncol(vmsreg)] <- paste("ref",metier_static[id],sep="_") #HH
   }
  
+ # total MBCG fishing footprint (static, FPO, GNS, LLS) in period 2009-2011 #HH
+  for(id in 5:length(metier_mbcg)){ 
+    nam <- c(paste("SAR",metier_mbcg[id],refyear,sep="_")) 
+    indexcol <- which(names(vmsreg) %in% nam) 
+    dat <- rowSums(vmsreg[indexcol])
+    dat[dat > 0] <- 1 
+    vmsreg$dat <- dat #HH
+    colnames(vmsreg)[ncol(vmsreg)] <- paste("ref",metier_mbcg[id],sep="_") #HH
+  }
+ 
   # total number of sub-gears per c-square in period 2009-2011
   vmssub <- vmsreg 
   subg <- c("SAR_OT_CRU","SAR_OT_DMF","SAR_OT_MIX","SAR_OT_MIX_CRU_DMF","SAR_OT_MIX_DMF_BEN", 
@@ -77,14 +87,14 @@
   }
   vmsreg$ref_count <- vmssub$ref_count 
 
-  IREG <- cbind(IREG, vmsreg[match(IREG$csquares,vmsreg$c_square), c("ref","after","ref_count","ref_Static","ref_Static_FPO","ref_Static_LLS","ref_Static_GNS")])
+  IREG <- cbind(IREG, vmsreg[match(IREG$csquares,vmsreg$c_square), c("ref","after","ref_count","ref_Static","ref_Static_FPO","ref_Static_LLS",
+                                                                     "ref_Static_GNS","ref_OT_CRU","ref_OT_DMF","ref_OT_MIX",
+                                                                     "ref_OT_MIX_CRU_DMF","ref_OT_MIX_DMF_BEN","ref_OT_SPF")]) #HH
   IREG$ref[is.na(IREG$ref)] <- 0
   IREG$after[is.na(IREG$after)] <- 0
   IREG$ref_count[is.na(IREG$ref_count)] <- 0 
   IREG$ref_Static[is.na(IREG$Static)] <- 0 
-  IREG$ref_Static_FPO[is.na(IREG$ref_Static_FPO)] <- 0 
-  IREG$ref_Static_LLS[is.na(IREG$ref_Static_LLS)] <- 0   
-  IREG$ref_Static_GNS[is.na(IREG$ref_Static_GNS)] <- 0 
+  IREG[, 15:23][is.na(IREG[,15:23])] <- 0
   
   fig6 <- IREG
                                 
@@ -293,7 +303,7 @@
   tab4cat <- as.data.frame(tab4cat)
   tab4cat <- tab4cat[!duplicated(tab4cat),]
   
-  withVMEfish <- subset(withVME,withVME$ref == 1)
+  withVMEfish <- subset(withVME,withVME$adjacent.cells > 0)
   tab4catf <- withVMEfish %>%
     group_by(precaution) %>%
     summarize(sum = mean(number), n = n()) %>%
@@ -315,7 +325,7 @@
   tab4cat <- as.data.frame(tab4cat)
   tab4cat <- tab4cat[!duplicated(tab4cat),]
   
-  withVMEfish <- subset(withVME,withVME$ref == 1)
+  withVMEfish <- subset(withVME,withVME$adjacent.cells == 1)
   tab4catf <- withVMEfish %>%
     group_by(precaution,EEZ) %>%
     summarize(sum = mean(number), n = n()) %>%
@@ -343,6 +353,57 @@
   
   tab4     <- rbind(tab4,tab4EEZ)
   saveRDS(tab4,  paste(outdir,"tab4.rds",sep="/"))
+
+  # Table 4 VME occurences per ecoregion per metier
+  metier_comb <- c(metier_mbcg[5:length(metier_mbcg)],metier_static[2:length(metier_static)])
+  
+  temp <- tab4
+  temp$subgear <- NA
+  
+  for(i in 1:length(metier_comb)){
+    
+    nam <- c(paste("ref",metier_comb[i],sep="_"))
+    
+    withVMEfish <- subset(withVME,withVME[nam] == 1)
+    if (nrow(withVMEfish) > 0) {
+      tab4catf <- withVMEfish %>%
+        group_by(precaution,EEZ) %>%
+        summarize(sum = mean(number), n = n()) %>%
+        complete(precaution,EEZ)
+      tab4catf <- as.data.frame(tab4catf)
+      tab4catf <- tab4catf[!duplicated(tab4catf),]
+      
+      tab4EEZ  <- data.frame(Region = tab4sub$Group.1, VME_presence = tab4sub$x)
+      tt_f <- subset(tab4catf,tab4catf$precaution =="low")
+      tab4EEZ <- cbind(tab4EEZ, tt_f[match(tab4EEZ$Region,tt_f$EEZ), c("n")])
+      tt <- subset(tab4cat,tab4cat$precaution =="low")
+      tab4EEZ <- cbind(tab4EEZ, tt[match(tab4EEZ$Region,tt$EEZ), c("n")])
+      
+      tt_f <- subset(tab4catf,tab4catf$precaution =="medium")
+      tab4EEZ <- cbind(tab4EEZ, tt_f[match(tab4EEZ$Region,tt_f$EEZ), c("n")])
+      tt <- subset(tab4cat,tab4cat$precaution =="medium")
+      tab4EEZ <- cbind(tab4EEZ, tt[match(tab4EEZ$Region,tt$EEZ), c("n")])
+      
+      tt_f <- subset(tab4catf,tab4catf$precaution =="high")
+      tab4EEZ <- cbind(tab4EEZ, tt_f[match(tab4EEZ$Region,tt_f$EEZ), c("n")])
+      tt <- subset(tab4cat,tab4cat$precaution =="high")
+      tab4EEZ <- cbind(tab4EEZ, tt[match(tab4EEZ$Region,tt$EEZ), c("n")])
+      
+      
+      colnames(tab4EEZ) <-  colnames(tab4)
+      tab4EEZ$subgear <- nam
+      
+      temp <- rbind(temp,tab4EEZ)
+    } else {
+      
+    }
+  }
+  
+  # sort by mpg
+  temp <- temp[order(temp$Region),]
+  
+  tab4a     <- temp
+  saveRDS(tab4a,  paste(outdir,"tab4a.rds",sep="/"))
 
 # figure 9  map of overlap between fishing and VME 
 # not saved as data is restricted
