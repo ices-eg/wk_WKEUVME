@@ -257,7 +257,7 @@
   
 # figure 7 - depth c-squares fished/unfished 
   fig7 <- IREG
-  fig7$ref_cat <- ifelse(fig7$ref > 0,1,0)
+  fig7$ref_cat <- ifelse(fig7$adjacent.cells > 0,1,0)
   fig7$after_cat <- ifelse(fig7$after > 0,1,0)
   fig7$ref_vs_after <- paste(fig7$after_cat,fig7$ref_cat,sep="_")
   saveRDS(fig7,  paste(outdir,"fig7.rds",sep="/"))
