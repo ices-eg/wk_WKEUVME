@@ -3,11 +3,6 @@
 
 outdir <- paste(pathdir,"5-Output",EcoReg,sep="/") 
 
-# plotting specifics
-  pointsize <- 0.5
-  fig_width  <- (maxlong-minlong)/2.5
-  fig_length <- (maxlat-minlat)/2
-
 # get depth data
   setwd(paste(pathdir,"1-Input data/csquares_ecoregions_depth",sep="/"))
   depthreg <- readRDS(paste(EcoReg,"_depth.rds",sep=""))
@@ -88,22 +83,7 @@ outdir <- paste(pathdir,"5-Output",EcoReg,sep="/")
   dev.off()
   
 # now plot closures that fall in the 400-800 meter depth range
-  #### fig 1
-  setwd(paste(pathdir,"3-Data analysis",EcoReg,sep="/")) 
-  fig1 <- readRDS(file ="fig1.rds")
-  
-  # Get the world map
-  worldMap <- map_data("world")
-  
-  # get boundaries of ecoregion used for all plots
-  minlong <- round(min(fig1$long)-0.1,digits = 0)
-  maxlong <- round(max(fig1$long)+ 0.1,digits = 0)
-  minlat  <- round(min(fig1$lat)- 0.1,digits = 0)
-  maxlat  <- round(max(fig1$lat)+ 0.1,digits = 0)
-  coordslim <- c(minlong,maxlong,minlat,maxlat)
-  coordxmap <- round(seq(minlong,maxlong,length.out = 4))
-  coordymap <- round(seq(minlat,maxlat,length.out = 4))
-  
+  # run producing figures and tables up to fig 1
   jpeg(file = paste(outdir,"Figure_map_closures.jpeg",sep="/"), width=fig_width*2, height=fig_length*0.8,units ='in', res = 300)
   figmap <- ggplot() + geom_point(data=fig1, aes(x=long, y=lat , col=as.factor(within)),
                                   shape=15,size=0.5,na.rm=T) 
@@ -126,11 +106,11 @@ outdir <- paste(pathdir,"5-Output",EcoReg,sep="/")
   figmap  <- figmap +  geom_polygon(data = shapeEEZ, aes(x = long, y = lat, group = group),color="grey",fill=NA)
   figmap  <- figmap +  geom_polygon(data = shapeReg, aes(x = long, y = lat, group = group),color="black",fill=NA)
  
-  figmap_sce1 <- figmap + geom_polygon(data= sce1, aes(x = long, y = lat, group = group),color="black",fill="#fee6ce") +
+  figmap_sce1 <- figmap + geom_polygon(data= sce1, aes(x = long, y = lat, group = group),color="orange",fill="orange") +
                   ggtitle("scenario 1")
-  figmap_sce2a <- figmap + geom_polygon(data= sce2a, aes(x = long, y = lat, group = group),color="black",fill="#fee6ce") +
+  figmap_sce2a <- figmap + geom_polygon(data= sce2a, aes(x = long, y = lat, group = group),color="orange",fill="orange") +
     ggtitle("scenario 2 - option 1")
-  figmap_sce2b <- figmap + geom_polygon(data= sce2b, aes(x = long, y = lat, group = group),color="black",fill="#fee6ce") +
+  figmap_sce2b <- figmap + geom_polygon(data= sce2b, aes(x = long, y = lat, group = group),color="orange",fill="orange") +
     ggtitle("scenario 2 - option 2")
 
   print(grid.arrange(figmap_sce1, figmap_sce2a,figmap_sce2b, nrow = 1))
@@ -270,20 +250,23 @@ outdir <- paste(pathdir,"5-Output",EcoReg,sep="/")
   table(depthwithin$Footprint[depthwithin$clos2b == 0 ])
     
   # c-squares part of static gears present
-  table(depthwithin$clos1[depthwithin$refStatic == 1])
-  table(depthwithin$clos2a[depthwithin$refStatic == 1])
-  table(depthwithin$clos2b[depthwithin$refStatic == 1])
+  footp_only <- subset(depthwithin, depthwithin$Footprint == 1)
+  table(footp_only$clos1[footp_only$refStatic == 1])
+  table(footp_only$clos2a[footp_only$refStatic == 1 ])
+  table(footp_only$clos2b[footp_only$refStatic == 1 ])
   
   # c-squares part of SAR gears present
-  table(depthwithin$clos1[depthwithin$refSAR > 0])
-  table(depthwithin$clos2a[depthwithin$refSAR > 0])
-  table(depthwithin$clos2b[depthwithin$refSAR > 0])
+  table(footp_only$clos1[footp_only$refSAR > 0])
+  table(footp_only$clos2a[footp_only$refSAR > 0])
+  table(footp_only$clos2b[footp_only$refSAR > 0])
 
   # c-squares part of core fishing area
-  table(depthwithin$clos1[depthwithin$core_area == "(10,100]"])
-  table(depthwithin$clos2a[depthwithin$core_area == "(10,100]"])
-  table(depthwithin$clos2b[depthwithin$core_area == "(10,100]"])
+  table(footp_only$clos1[footp_only$core_area == "(10,100]"])
+  table(footp_only$clos2a[footp_only$core_area == "(10,100]"])
+  table(footp_only$clos2b[footp_only$core_area == "(10,100]"])
   
   # fraction of SAR in closed area
-  aggregate(depthwithin$refSAR,by=list(depthwithin$clos1),sum,na.rm=T)
+  aggregate(footp_only$refSAR,by=list(footp_only$clos1),sum,na.rm=T)
+  aggregate(footp_only$refSAR,by=list(footp_only$clos2a),sum,na.rm=T)
+  aggregate(footp_only$refSAR,by=list(footp_only$clos2b),sum,na.rm=T)
   

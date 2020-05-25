@@ -234,7 +234,7 @@
   figmap <- ggplot() + geom_point(data=fig8, aes(x=long, y=lat , col=cat2),
                                   shape=15,size=0.5,na.rm=T) 
   figmap <- figmap +  scale_color_manual(values = c("lightblue","darkblue"),name ="",
-                                         labels=c("0-10th percentile","10-100th percentile"))      
+                                         labels=c("0-10th percentile","10-100th percentile (core fishing area)"))      
   figmap <- figmap +  geom_polygon(data = worldMap, aes(x = long, y = lat, group = group),color="grey",fill="grey")
   figmap <- figmap +  theme(plot.background=element_blank(),
                             panel.background=element_blank(),
