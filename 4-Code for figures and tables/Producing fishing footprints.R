@@ -153,7 +153,7 @@ dat$scenario_3 <- 0
 dat$scenario_3[dat$adjacent.cells > 2] <- 1
 
 fig6b <- dat %>% 
-        select(-adjacent.cells)
+  dplyr::select(-adjacent.cells)
 
 saveRDS(fig6b,  paste(pathdir,"3-Data analysis",EcoReg,"fig6b.rds",sep="/"))
 

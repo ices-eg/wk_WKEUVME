@@ -213,60 +213,123 @@ outdir <- paste(pathdir,"5-Output",EcoReg,sep="/")
 # make table per row
   depthwithin <- subset(depthreg@data, depthreg@data$within == 1)
 
-  # vme habitat / index closed
-  table(depthwithin$VME_Class[depthwithin$clos1 == 1])  
-  table(depthwithin$VME_Class[depthwithin$clos1 == 0])
-  table(depthwithin$VME_Class[depthwithin$clos2a == 1])  
-  table(depthwithin$VME_Class[depthwithin$clos2a == 0])
-  table(depthwithin$VME_Class[depthwithin$clos2b == 1])  
-  table(depthwithin$VME_Class[depthwithin$clos2b == 0])
+  tablenew <- data.frame(matrix(data=NA,nrow = 22, ncol= 7))
+  
+  # vme habitat / index closed 
+  # scenario 1
+  tablenew [4,2] <- length(which(depthwithin$clos1 == 1 & depthwithin$VME_Class == 3)) 
+  tablenew [5,2] <- length(which(depthwithin$clos1 == 1 & depthwithin$VME_Class == 2))
+  tablenew [6,2] <- length(which(depthwithin$clos1 == 1 & depthwithin$VME_Class == 1))
+  tablenew [7,2] <- length(which(depthwithin$clos1 == 1 & depthwithin$VME_Class == 0))
+  
+  tablenew [4,3] <- length(which(depthwithin$clos1 == 0 & depthwithin$VME_Class == 3)) 
+  tablenew [5,3] <- length(which(depthwithin$clos1 == 0 & depthwithin$VME_Class == 2))
+  tablenew [6,3] <- length(which(depthwithin$clos1 == 0 & depthwithin$VME_Class == 1))
+  tablenew [7,3] <- length(which(depthwithin$clos1 == 0 & depthwithin$VME_Class == 0))
+  
+  # scenario 2a
+  tablenew [4,4] <- length(which(depthwithin$clos2a == 1 & depthwithin$VME_Class == 3)) 
+  tablenew [5,4] <- length(which(depthwithin$clos2a == 1 & depthwithin$VME_Class == 2))
+  tablenew [6,4] <- length(which(depthwithin$clos2a == 1 & depthwithin$VME_Class == 1))
+  tablenew [7,4] <- length(which(depthwithin$clos2a == 1 & depthwithin$VME_Class == 0))
+  
+  tablenew [4,5] <- length(which(depthwithin$clos2a == 0 & depthwithin$VME_Class == 3)) 
+  tablenew [5,5] <- length(which(depthwithin$clos2a == 0 & depthwithin$VME_Class == 2))
+  tablenew [6,5] <- length(which(depthwithin$clos2a == 0 & depthwithin$VME_Class == 1))
+  tablenew [7,5] <- length(which(depthwithin$clos2a == 0 & depthwithin$VME_Class == 0))
+  
+  # scenario 2b
+  tablenew [4,6] <- length(which(depthwithin$clos2b == 1 & depthwithin$VME_Class == 3)) 
+  tablenew [5,6] <- length(which(depthwithin$clos2b == 1 & depthwithin$VME_Class == 2))
+  tablenew [6,6] <- length(which(depthwithin$clos2b == 1 & depthwithin$VME_Class == 1))
+  tablenew [7,6] <- length(which(depthwithin$clos2b == 1 & depthwithin$VME_Class == 0))
+  
+  tablenew [4,7] <- length(which(depthwithin$clos2b == 0 & depthwithin$VME_Class == 3)) 
+  tablenew [5,7] <- length(which(depthwithin$clos2b == 0 & depthwithin$VME_Class == 2))
+  tablenew [6,7] <- length(which(depthwithin$clos2b == 0 & depthwithin$VME_Class == 1))
+  tablenew [7,7] <- length(which(depthwithin$clos2b == 0 & depthwithin$VME_Class == 0))
   
   # vme habitat /index closed and below threshold
-  sum(table(depthwithin$VME_Class[depthwithin$clos1 == 1 & depthwithin$threshold == 0]))
-  sum(table(depthwithin$VME_Class[depthwithin$clos1 == 0 & depthwithin$threshold == 0]))
-  
-  sum(table(depthwithin$VME_Class[depthwithin$clos2a == 1 & depthwithin$threshold == 0]))
-  sum(table(depthwithin$VME_Class[depthwithin$clos2a == 0 & depthwithin$threshold == 0]))
-  
-  sum(table(depthwithin$VME_Class[depthwithin$clos2b == 1 & depthwithin$threshold == 0]))
-  sum(table(depthwithin$VME_Class[depthwithin$clos2b == 0 & depthwithin$threshold == 0]))
-  
+  tablenew [10,2] <- length(which(depthwithin$clos1 == 1 & depthwithin$threshold == 0 & !(is.na(depthwithin$VME_Class))))
+  tablenew [10,3] <- length(which(depthwithin$clos1 == 0 & depthwithin$threshold == 0 & !(is.na(depthwithin$VME_Class))))
+  tablenew [10,4] <- length(which(depthwithin$clos1 == 1 & depthwithin$threshold == 0 & !(is.na(depthwithin$VME_Class))))
+  tablenew [10,5] <- length(which(depthwithin$clos1 == 0 & depthwithin$threshold == 0 & !(is.na(depthwithin$VME_Class))))
+  tablenew [10,6] <- length(which(depthwithin$clos1 == 1 & depthwithin$threshold == 0 & !(is.na(depthwithin$VME_Class))))
+  tablenew [10,7] <- length(which(depthwithin$clos1 == 0 & depthwithin$threshold == 0 & !(is.na(depthwithin$VME_Class))))
+
   # vme habitat /index closed and above threshold
-  sum(table(depthwithin$VME_Class[depthwithin$clos1 == 1 & depthwithin$threshold == 1]))
-  sum(table(depthwithin$VME_Class[depthwithin$clos1 == 0 & depthwithin$threshold == 1]))
-  
-  sum(table(depthwithin$VME_Class[depthwithin$clos2a == 1 & depthwithin$threshold == 1]))
-  sum(table(depthwithin$VME_Class[depthwithin$clos2a == 0 & depthwithin$threshold == 1]))
-  
-  sum(table(depthwithin$VME_Class[depthwithin$clos2b == 1 & depthwithin$threshold == 1]))
-  sum(table(depthwithin$VME_Class[depthwithin$clos2b == 0 & depthwithin$threshold == 1]))
-  
+  tablenew [11,2] <- length(which(depthwithin$clos1 == 1 & depthwithin$threshold == 1 & !(is.na(depthwithin$VME_Class))))
+  tablenew [11,3] <- length(which(depthwithin$clos1 == 0 & depthwithin$threshold == 1 & !(is.na(depthwithin$VME_Class))))
+  tablenew [11,4] <- length(which(depthwithin$clos1 == 1 & depthwithin$threshold == 1 & !(is.na(depthwithin$VME_Class))))
+  tablenew [11,5] <- length(which(depthwithin$clos1 == 0 & depthwithin$threshold == 1 & !(is.na(depthwithin$VME_Class))))
+  tablenew [11,6] <- length(which(depthwithin$clos1 == 1 & depthwithin$threshold == 1 & !(is.na(depthwithin$VME_Class))))
+  tablenew [11,7] <- length(which(depthwithin$clos1 == 0 & depthwithin$threshold == 1 & !(is.na(depthwithin$VME_Class))))
+
   # c-squares part of fishing footprint
-  table(depthwithin$Footprint[depthwithin$clos1 == 1 ])
-  table(depthwithin$Footprint[depthwithin$clos1 == 0 ])
-  table(depthwithin$Footprint[depthwithin$clos2a == 1 ])
-  table(depthwithin$Footprint[depthwithin$clos2a == 0 ])
-  table(depthwithin$Footprint[depthwithin$clos2b == 1 ])
-  table(depthwithin$Footprint[depthwithin$clos2b == 0 ])
-    
+  tablenew [14,2] <- length(which(depthwithin$clos1 == 1 & depthwithin$Footprint == 1 ))
+  tablenew [14,3] <- length(which(depthwithin$clos1 == 0 & depthwithin$Footprint == 1 ))
+  tablenew [14,4] <- length(which(depthwithin$clos2a == 1 & depthwithin$Footprint == 1 ))
+  tablenew [14,5] <- length(which(depthwithin$clos2a == 0 & depthwithin$Footprint == 1 ))
+  tablenew [14,6] <- length(which(depthwithin$clos2b == 1 & depthwithin$Footprint == 1 ))
+  tablenew [14,7] <- length(which(depthwithin$clos2b == 0 & depthwithin$Footprint == 1 ))
+  
   # c-squares part of static gears present
   footp_only <- subset(depthwithin, depthwithin$Footprint == 1)
-  table(footp_only$clos1[footp_only$refStatic == 1])
-  table(footp_only$clos2a[footp_only$refStatic == 1 ])
-  table(footp_only$clos2b[footp_only$refStatic == 1 ])
   
-  # c-squares part of SAR gears present
-  table(footp_only$clos1[footp_only$refSAR > 0])
-  table(footp_only$clos2a[footp_only$refSAR > 0])
-  table(footp_only$clos2b[footp_only$refSAR > 0])
+  tablenew [15,2] <- length(which(footp_only$clos1 == 1 & footp_only$refStatic == 1))
+  tablenew [15,3] <- length(which(footp_only$clos1 == 0 & footp_only$refStatic == 1))
+  tablenew [15,4] <- length(which(footp_only$clos2a == 1 & footp_only$refStatic == 1))
+  tablenew [15,5] <- length(which(footp_only$clos2a == 0 & footp_only$refStatic == 1))
+  tablenew [15,6] <- length(which(footp_only$clos2b == 1 & footp_only$refStatic == 1))
+  tablenew [15,7] <- length(which(footp_only$clos2b == 0 & footp_only$refStatic == 1))
 
-  # c-squares part of core fishing area
-  table(footp_only$clos1[footp_only$core_area == "(10,100]"])
-  table(footp_only$clos2a[footp_only$core_area == "(10,100]"])
-  table(footp_only$clos2b[footp_only$core_area == "(10,100]"])
+  # c-squares part of SAR gears present
+  tablenew [16,2] <- length(which(footp_only$clos1 == 1 & footp_only$refSAR > 0))
+  tablenew [16,3] <- length(which(footp_only$clos1 == 0 & footp_only$refSAR > 0))
+  tablenew [16,4] <- length(which(footp_only$clos2a == 1 & footp_only$refSAR > 0))
+  tablenew [16,5] <- length(which(footp_only$clos2a == 0 & footp_only$refSAR > 0))
+  tablenew [16,6] <- length(which(footp_only$clos2b == 1 & footp_only$refSAR > 0))
+  tablenew [16,7] <- length(which(footp_only$clos2b == 0 & footp_only$refSAR > 0))
+  
+  # core footprint based on SAR
+  tablenew [19,2] <- length(which(footp_only$clos1 == 1 & footp_only$core_area == "(10,100]"))
+  tablenew [19,3] <- length(which(footp_only$clos1 == 0 & footp_only$core_area == "(10,100]"))
+  tablenew [19,4] <- length(which(footp_only$clos2a == 1 & footp_only$core_area == "(10,100]"))
+  tablenew [19,5] <- length(which(footp_only$clos2a == 0 & footp_only$core_area == "(10,100]"))
+  tablenew [19,6] <- length(which(footp_only$clos2b == 1 & footp_only$core_area == "(10,100]"))
+  tablenew [19,7] <- length(which(footp_only$clos2b == 0 & footp_only$core_area == "(10,100]"))
   
   # fraction of SAR in closed area
-  aggregate(footp_only$refSAR,by=list(footp_only$clos1),sum,na.rm=T)
-  aggregate(footp_only$refSAR,by=list(footp_only$clos2a),sum,na.rm=T)
-  aggregate(footp_only$refSAR,by=list(footp_only$clos2b),sum,na.rm=T)
+  tablenew [21,2] <- as.character(round(sum(footp_only$refSAR[footp_only$clos1 == 1]) / sum(footp_only$refSAR),digits = 2))
+  tablenew [21,3] <- as.character(round(sum(footp_only$refSAR[footp_only$clos1 == 0]) / sum(footp_only$refSAR),digits = 2))
+  tablenew [21,4] <- as.character(round(sum(footp_only$refSAR[footp_only$clos2a == 1]) / sum(footp_only$refSAR),digits = 2))
+  tablenew [21,5] <- as.character(round(sum(footp_only$refSAR[footp_only$clos2a == 0]) / sum(footp_only$refSAR),digits = 2))
+  tablenew [21,6] <- as.character(round(sum(footp_only$refSAR[footp_only$clos2b == 1]) / sum(footp_only$refSAR),digits = 2))
+  tablenew [21,7] <- as.character(round(sum(footp_only$refSAR[footp_only$clos2b == 0]) / sum(footp_only$refSAR),digits = 2))
   
+tablenew [,1] <- c("","","VME protection","nb of c-squares with VME habitat","nb of c-squares with VME index high",
+                       "nb of c-squares with VME index medium","nb of c-squares with VME index low",
+                       "","VME protection and fishing impact threshold","nb of c-squares with VME habitat/index below SAR 0.43 threshold (2009-2019)",
+                       "nb of c-squares with closed VME habitat/index above SAR 0.43 threshold (2009-2019)",
+                       "","Fisheries consequences (total footprint)",
+                       "nb of c-squares part of fishing footprint (all gears) (2009-2011)",
+                       "nb of c-squares with static bottom fishing (present) (2009-2011)",
+                       "nb of c-squares with mobile bottom fishing (SAR > 0) (2009-2011)",
+                       "","Fisheries consequences (core fishing ground)",
+                       "nb of c-squares that form core fishing area based on SAR (2009-2011) (method 1)",
+                       "nb of c-squares that form core fishing area based on kw/h fished (2009-2011) (method 2)",
+                       "fraction of total SAR (2009-2011)",
+                       "fraction of total kw/h (2009-2011)")
+tablenew[1,] <- c("","Scenario 1","","Scenario 2 option 1","","Scenario 2 option 2","")
+tablenew[2,] <- c("","within closure","outside closures","within closure","outside closures","within closure","outside closures")
+tablenew[3,2:7] <- c("","","","","","")
+tablenew[8,] <- c("","","","","","","")
+tablenew[9,2:7] <- c("","","","","","")
+tablenew[12,] <- c("","","","","","","")
+tablenew[13,2:7] <- c("","","","","","")
+tablenew[17,] <- c("","","","","","","")
+tablenew[18,2:7] <- c("","","","","","")
+
+tablenew <- data.frame(tablenew)
+write.csv(tablenew, paste(outdir,"Table_closure_options.csv",sep="/"), 
+          row.names = FALSE, quote=FALSE) 
