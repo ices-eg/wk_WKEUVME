@@ -17,7 +17,7 @@ setwd(paste(pathdir_nogit,"VMS data repository",sep="/"))
 vmsreg <- readRDS(paste(EcoReg,"vms.rds",sep="_"))
 
 # define few params
-refyear <- 2009:2011
+refyear <- 2009:2019
 afteryear <- 2012:2019
 metier_mbcg  <- c("Otter","Beam","Dredge","Seine", 
                   "OT_CRU","OT_DMF","OT_MIX","OT_MIX_CRU_DMF",
@@ -53,6 +53,11 @@ area <- aggregate(fig8$area_sqkm,list(fig8$cat),sum)
 area <- cumsum(area[,2]/1000)/(sum(area[,2]/1000)) *100
 area <- c(0,area)
 
+fig8 <- fig8[order(fig8$Otter_intensity),]
+fig8$perc2 <- cumsum(fig8$Otter_intensity) / sum(fig8$Otter_intensity)*100
 
-quat2 <- c(0, 90,  100)
-fig8$cat2 <- cut(fig8$perc,c(quat2))
+quat2 <- c(0, 10,  100)
+fig8$cat2 <- cut(fig8$perc2,c(quat2))
+
+quat3 <- seq(0, 100, by=10)
+fig8$cat3 <- cut(rev(fig8$perc2),c(quat3))

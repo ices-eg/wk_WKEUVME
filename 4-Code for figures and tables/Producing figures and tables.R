@@ -189,17 +189,21 @@
   setwd(paste(pathdir,"3-Data analysis",EcoReg,sep="/")) 
   outdir <- paste(pathdir,"5-Output",EcoReg,sep="/") 
   
-  jpeg(file = paste(outdir,"Figure_8a.jpeg",sep="/"), width=fig_width, height=fig_length*0.75,units ='in', res = 300)
-  par(mar = c(5, 4, 4, 4) + 0.3)              # Additional space for second y-axis
-  plot(area~quat,type="l", lwd=2,ylab="Cumulative area (%)",
-       xlab="Percentiles of total grid cell SAR",las=1)              # Create first plot
-  par(new = TRUE)                             # Add new plot
-  plot(fig8$Otter_intensity~fig8$perc, type="l", lwd=2, col = "red",              # Create second plot without axes
-       axes = FALSE, xlab = "", ylab = "")
-  axis(side = 4, at = pretty(fig8$Otter_intensity),las=1)      # Add second axis
-  mtext("Otter SAR/c-square", side = 4, line = 3)             # Add second axis label
-  lines(x=c(10,10),y=c(-5,100),lty=3)
+  jpeg(file = paste(outdir,"Figure_8a.jpeg",sep="/"), width=fig_width, height=fig_length*0.8,units ='in', res = 300)
+  par(mar = c(5, 4, 4, 4) + 0.3)              
+  plot(fig8$Otter_intensity~fig8$perc, type="l", lwd=2, col = "red", xaxt="n",              
+       yaxt = "n", xlab="Percentiles of total grid cell SAR", ylab = "SAR/c-square")              
+  axis(1,c( seq(0, 100, by=10)),c(rev( seq(0, 100, by=10))))
+  axis(side = 2, at = pretty(fig8$Otter_intensity),las=1, col.axis="red")     
+  par(new = TRUE)                           
+  plot(area~quat,type="l", lwd=2, axes = FALSE, xlab = "", ylab = "")
+  mtext("Cumulative area (%)", side = 4, line = 3)             
+  axis(side = 4, at = pretty(quat),las=1, col.axis="black")
+  lines(x=c(90,90),y=c(0,100),lty=3)
+  text(45,80,"core fishing area \n (90% of total SAR)")
+  arrows(10, 70, 80, 70, code= 3)
   dev.off()
+  
   
   jpeg(file = paste(outdir,"Figure_8b.jpeg",sep="/"), width=fig_width, height=fig_length,units ='in', res = 300)
   figmap <- ggplot() + geom_point(data=fig8, aes(x=long, y=lat , col=cat2),
@@ -226,6 +230,34 @@
   figmap2 <- figmap2 +  geom_polygon(data = shapeReg, aes(x = long, y = lat, group = group),color="black",fill=NA)
   print(figmap2)
   dev.off() 
+
+  copl <- c("#045a8d","#2b8cbe","#74a9cf","#a6bddb","#d9f0a3","#addd8e","#78c679","#31a354","#d95f0e","#993404")
+  
+  jpeg(file = paste(outdir,"Figure_8cd.jpeg",sep="/"), width=fig_width, height=fig_length,units ='in', res = 300)
+  
+  figmap <- ggplot() + geom_point(data=fig8, aes(x=long, y=lat , col=rev(cat3)),
+                                  shape=15,size=0.5,na.rm=T) 
+  figmap <- figmap +  scale_color_manual(values = copl,name ="")      
+  figmap <- figmap +  geom_polygon(data = worldMap, aes(x = long, y = lat, group = group),color="grey",fill="grey")
+  figmap <- figmap +  theme(plot.background=element_blank(),
+                            panel.background=element_blank(),
+                            axis.text.y   = element_text(size=16),
+                            axis.text.x   = element_text(size=16),
+                            axis.title.y  = element_text(size=16),
+                            axis.title.x  = element_text(size=16),
+                            panel.border  = element_rect(colour = "grey", size=.5,fill=NA),
+                            legend.text   = element_text(size=11),
+                            legend.title  = element_text(size=11),
+                            legend.position ="bottom") +
+    scale_x_continuous(breaks=coordxmap, name = "longitude") +
+    scale_y_continuous(breaks=coordymap, name = "latitude")  +
+    coord_cartesian(xlim=c(coordslim[1], coordslim[2]), ylim=c(coordslim[3],coordslim[4]))
+  figmap<- figmap +   guides(colour = guide_legend(override.aes = list(size=5),nrow=2,byrow=TRUE))
+  figmap <- figmap +  geom_polygon(data = shapeEEZ, aes(x = long, y = lat, group = group),color="grey",fill=NA)
+  figmap <- figmap +  geom_polygon(data = shapeReg, aes(x = long, y = lat, group = group),color="black",fill=NA)
+  print(figmap)
+  dev.off()
+  
   
 #### table 4
   tab4 <- readRDS(file = "tab4.rds")
