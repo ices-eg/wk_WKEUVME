@@ -189,10 +189,9 @@
   colnames(tab3) <- coln
     
   # estimate c-squares have multiple fishing gears
-  tab3a <- data.frame(unclass(table(IREG$ref_count,IREG$EEZ))) 
+  tab3a <- data.frame(unclass(table(IREG$ref_count[IREG$adjacent.cells>0],IREG$EEZ[IREG$adjacent.cells>0]))) 
   tab3a <- cbind(rownames(tab3a), data.frame(tab3a, row.names=NULL)) 
   names(tab3a)[1] <- "Number of Sub-gears" 
-  tab3a <- tab3a[-1,]  
   total <- colSums(tab3a[,2:4])
   total2 <- data.frame("total",total[1],total[2],total[3]) 
   colnames(total2) <- colnames(tab3a) 
