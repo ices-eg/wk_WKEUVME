@@ -266,7 +266,18 @@
                       "Precaution high -- fished","Precaution high -- total")
   write.csv(tab4, paste(outdir,"Table_4.csv",sep="/")) 
   
-  
+  tab4a <- readRDS(file = "tab4a.rds")
+
+  colnames(tab4a) <- c("Region","VME presence","Precaution low -- fished","Precaution low -- total",
+                    
+                    "Precaution medium -- fished", "Precaution medium -- total",
+                    
+                    "Precaution high -- fished","Precaution high -- total",
+                    
+                    "Sub-gear")
+
+  write.csv(tab4a, paste(outdir,"Table_4a.csv",sep="/")) 
+
 #### Figure 9
   source(paste(pathdir,"4-Code for figures and tables/Figure9_source_restricted.R",sep="/"))
   
