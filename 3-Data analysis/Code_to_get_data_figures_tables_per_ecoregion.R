@@ -415,7 +415,7 @@
 
 # figure 10 map of overlap between fishing intensity otter trawls and VME
   fig10 <- VMEVMS
-  fig10 <- cbind(fig10, fig8[match(fig10$csquares,fig8b$csquares), c("Otter_cat")])  
+  fig10 <- cbind(fig10, fig8b[match(fig10$csquares,fig8b$csquares), c("Otter_cat")])  
   colnames(fig10)[ncol(fig10)] <- "Otter_cat"
   fig10$Otter_cat <- gsub("medium","step",fig10$Otter_cat)
   fig10$Otter_cat <- gsub("high","step",fig10$Otter_cat)
