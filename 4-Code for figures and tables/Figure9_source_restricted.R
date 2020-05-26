@@ -83,7 +83,9 @@ VMEVMS$number <- 1
 fig9 <- VMEVMS
 fig9$category <- paste(fig9$precaution,fig9$ref,sep="_")
 
+
 # subset fig9 in line with fishing footprint scenario 
-fig9 <- fig9[fig9$adjacent.cells > 0,]
+  fig9 <- fig9[!(fig9$adjacent.cells == 0 & fig9$ref==1),]
+
 
 #rm(list=setdiff(ls(), c("pathdir","pathdir_nogit","fig9" , "EcoReg")))
