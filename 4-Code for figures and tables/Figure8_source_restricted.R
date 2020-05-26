@@ -105,6 +105,5 @@ fig8$Otter_cat[fig8$Otter_intensity >= 2] <- "high"
 # save without intensity information per c-square
 indexcol <- which(names(fig8) %in% c("Otter_intensity","perc","cat","cat2","perc2","cat2","cat3")) 
 fig8b <- fig8[,-(indexcol)]
-saveRDS(fig8b,  paste(outdir,"fig8b.rds",sep="/"))
 
 
