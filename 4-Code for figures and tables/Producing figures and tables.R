@@ -327,7 +327,16 @@
   dev.off() 
   
 #### Figure 10
-  fig10 <- readRDS(file = "fig10.rds")
+
+# figure 10 map of overlap between fishing intensity otter trawls and VME
+  fig10 <- VMEVMS
+  fig10 <- cbind(fig10, fig8b[match(fig10$csquares,fig8b$csquares), c("Otter_cat")])  
+  colnames(fig10)[ncol(fig10)] <- "Otter_cat"
+  fig10$Otter_cat <- gsub("medium","step",fig10$Otter_cat)
+  fig10$Otter_cat <- gsub("high","step",fig10$Otter_cat)
+  fig10$Otter_cat <- gsub("step","medium/high",fig10$Otter_cat)
+  fig10$VME_ClassII <- ifelse(fig10$precaution == "none", 0, 1 )
+  fig10$category <- paste(fig10$Otter_cat,fig10$VME_ClassII,sep="_")   
 
   colfig10 <- c("#bae4b3", "#238b45", "#fdbe85","#e31a1c","#bdd7e7","#2171b5")
   
