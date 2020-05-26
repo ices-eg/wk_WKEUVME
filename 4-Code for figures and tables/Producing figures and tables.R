@@ -121,6 +121,7 @@
     scale_y_continuous(breaks=coordymap, name = "latitude")  + 
     coord_cartesian(xlim=c(coordslim[1], coordslim[2]), ylim=c(coordslim[3],coordslim[4])) 
   figmap <- figmap +  labs(col="gears count") 
+  figmap <- figmap + guides(colour = guide_legend(override.aes = list(size=5),nrow=2,byrow=TRUE))
   figmap2 <- figmap +  geom_polygon(data = shapeEEZ, aes(x = long, y = lat, group = group),color="grey",fill=NA) 
   figmap2 <- figmap2 +  geom_polygon(data = shapeReg, aes(x = long, y = lat, group = group),color="black",fill=NA)
   print(figmap2) 
