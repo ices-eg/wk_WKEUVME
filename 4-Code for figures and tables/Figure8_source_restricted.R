@@ -91,3 +91,20 @@ fig8$cat2 <- cut(fig8$perc2,c(quat2))
 
 quat3 <- seq(0, 100, by=10)
 fig8$cat3 <- cut(rev(fig8$perc2),c(quat3))
+
+
+# for continuity between  fig9/10 although potentially no longer required. 
+# thresholds to be determined during the workshop
+
+fig8$Otter_cat <- NA
+fig8$Otter_cat[fig8$Otter_intensity == 0] <- "unfished"
+fig8$Otter_cat[fig8$Otter_intensity > 0 & fig8$Otter_intensity < 0.5] <- "low"
+fig8$Otter_cat[fig8$Otter_intensity >= 0.5 & fig8$Otter_intensity < 2] <- "medium"
+fig8$Otter_cat[fig8$Otter_intensity >= 2] <- "high"
+
+# save without intensity information per c-square
+indexcol <- which(names(fig8) %in% c("Otter_intensity","perc","cat","cat2","perc2","cat2","cat3")) 
+fig8b <- fig8[,-(indexcol)]
+saveRDS(fig8b,  paste(outdir,"fig8b.rds",sep="/"))
+
+
