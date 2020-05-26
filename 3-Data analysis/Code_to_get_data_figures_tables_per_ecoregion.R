@@ -414,15 +414,7 @@
 # not saved as data is restricted
 
 # figure 10 map of overlap between fishing intensity otter trawls and VME
-  fig10 <- VMEVMS
-  fig10 <- cbind(fig10, fig8b[match(fig10$csquares,fig8b$csquares), c("Otter_cat")])  
-  colnames(fig10)[ncol(fig10)] <- "Otter_cat"
-  fig10$Otter_cat <- gsub("medium","step",fig10$Otter_cat)
-  fig10$Otter_cat <- gsub("high","step",fig10$Otter_cat)
-  fig10$Otter_cat <- gsub("step","medium/high",fig10$Otter_cat)
-  fig10$VME_ClassII <- ifelse(fig10$precaution == "none", 0, 1 )
-  fig10$category <- paste(fig10$Otter_cat,fig10$VME_ClassII,sep="_")   
-  saveRDS(fig10,  paste(outdir,"fig10.rds",sep="/"))
+# requires objects from fig8 restricted script.
   
-  rm(list=setdiff(ls(), c("pathdir","pathdir_nogit" , "EcoReg")))
+  rm(list=setdiff(ls(), c("pathdir","pathdir_nogit" , "EcoReg","VMEVMS")))
   
