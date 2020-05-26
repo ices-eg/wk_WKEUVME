@@ -232,12 +232,13 @@
   dev.off() 
 
   copl <- c("#045a8d","#2b8cbe","#74a9cf","#a6bddb","#d9f0a3","#addd8e","#78c679","#31a354","#d95f0e","#993404")
+  labeltext <- c("0-10","10-20","20-30","30-40","40-50","50-60","60-70","70-80","80-90","90-100")
   
   jpeg(file = paste(outdir,"Figure_8c.jpeg",sep="/"), width=fig_width, height=fig_length,units ='in', res = 300)
   
   figmap <- ggplot() + geom_point(data=fig8, aes(x=long, y=lat , col=rev(cat3)),
                                   shape=15,size=0.5,na.rm=T) 
-  figmap <- figmap +  scale_color_manual(values = copl,name ="")      
+  figmap <- figmap +  scale_color_manual(values = copl,name ="Percentiles",labels=labeltext)      
   figmap <- figmap +  geom_polygon(data = worldMap, aes(x = long, y = lat, group = group),color="grey",fill="grey")
   figmap <- figmap +  theme(plot.background=element_blank(),
                             panel.background=element_blank(),
