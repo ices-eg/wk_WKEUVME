@@ -6,7 +6,7 @@ outdir <- paste(pathdir,"3-Data analysis",EcoReg,sep="/")
 setwd(paste(pathdir,"1-Input data/csquares_ecoregions_depth",sep="/"))
 depthreg <- readRDS(paste(EcoReg,"depth.rds",sep="_"))
 depthreg <- subset(depthreg, !(depthreg$EEZ == "Faroe Is." | depthreg$EEZ == "Norway" |
-                                 depthreg$EEZ == "<NA>" | depthreg$EEZ =="Guernsey"))
+                               depthreg$EEZ == "<NA>" | depthreg$EEZ =="Guernsey"))
 
 # get region within 400-800 meter
 IREG <- subset(depthreg@data,depthreg@data$within == 1)
