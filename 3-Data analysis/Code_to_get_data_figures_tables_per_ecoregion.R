@@ -325,7 +325,7 @@
   tab4cat <- as.data.frame(tab4cat)
   tab4cat <- tab4cat[!duplicated(tab4cat),]
   
-  withVMEfish <- subset(withVME,withVME$adjacent.cells == 1)
+  withVMEfish <- subset(withVME,withVME$adjacent.cells > 0)
   tab4catf <- withVMEfish %>%
     group_by(precaution,EEZ) %>%
     summarize(sum = mean(number), n = n()) %>%
