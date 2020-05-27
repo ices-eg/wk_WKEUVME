@@ -1,5 +1,15 @@
 
+source(paste(pathdir,"6-Utilities/Get_fishing_footprint_refperiod.R",sep="/"))
+
 # plot closures and analyse effect of closures on fisheries
+
+
+
+
+
+
+
+
 
 outdir <- paste(pathdir,"5-Output",EcoReg,sep="/") 
 
@@ -117,12 +127,8 @@ outdir <- paste(pathdir,"5-Output",EcoReg,sep="/")
   
   dev.off() 
   
-  
-### now estimate overlap, download fishing footprint
-  footprint_path <- paste(pathdir,"3-Data analysis",EcoReg,sep = "/")
-  footp <- readRDS(paste(footprint_path,"fig6b.rds",sep="/"))
-  depthreg <- cbind(depthreg, footp[match(depthreg@data$csquares,footp$csquares), c("scenario_2")])
-  colnames(depthreg@data)[ncol(depthreg@data)] <- "Footprint"
+
+### now make table to calculate overlap
   
   # get VME
   VME <- read.csv(paste(pathdir_nogit,
@@ -134,7 +140,7 @@ outdir <- paste(pathdir,"5-Output",EcoReg,sep="/")
   depthreg <- cbind(depthreg, VME[match(depthreg@data$csquares,VME$CSquare), c("VME_Class")])
   colnames(depthreg@data)[ncol(depthreg@data)] <- "VME_Class"
   
-  # get vms data
+  # get VMS
   setwd(paste(pathdir_nogit,"VMS data repository",sep="/"))
   vmsreg <- readRDS(paste(EcoReg,"vms.rds",sep="_"))
   
@@ -144,7 +150,7 @@ outdir <- paste(pathdir,"5-Output",EcoReg,sep="/")
   metier_mbcg  <- c("Otter","Beam","Dredge","Seine", 
                     "OT_CRU","OT_DMF","OT_MIX","OT_MIX_CRU_DMF",
                     "OT_MIX_DMF_BEN","OT_SPF")
-  metier_static <- "Static"
+  metier_static <- c("Static","Static_FPO","Static_GNS","Static_LLS") 
   
   # SAR trawling in ref period
   nam <- paste("SAR_total",refyear,sep="_")
@@ -162,7 +168,7 @@ outdir <- paste(pathdir,"5-Output",EcoReg,sep="/")
   
   depthreg <- cbind(depthreg, vmsreg[match(depthreg@data$csquares,vmsreg$c_square), c("refStatic")])
   colnames(depthreg@data)[ncol(depthreg@data)] <- "refStatic"
-
+  
   # SAR trawling in ref period
   nam <- paste("SAR_total",c(refyear, afteryear),sep="_")
   indexcol <- which(names(vmsreg) %in% nam) 
@@ -172,6 +178,7 @@ outdir <- paste(pathdir,"5-Output",EcoReg,sep="/")
   depthreg <- cbind(depthreg, vmsreg[match(depthreg@data$csquares,vmsreg$c_square), c("threshold")])
   colnames(depthreg@data)[ncol(depthreg@data)] <- "threshold"
   depthreg@data$threshold[is.na(depthreg@data$threshold)] <- 0
+  
   
   # get core fishing ground otter trawling
   # get region within 400-800 meter
