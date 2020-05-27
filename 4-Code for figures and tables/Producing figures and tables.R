@@ -121,6 +121,7 @@
     scale_y_continuous(breaks=coordymap, name = "latitude")  + 
     coord_cartesian(xlim=c(coordslim[1], coordslim[2]), ylim=c(coordslim[3],coordslim[4])) 
   figmap <- figmap +  labs(col="gears count") 
+  figmap <- figmap + guides(colour = guide_legend(override.aes = list(size=5),nrow=2,byrow=TRUE))
   figmap2 <- figmap +  geom_polygon(data = shapeEEZ, aes(x = long, y = lat, group = group),color="grey",fill=NA) 
   figmap2 <- figmap2 +  geom_polygon(data = shapeReg, aes(x = long, y = lat, group = group),color="black",fill=NA)
   print(figmap2) 
@@ -159,7 +160,7 @@
                                   shape=15,size=0.5,na.rm=T) 
   figmap <- figmap +  scale_color_manual(values = c("#bcbddc","#54278f","#b30000","#fcae91"),name ="",
                                          labels=c("unfished (both periods)","only fished in 2009-11",
-                                                  "only fished in 2012-18","fished (both periods)"))      
+                                                  "only fished in 2012-19","fished (both periods)"))      
   figmap <- figmap +  geom_polygon(data = worldMap, aes(x = long, y = lat, group = group),color="grey",fill="grey")
   figmap <- figmap +  theme(plot.background=element_blank(),
                             panel.background=element_blank(),
@@ -327,7 +328,16 @@
   dev.off() 
   
 #### Figure 10
-  fig10 <- readRDS(file = "fig10.rds")
+
+# figure 10 map of overlap between fishing intensity otter trawls and VME
+  fig10 <- VMEVMS
+  fig10 <- cbind(fig10, fig8b[match(fig10$csquares,fig8b$csquares), c("Otter_cat")])  
+  colnames(fig10)[ncol(fig10)] <- "Otter_cat"
+  fig10$Otter_cat <- gsub("medium","step",fig10$Otter_cat)
+  fig10$Otter_cat <- gsub("high","step",fig10$Otter_cat)
+  fig10$Otter_cat <- gsub("step","medium/high",fig10$Otter_cat)
+  fig10$VME_ClassII <- ifelse(fig10$precaution == "none", 0, 1 )
+  fig10$category <- paste(fig10$Otter_cat,fig10$VME_ClassII,sep="_")   
 
   colfig10 <- c("#bae4b3", "#238b45", "#fdbe85","#e31a1c","#bdd7e7","#2171b5")
   
