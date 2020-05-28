@@ -205,10 +205,9 @@
   arrows(10, 70, 80, 70, code= 3)
   dev.off()
   
-  
   jpeg(file = paste(outdir,"Figure_8b.jpeg",sep="/"), width=fig_width, height=fig_length,units ='in', res = 300)
-  figmap <- ggplot() + geom_point(data=fig8, aes(x=long, y=lat , col=cat2),
-                                  shape=15,size=0.5,na.rm=T) 
+  figmap <- ggplot() + geom_point(data=fig8b, aes(x=long, y=lat , col=cat2),
+                                  shape=15,size=0.5,na.rm=T)  + ggtitle("(b) Core fishing area")
   figmap <- figmap +  scale_color_manual(values = c("lightblue","darkblue"),name ="",
                                          labels=c("0-10th percentile","10-100th percentile (core fishing area)"))      
   figmap <- figmap +  geom_polygon(data = worldMap, aes(x = long, y = lat, group = group),color="grey",fill="grey")
@@ -232,13 +231,41 @@
   print(figmap2)
   dev.off() 
 
-  copl <- c("#045a8d","#2b8cbe","#74a9cf","#a6bddb","#d9f0a3","#addd8e","#78c679","#31a354","#d95f0e","#993404")
+  copl <- c("#a6bddb","#74a9cf","#2b8cbe","#045a8d","#d9f0a3","#addd8e","#78c679","#31a354","#d95f0e","#993404")
   labeltext <- c("0-10","10-20","20-30","30-40","40-50","50-60","60-70","70-80","80-90","90-100")
   
   jpeg(file = paste(outdir,"Figure_8c.jpeg",sep="/"), width=fig_width, height=fig_length,units ='in', res = 300)
   
-  figmap <- ggplot() + geom_point(data=fig8, aes(x=long, y=lat , col=rev(cat3)),
-                                  shape=15,size=0.5,na.rm=T) 
+  figmap <- ggplot() + geom_point(data=fig8b, aes(x=long, y=lat , col=rev(cat3)),
+                                  shape=15,size=0.5,na.rm=T)  + ggtitle("(c) fishing in 2009-2011")
+  figmap <- figmap +  scale_color_manual(values = copl,name ="Percentiles",labels=labeltext)      
+  figmap <- figmap +  geom_polygon(data = worldMap, aes(x = long, y = lat, group = group),color="grey",fill="grey")
+  figmap <- figmap +  theme(plot.background=element_blank(),
+                            panel.background=element_blank(),
+                            axis.text.y   = element_text(size=16),
+                            axis.text.x   = element_text(size=16),
+                            axis.title.y  = element_text(size=16),
+                            axis.title.x  = element_text(size=16),
+                            panel.border  = element_rect(colour = "grey", size=.5,fill=NA),
+                            legend.text   = element_text(size=11),
+                            legend.title  = element_text(size=11),
+                            legend.position ="bottom") +
+    scale_x_continuous(breaks=coordxmap, name = "longitude") +
+    scale_y_continuous(breaks=coordymap, name = "latitude")  +
+    coord_cartesian(xlim=c(coordslim[1], coordslim[2]), ylim=c(coordslim[3],coordslim[4]))
+  figmap<- figmap +   guides(colour = guide_legend(override.aes = list(size=5),nrow=2,byrow=TRUE))
+  figmap <- figmap +  geom_polygon(data = shapeEEZ, aes(x = long, y = lat, group = group),color="grey",fill=NA)
+  figmap <- figmap +  geom_polygon(data = shapeReg, aes(x = long, y = lat, group = group),color="black",fill=NA)
+  print(figmap)
+  dev.off()
+  
+  copl <- c("#a6bddb","#74a9cf","#2b8cbe","#045a8d","#d9f0a3","#addd8e","#78c679","#31a354","#d95f0e","#993404")
+  labeltext <- c("0-10","10-20","20-30","30-40","40-50","50-60","60-70","70-80","80-90","90-100")
+  
+  jpeg(file = paste(outdir,"Figure_8d.jpeg",sep="/"), width=fig_width, height=fig_length,units ='in', res = 300)
+  
+  figmap <- ggplot() + geom_point(data=fig8d, aes(x=long, y=lat , col=rev(cat4)),
+                                  shape=15,size=0.5,na.rm=T) + ggtitle("(d) fishing in 2016-2019")
   figmap <- figmap +  scale_color_manual(values = copl,name ="Percentiles",labels=labeltext)      
   figmap <- figmap +  geom_polygon(data = worldMap, aes(x = long, y = lat, group = group),color="grey",fill="grey")
   figmap <- figmap +  theme(plot.background=element_blank(),

@@ -18,7 +18,7 @@ vmsreg <- readRDS(paste(EcoReg,"vms.rds",sep="_"))
 
 # define few params
 refyear <- 2009:2011
-afteryear <- 2012:2019
+afteryear <- 2016:2019
 metier_mbcg  <- c("Otter","Beam","Dredge","Seine", 
                   "OT_CRU","OT_DMF","OT_MIX","OT_MIX_CRU_DMF",
                   "OT_MIX_DMF_BEN","OT_SPF")
@@ -83,27 +83,39 @@ area <- aggregate(fig8$area_sqkm,list(fig8$cat),sum)
 area <- cumsum(area[,2]/1000)/(sum(area[,2]/1000)) *100
 area <- c(0,area)
 
-fig8 <- fig8[order(fig8$Otter_intensity),]
-fig8$perc2 <- cumsum(fig8$Otter_intensity) / sum(fig8$Otter_intensity)*100
+fig8b <- fig8[order(fig8$Otter_intensity),]
+fig8b$perc2 <- cumsum(fig8b$Otter_intensity) / sum(fig8b$Otter_intensity)*100
 
 quat2 <- c(0, 10,  100)
-fig8$cat2 <- cut(fig8$perc2,c(quat2))
+fig8b$cat2 <- cut(fig8b$perc2,c(quat2))
 
 quat3 <- seq(0, 100, by=10)
-fig8$cat3 <- cut(rev(fig8$perc2),c(quat3))
+fig8b$cat3 <- cut(rev(fig8b$perc2),c(quat3))
+
+# do similar for 2016-2019 period
+nam <- paste("SAR_Otter",afteryear,sep="_")
+indexcol <- which(names(vmsreg) %in% nam) 
+vmsreg$otafteryear <- rowMeans(vmsreg[indexcol],na.rm = T)  
+fig8d <- cbind(fig8, vmsreg[match(fig8$csquares,vmsreg$c_square), c("otafteryear")])
+colnames(fig8d)[ncol(fig8d)] <- "Otter_intensity_after"
+fig8d$Otter_intensity_after[is.na(fig8d$Otter_intensity_after)] <- 0
+fig8d <- subset(fig8d,fig8d$Otter_intensity_after > 0) #& fig8$adjacent.cells > 0)
+fig8d <- fig8d[order(fig8d$Otter_intensity_after),]
+fig8d$perc3 <- cumsum(fig8d$Otter_intensity_after) / sum(fig8d$Otter_intensity_after)*100
+fig8d$cat4 <- cut(rev(fig8d$perc3),c(quat3))
 
 
 # for continuity between  fig9/10 although potentially no longer required. 
 # thresholds to be determined during the workshop
 
-fig8$Otter_cat <- NA
-fig8$Otter_cat[fig8$Otter_intensity == 0] <- "unfished"
-fig8$Otter_cat[fig8$Otter_intensity > 0 & fig8$Otter_intensity < 0.5] <- "low"
-fig8$Otter_cat[fig8$Otter_intensity >= 0.5 & fig8$Otter_intensity < 2] <- "medium"
-fig8$Otter_cat[fig8$Otter_intensity >= 2] <- "high"
+#fig8$Otter_cat <- NA
+#fig8$Otter_cat[fig8$Otter_intensity == 0] <- "unfished"
+#fig8$Otter_cat[fig8$Otter_intensity > 0 & fig8$Otter_intensity < 0.5] <- "low"
+#fig8$Otter_cat[fig8$Otter_intensity >= 0.5 & fig8$Otter_intensity < 2] <- "medium"
+#fig8$Otter_cat[fig8$Otter_intensity >= 2] <- "high"
 
 # save without intensity information per c-square
-indexcol <- which(names(fig8) %in% c("Otter_intensity","perc","cat","cat2","perc2","cat2","cat3")) 
-fig8b <- fig8[,-(indexcol)]
+#indexcol <- which(names(fig8) %in% c("Otter_intensity","perc","cat","cat2","perc2","cat2","cat3")) 
+#fig8b <- fig8[,-(indexcol)]
 
 
