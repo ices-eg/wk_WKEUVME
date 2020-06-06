@@ -66,7 +66,7 @@ IREG$adjacent.cells[is.na(IREG$adjacent.cells)] <- 0
 
 # get vme data
 VME <- read.csv(paste(pathdir_nogit,
-                      "VME data repository/VME weighted csquares/vme_extraction_weightingAlgorithm_15052020.csv",sep="/"),
+                      "VME data repository/VME observations and csquares/vme_extraction_weightingAlgorithm_15052020.csv",sep="/"),
                 header=T,sep=",",row.names = NULL)
 VME <- as.data.frame(VME)
 VME <- VME[,-1]

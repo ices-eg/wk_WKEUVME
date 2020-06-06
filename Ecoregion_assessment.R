@@ -8,63 +8,44 @@
 # 2- ICES_ecoregions shapefiles
 # 3- EEZ shapefiles
 # 4- VME weighting -- ICES WGDEC (located on WKEUVME sharepoint, restricted access)
-# 5- VMS data -- ICES WGSFD (located on WKEUVME sharepoint, restricted access)
+# 5- VME observations -- ICES WGDEC (located on WKEUVME sharepoint, restricted access)
+# 6- VME elements -- ICES WGDEC + WKEUVME (located on WKEUVME sharepoint, restricted access)
+# 7- VMS data -- ICES WGSFD (located on WKEUVME sharepoint, restricted access)
 
-#### set path to folder and specify username 
+## set path to folder and specify username 
   pathdir <- "C:/Users/pdvd/Online for git/WKEUVME"
-  pathdir_nogit <- "C:/Users/pdvd/Online for git/WKEUVME_noGIT" # only works after downloading data from sharepoint
+  pathdir_nogit <- "C:/Users/pdvd/Online for git/WKEUVME_noGIT" # stores the data from sharepoint
   ices_username <- "vandenderen"
 
-#### download data sharepoint
-  #remotes::install_github("ices-tools-prod/icesSharePoint")
-  library(icesSharePoint)
-  library(keyring)
-  
-  # set ices username
-  options(icesSharePoint.username = ices_username)
-  
-  # set the site to save supplying in function calls
-  options(icesSharePoint.site = "/ExpertGroups/WKEUVME")
-  
-  # put password
-  spdir()
+## install libraries
+  source(paste(pathdir,"6-Utilities/Libraries_WKEUVME.R",sep="/"))
+
+## download data sharepoint 
+  options(icesSharePoint.username = ices_username)   # set ices username
+  options(icesSharePoint.site = "/ExpertGroups/WKEUVME")  # set the site 
+  spdir() # put password
   
   # run the script
-  source(paste(pathdir,"6-Utilities","get_data_WKEUVME_sharepoint.R",sep="/"))
+  source(paste(pathdir,"6-Utilities/get_data_WKEUVME_sharepoint.R",sep="/"))
+  # and unzip (manually)  
   
-  # double check, "Element not found" is okay (password is not stored on your computer)
+  # double check that password is not stored on your computer, "Element not found" is okay 
   keyring::key_delete("icesSharePoint", ices_username)
   
-#### get output per ecoregion, specify ecoregion
-  library(sf)
-  library(tidyverse)
-  
+## run the closure scenario options, takes 20 minutes... (output is stored, hence no need to run)
+  source(paste(pathdir,"6-Utilities/Scenario_1_option_1.R",sep="/"))
+  source(paste(pathdir,"6-Utilities/Scenario_1_option_2.R",sep="/"))
+  source(paste(pathdir,"6-Utilities/Scenario_2_option_1.R",sep="/"))
+  source(paste(pathdir,"6-Utilities/Scenario_2_option_2.R",sep="/"))
+
+## get output per ecoregion
   EcoReg <-  "Celtic Seas"  # "Celtic Seas" or "Bay of Biscay and the Iberian Coast"
+  
+  # run to get output for plots and tables up to closure consequences
   source(paste(pathdir,"3-Data analysis/Code_to_get_data_figures_tables_per_ecoregion.R",sep="/"))
 
-#### make plots and tables with VMS and VME
-  library(rgdal)
-  library(sp)
-  library(ggplot2)
-  library(rgeos)
-  library(RColorBrewer)
-  library(rworldmap)
-  library(rworldxtra)
-  library(broom)
-  library(latex2exp)
-
+  # run to make plots and tables with VMS and VME up to closure consequences
   source(paste(pathdir,"4-Code for figures and tables/Producing figures and tables.R",sep="/"))
 
-#### assess consequences of closure options
-  library(maptools)
-  library(raster)
-  library(gridExtra)
-  
+  # run to assess consequences of closure options
   source(paste(pathdir,"6-Utilities/Assessment of closures.R",sep="/"))
-  
-#### make interactive maps
-  library(leaflet)
-  library(htmlwidgets)
-  
-  source(paste(pathdir,"6-Utilities/dynamic_map.R",sep="/"))
-  

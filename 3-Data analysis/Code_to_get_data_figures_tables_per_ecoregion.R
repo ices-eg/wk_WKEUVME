@@ -277,7 +277,7 @@
   
 # Table 4 VME occurences per ecoregion
   VME <- read.csv(paste(pathdir_nogit,
-                        "VME data repository/VME weighted csquares/vme_extraction_weightingAlgorithm_15052020.csv",sep="/"),
+                        "VME data repository/VME observations and csquares/vme_extraction_weightingAlgorithm_15052020.csv",sep="/"),
                   header=T,sep=",",row.names = NULL)
   VME <- as.data.frame(VME)
   VME <- VME[,-1]
