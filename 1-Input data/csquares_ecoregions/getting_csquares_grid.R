@@ -24,5 +24,8 @@ bargrid@data$lat <- coord[,2]
 bargrid@data$lat <- round(bargrid@data$lat, digits = 3)
 bargrid@data$uni <- paste(bargrid@data$long,bargrid@data$lat) 
 
+squares<-CSquare(bargrid@data$long,bargrid@data$lat,0.05)
+bargrid@data$csquares <- squares
+
 setwd(paste(pathdir,"1-Input data/csquares_ecoregions",sep="/"))
 saveRDS(bargrid, file = "Region_csquare_grid.rds")

@@ -25,7 +25,7 @@ sce1b      <- sf::st_intersection(scenario1b,reg)
 areasce1b  <- sf::st_area(sce1b)/1000000
 
 # scenario 2 - option 1
-scenario2a <- st_read(paste(pathdir_nogit,"Closure options/VME_buffer_Scenario2_Opt1_2020May22_v1.shp",sep="/"))
+scenario2a <- st_read(paste(pathdir_nogit,"Closure options/VME_Closures_Scenario2_option1_2020May27_v2.shp",sep="/"))
 scenario2a <- st_as_sf(scenario2a)
 sce2a      <- sf::st_intersection(scenario2a,reg)
 areasce2a  <- sf::st_area(sce2a)/1000000

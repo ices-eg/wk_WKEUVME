@@ -1,10 +1,15 @@
 
 # unzip the VME elements in folder before running script
 
-# crop the VME elements
-
   pathelements <- paste(pathdir_nogit,"VME data repository/VME elements",sep="/")
-  Canyons <- readOGR(dsn = pathelements, layer="Canyons_ICES_Ecoregion") 
+  Bank <- readOGR(dsn = pathelements, layer="EMODNET_Bank") 
+  CoralMound <- readOGR(dsn = pathelements, layer="EMODNET_CoralMounds") 
+  Mudvolcano <- readOGR(dsn = pathelements, layer="EMODNET_Mud_Volcano") 
+  Seamount   <- readOGR(dsn = pathelements, layer="EMODNET_Seamount") 
+  
+  
+# not used 
+  pathelements <- paste(pathdir_nogit,"VME data repository/VME elements",sep="/")
   Canyons <- cbind(Canyons,coordinates(Canyons))
   Canyons <- subset(Canyons,Canyons@data$X1 > -17 & Canyons@data$X1 < 2)
   Canyons <- subset(Canyons,Canyons@data$X2 >  36 & Canyons@data$X2 < 64)

@@ -94,9 +94,10 @@ outdir <- paste(pathdir_nogit,"mapdynamic",sep="/")
   VMEdepth <- cbind(depth, VME[match(depth@data$csquares,VME$CSquare), c("VME_Class")])
   colnames(VMEdepth@data)[ncol(VMEdepth)] <- "VME_Class"
   
-  VME_low    <- subset(VMEdepth,VMEdepth@data$VME_Class == 3)
-  VME_medium <- subset(VMEdepth,VMEdepth@data$VME_Class == 2 | VMEdepth@data$VME_Class == 1)
-  VME_high   <- subset(VMEdepth,VMEdepth@data$VME_Class == 0)
+  VME_habitat <- subset(VMEdepth,VMEdepth@data$VME_Class == 3)
+  VME_high   <- subset(VMEdepth,VMEdepth@data$VME_Class == 2)
+  VME_medium <- subset(VMEdepth,VMEdepth@data$VME_Class == 1)
+  VME_low   <- subset(VMEdepth,VMEdepth@data$VME_Class == 0)
   
 # add VME elements
  # unzip the VME elements in folder before running script
@@ -109,37 +110,28 @@ outdir <- paste(pathdir_nogit,"mapdynamic",sep="/")
     addProviderTiles(providers$Esri.WorldImagery) %>%
     addPolygons(data = depth,group="Depth 400-800 m",
                 stroke = FALSE, fillOpacity = 0.5, smoothFactor = 0.5,fillColor =  "white")%>%
-    addPolygons(data = Canyons, group = "Canyons",
+    addPolygons(data = Bank, group = "Bank",
                 stroke = FALSE, fillOpacity = 1, smoothFactor = 0.5,fillColor =  "#8c510a") %>%
-    addPolygons(data = ContinentalSlope, group = "ContinentalSlope",
+    addPolygons(data = CoralMound, group = "CoralMound",
                 stroke = FALSE, fillOpacity = 1, smoothFactor = 0.5,fillColor =  "#bf812d") %>%
-    addPolygons(data = Escarpments, group = "Escarpments",
+    addPolygons(data = Mudvolcano, group = "Mudvolcano",
                 stroke = FALSE, fillOpacity = 1, smoothFactor = 0.5,fillColor =  "#dfc27d") %>%
-    addPolygons(data = Flanks, group = "Flanks",
+    addPolygons(data = Seamount, group = "Seamount",
                 stroke = FALSE, fillOpacity = 1, smoothFactor = 0.5,fillColor =  "#f6e8c3") %>%
-    addPolygons(data = GlacialTroughs, group = "GlacialTroughs",
-                stroke = FALSE, fillOpacity = 1, smoothFactor = 0.5,fillColor =  "#c7eae5") %>%
-    addPolygons(data = Guyots, group = "Guyots",
-                stroke = FALSE, fillOpacity = 1, smoothFactor = 0.5,fillColor =  "#80cdc1") %>%
-    addPolygons(data = Ridges, group = "Ridges",
-                stroke = FALSE, fillOpacity = 1, smoothFactor = 0.5,fillColor =  "#35978f") %>%
-    addPolygons(data = Seamounts, group = "Seamounts",
-                stroke = FALSE, fillOpacity = 1, smoothFactor = 0.5,fillColor =  "#35978f") %>%
-    addPolygons(data = SteepSlopes_on_Ridges, group = "SteepSlopes_on_Ridges",
-                stroke = FALSE, fillOpacity = 1, smoothFactor = 0.5,fillColor =  "purple") %>%
-    addPolygons(data = VME_low, group = "VME - low precaution",
+    addPolygons(data = VME_habitat, group = "VME habitat",
                 stroke = FALSE, fillOpacity = 1, smoothFactor = 0.5,fillColor =  "red") %>%
-    addPolygons(data = VME_medium, group = "VME - medium precaution",
+    addPolygons(data = VME_high, group = "VME index - high",
                 stroke = FALSE, fillOpacity = 1, smoothFactor = 0.5,fillColor =  "blue") %>%
-    addPolygons(data = VME_high, group = "VME - high precaution",
+    addPolygons(data = VME_medium, group = "VME index - medium",
+                stroke = FALSE, fillOpacity = 1, smoothFactor = 0.5,fillColor =   "#df65b0") %>%
+    addPolygons(data = VME_low, group = "VME index - low",
                 stroke = FALSE, fillOpacity = 1, smoothFactor = 0.5,fillColor =   "#df65b0") %>%
     
     # Layers control
     addLayersControl(
-      overlayGroups = c("Depth 400-800 m", "Canyons", "ContinentalSlope",
-                        "Escarpments","Flanks","GlacialTroughs",
-                        "Guyots", "Ridges","Seamounts","SteepSlopes_on_Ridges","VME - low precaution",
-                        "VME - medium precaution", "VME - high precaution"),
+      overlayGroups = c("Depth 400-800 m", "Bank", "CoralMound",
+                        "Mudvolcano","Seamount","VME habitat","VME index - high",
+                        "VME index - medium","VME index - low"),
       options = layersControlOptions(collapsed = FALSE)
     )
   
@@ -203,3 +195,4 @@ setwd(outdir)
 #saveWidget(mfs, file="map_satelite.html")
 saveWidget(m, file="map_map.html")
 saveWidget(mele, file="map_vmeElements.html")
+  

@@ -39,7 +39,7 @@
   library(sf)
   library(tidyverse)
   
-  EcoReg <-  "Bay of Biscay and the Iberian Coast"  # "Celtic Seas" or "Bay of Biscay and the Iberian Coast"
+  EcoReg <-  "Celtic Seas"  # "Celtic Seas" or "Bay of Biscay and the Iberian Coast"
   source(paste(pathdir,"3-Data analysis/Code_to_get_data_figures_tables_per_ecoregion.R",sep="/"))
 
 #### make plots and tables with VMS and VME

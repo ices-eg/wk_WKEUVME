@@ -25,7 +25,7 @@ sce1b      <- sf::st_intersection(scenario1b,reg)
 areasce1b  <- sf::st_area(sce1b)/1000000
 
 # scenario 2 - option 1
-scenario2a <- st_read(paste(pathdir_nogit,"Closure options/VME_buffer_Scenario2_Opt1_2020May22_v1.shp",sep="/"))
+scenario2a <- st_read(paste(pathdir_nogit,"Closure options/VME_Closures_Scenario2_option1_2020May27_v2.shp",sep="/"))
 scenario2a <- st_as_sf(scenario2a)
 sce2a      <- sf::st_intersection(scenario2a,reg)
 areasce2a  <- sf::st_area(sce2a)/1000000
@@ -317,7 +317,7 @@ depthwithin@data$clos2b[is.na(depthwithin@data$clos2b)] <- 0
 # make table per row
 depthwithin <- depthwithin@data
 
-tablenew <- data.frame(matrix(data=NA,nrow = 44, ncol= 9))
+tablenew <- data.frame(matrix(data=NA,nrow = 38, ncol= 9))
 
 # vme habitat / index closed 
 # scenario 1a
@@ -426,17 +426,17 @@ tablenew [21,9] <- length(which(depthwithin$clos2b == 0 & depthwithin$core_area 
 
 # fraction of SAR in closed area
 depthwithin$refSAR <- depthwithin$refSAR/4
-tablenew [23,2] <- as.character(round(sum(depthwithin$refSAR[depthwithin$clos1a == 1],na.rm=T) / sum(depthwithin$refSAR,na.rm=T),digits = 2))
-tablenew [23,3] <- as.character(round(sum(depthwithin$refSAR[depthwithin$clos1a == 0],na.rm=T) / sum(depthwithin$refSAR,na.rm=T),digits = 2))
-tablenew [23,4] <- as.character(round(sum(depthwithin$refSAR[depthwithin$clos1b == 1],na.rm=T) / sum(depthwithin$refSAR,na.rm=T),digits = 2))
-tablenew [23,5] <- as.character(round(sum(depthwithin$refSAR[depthwithin$clos1b == 0],na.rm=T) / sum(depthwithin$refSAR,na.rm=T),digits = 2))
-tablenew [23,6] <- as.character(round(sum(depthwithin$refSAR[depthwithin$clos2a == 1],na.rm=T) / sum(depthwithin$refSAR,na.rm=T),digits = 2))
-tablenew [23,7] <- as.character(round(sum(depthwithin$refSAR[depthwithin$clos2a == 0],na.rm=T) / sum(depthwithin$refSAR,na.rm=T),digits = 2))
-tablenew [23,8] <- as.character(round(sum(depthwithin$refSAR[depthwithin$clos2b == 1],na.rm=T) / sum(depthwithin$refSAR,na.rm=T),digits = 2))
-tablenew [23,9] <- as.character(round(sum(depthwithin$refSAR[depthwithin$clos2b == 0],na.rm=T) / sum(depthwithin$refSAR,na.rm=T),digits = 2))
+tablenew [22,2] <- as.character(round(sum(depthwithin$refSAR[depthwithin$clos1a == 1],na.rm=T) / sum(depthwithin$refSAR,na.rm=T),digits = 2))
+tablenew [22,3] <- as.character(round(sum(depthwithin$refSAR[depthwithin$clos1a == 0],na.rm=T) / sum(depthwithin$refSAR,na.rm=T),digits = 2))
+tablenew [22,4] <- as.character(round(sum(depthwithin$refSAR[depthwithin$clos1b == 1],na.rm=T) / sum(depthwithin$refSAR,na.rm=T),digits = 2))
+tablenew [22,5] <- as.character(round(sum(depthwithin$refSAR[depthwithin$clos1b == 0],na.rm=T) / sum(depthwithin$refSAR,na.rm=T),digits = 2))
+tablenew [22,6] <- as.character(round(sum(depthwithin$refSAR[depthwithin$clos2a == 1],na.rm=T) / sum(depthwithin$refSAR,na.rm=T),digits = 2))
+tablenew [22,7] <- as.character(round(sum(depthwithin$refSAR[depthwithin$clos2a == 0],na.rm=T) / sum(depthwithin$refSAR,na.rm=T),digits = 2))
+tablenew [22,8] <- as.character(round(sum(depthwithin$refSAR[depthwithin$clos2b == 1],na.rm=T) / sum(depthwithin$refSAR,na.rm=T),digits = 2))
+tablenew [22,9] <- as.character(round(sum(depthwithin$refSAR[depthwithin$clos2b == 0],na.rm=T) / sum(depthwithin$refSAR,na.rm=T),digits = 2))
 
 ## now for period 2012-2015
-n <- 27
+n <- 25
 # c-squares part of static gears present
 tablenew [n,2] <- length(which(depthwithin$clos1a == 1 & depthwithin$afterStatic1 == 1))/4
 tablenew [n,3] <- length(which(depthwithin$clos1a == 0 & depthwithin$afterStatic1 == 1))/4
@@ -447,7 +447,7 @@ tablenew [n,7] <- length(which(depthwithin$clos2a == 0 & depthwithin$afterStatic
 tablenew [n,8] <- length(which(depthwithin$clos2b == 1 & depthwithin$afterStatic1 == 1))/4
 tablenew [n,9] <- length(which(depthwithin$clos2b == 0 & depthwithin$afterStatic1 == 1))/4
 
-n <- 28
+n <- 26
 # c-squares part of SAR gears present
 tablenew [n,2] <- length(which(depthwithin$clos1a == 1 & depthwithin$afterSAR1 > 0))/4
 tablenew [n,3] <- length(which(depthwithin$clos1a == 0 & depthwithin$afterSAR1 > 0))/4
@@ -458,7 +458,7 @@ tablenew [n,7] <- length(which(depthwithin$clos2a == 0 & depthwithin$afterSAR1 >
 tablenew [n,8] <- length(which(depthwithin$clos2b == 1 & depthwithin$afterSAR1 > 0))/4
 tablenew [n,9] <- length(which(depthwithin$clos2b == 0 & depthwithin$afterSAR1 > 0))/4
 
-n <- 31
+n <- 29
 # core footprint based on SAR
 tablenew [n,2] <- length(which(depthwithin$clos1a == 1 & depthwithin$core_area_after1 == "(10,100]"))/4
 tablenew [n,3] <- length(which(depthwithin$clos1a == 0 & depthwithin$core_area_after1 == "(10,100]"))/4
@@ -469,7 +469,7 @@ tablenew [n,7] <- length(which(depthwithin$clos2a == 0 & depthwithin$core_area_a
 tablenew [n,8] <- length(which(depthwithin$clos2b == 1 & depthwithin$core_area_after1 == "(10,100]"))/4
 tablenew [n,9] <- length(which(depthwithin$clos2b == 0 & depthwithin$core_area_after1 == "(10,100]"))/4
 
-n <- 33
+n <- 30
 # fraction of SAR in closed area
 depthwithin$afterSAR1 <- depthwithin$afterSAR1/4
 tablenew [n,2] <- as.character(round(sum(depthwithin$afterSAR1[depthwithin$clos1a == 1],na.rm=T) / sum(depthwithin$afterSAR1,na.rm=T),digits = 2))
@@ -482,7 +482,7 @@ tablenew [n,8] <- as.character(round(sum(depthwithin$afterSAR1[depthwithin$clos2
 tablenew [n,9] <- as.character(round(sum(depthwithin$afterSAR1[depthwithin$clos2b == 0],na.rm=T) / sum(depthwithin$afterSAR1,na.rm=T),digits = 2))
 
 ## now for period 2016-2019
-n <- 37
+n <- 33
 # c-squares part of static gears present
 tablenew [n,2] <- length(which(depthwithin$clos1a == 1 & depthwithin$afterStatic2 == 1))/4
 tablenew [n,3] <- length(which(depthwithin$clos1a == 0 & depthwithin$afterStatic2 == 1))/4
@@ -493,7 +493,7 @@ tablenew [n,7] <- length(which(depthwithin$clos2a == 0 & depthwithin$afterStatic
 tablenew [n,8] <- length(which(depthwithin$clos2b == 1 & depthwithin$afterStatic2 == 1))/4
 tablenew [n,9] <- length(which(depthwithin$clos2b == 0 & depthwithin$afterStatic2 == 1))/4
 
-n <- 38
+n <- 34
 # c-squares part of SAR gears present
 tablenew [n,2] <- length(which(depthwithin$clos1a == 1 & depthwithin$afterSAR2 > 0))/4
 tablenew [n,3] <- length(which(depthwithin$clos1a == 0 & depthwithin$afterSAR2 > 0))/4
@@ -504,7 +504,7 @@ tablenew [n,7] <- length(which(depthwithin$clos2a == 0 & depthwithin$afterSAR2 >
 tablenew [n,8] <- length(which(depthwithin$clos2b == 1 & depthwithin$afterSAR2 > 0))/4
 tablenew [n,9] <- length(which(depthwithin$clos2b == 0 & depthwithin$afterSAR2 > 0))/4
 
-n <- 41
+n <- 37
 # core footprint based on SAR
 tablenew [n,2] <- length(which(depthwithin$clos1a == 1 & depthwithin$core_area_after2 == "(10,100]"))/4
 tablenew [n,3] <- length(which(depthwithin$clos1a == 0 & depthwithin$core_area_after2 == "(10,100]"))/4
@@ -515,7 +515,7 @@ tablenew [n,7] <- length(which(depthwithin$clos2a == 0 & depthwithin$core_area_a
 tablenew [n,8] <- length(which(depthwithin$clos2b == 1 & depthwithin$core_area_after2 == "(10,100]"))/4
 tablenew [n,9] <- length(which(depthwithin$clos2b == 0 & depthwithin$core_area_after2 == "(10,100]"))/4
 
-n <- 43
+n <- 38
 # fraction of SAR in closed area
 depthwithin$afterSAR2 <- depthwithin$afterSAR2/4
 tablenew [n,2] <- as.character(round(sum(depthwithin$afterSAR2[depthwithin$clos1a == 1],na.rm=T) / sum(depthwithin$afterSAR2,na.rm=T),digits = 2))
@@ -537,26 +537,20 @@ tablenew [,1] <- c("","","VME protection","nb of c-squares with VME habitat","nb
                    "nb of c-squares with static bottom fishing (present)",
                    "nb of c-squares with mobile bottom fishing (SAR > 0)",
                    "","Fisheries overlap (core fishing ground) (2009-2011)",
-                   "nb of c-squares that form core fishing area based on SAR  (method 1)",
-                   "nb of c-squares that form core fishing area based on kw/h fished (method 2)",
+                   "nb of c-squares that form core fishing area based on SAR",
                    "fraction of total SAR",
-                   "fraction of total kw/h",
                    "", "Fisheries consequences (presence/absence) (2012-2015)",
                    "nb of c-squares with static bottom fishing (present)",
                    "nb of c-squares with mobile bottom fishing (SAR > 0)",
                    "","Fisheries consequences (core fishing ground) (2012-2015)",
-                   "nb of c-squares that form core fishing area based on SAR (method 1)",
-                   "nb of c-squares that form core fishing area based on kw/h fished (method 2)",
+                   "nb of c-squares that form core fishing area based on SAR ",
                    "fraction of total SAR",
-                   "fraction of total kw/h",
                    "", "Fisheries consequences (presence/absence) (2016-2019)",
                    "nb of c-squares with static bottom fishing (present)",
                    "nb of c-squares with mobile bottom fishing (SAR > 0)",
                    "","Fisheries consequences (core fishing ground) (2016-2019)",
-                   "nb of c-squares that form core fishing area based on SAR (method 1)",
-                   "nb of c-squares that form core fishing area based on kw/h fished (method 2)",
-                   "fraction of total SAR",
-                   "fraction of total kw/h")
+                   "nb of c-squares that form core fishing area based on SAR",
+                   "fraction of total SAR")
 tablenew[1,] <- c("","Scenario 1 option 1","","Scenario 1 option 2","","Scenario 2 option 1","","Scenario 2 option 2","")
 tablenew[2,] <- c("","within closure","outside closures","within closure","outside closures","within closure","outside closures","within closure","outside closures")
 tablenew[3,2:9] <- c("","","","","","","","")
@@ -568,14 +562,14 @@ tablenew[15,] <- c("","","","","","","","","")
 tablenew[16,2:9] <- c("","","","","","","","")
 tablenew[19,] <- c("","","","","","","","","")
 tablenew[20,2:9] <- c("","","","","","","","")
-tablenew[25,] <- c("","","","","","","","","")
-tablenew[26,2:9] <- c("","","","","","","","")
-tablenew[29,] <- c("","","","","","","","","")
-tablenew[30,2:9] <- c("","","","","","","","")
+tablenew[23,] <- c("","","","","","","","","")
+tablenew[24,2:9] <- c("","","","","","","","")
+tablenew[27,] <- c("","","","","","","","","")
+tablenew[28,2:9] <- c("","","","","","","","")
+tablenew[31,] <- c("","","","","","","","","")
+tablenew[32,2:9] <- c("","","","","","","","")
 tablenew[35,] <- c("","","","","","","","","")
 tablenew[36,2:9] <- c("","","","","","","","")
-tablenew[39,] <- c("","","","","","","","","")
-tablenew[40,2:9] <- c("","","","","","","","")
 
 tablenew <- data.frame(tablenew)
 write.csv(tablenew, paste(outdir,"Table_closure_options.csv",sep="/"), 
