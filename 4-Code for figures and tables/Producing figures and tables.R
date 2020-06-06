@@ -393,4 +393,4 @@
   print(figmap2)
   dev.off() 
   
-  rm(list=setdiff(ls(), c("pathdir" , "EcoReg")))
+  rm(list=setdiff(ls(), c("pathdir", "pathdir_nogit" , "EcoReg")))

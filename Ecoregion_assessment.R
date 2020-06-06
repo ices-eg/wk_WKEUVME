@@ -39,7 +39,7 @@
   source(paste(pathdir,"6-Utilities/Scenario_2_option_2.R",sep="/"))
 
 ## get output per ecoregion
-  EcoReg <-  "Bay of Biscay and the Iberian Coast"  # "Celtic Seas" or "Bay of Biscay and the Iberian Coast"
+  EcoReg <-  "Celtic Seas"  # "Celtic Seas" or "Bay of Biscay and the Iberian Coast"
   
   # run to get output for plots and tables up to closure consequences
   source(paste(pathdir,"3-Data analysis/Code_to_get_data_figures_tables_per_ecoregion.R",sep="/"))
@@ -47,5 +47,5 @@
   # run to make plots and tables with VMS and VME up to closure consequences
   source(paste(pathdir,"4-Code for figures and tables/Producing figures and tables.R",sep="/"))
 
-  # run to assess consequences of closure options
-  source(paste(pathdir,"6-Utilities/Assessment of closures.R",sep="/"))
+  # run to assess consequences of closure options (warnings are okay!)
+  source(paste(pathdir,"4-Code for figures and tables/Assessment of closures.R",sep="/"))

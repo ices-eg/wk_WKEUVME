@@ -1,0 +1,39 @@
+X1,X2,X3,X4,X5,X6,X7,X8,X9
+,Scenario 1 option 1,,Scenario 1 option 2,,Scenario 2 option 1,,Scenario 2 option 2,
+,within closure,outside closures,within closure,outside closures,within closure,outside closures,within closure,outside closures
+VME protection,,,,,,,,
+nb of c-squares with VME habitat,25,0,25,0,25,0,25,0
+nb of c-squares with VME index high,0,0,0,0,0,0,0,0
+nb of c-squares with VME index medium,18,0,18,0,18,0,15,3
+nb of c-squares with VME index low,6,15,6,15,14,7,14,7
+,,,,,,,,
+VME protection and fishing impact threshold,,,,,,,,
+nb of c-squares with VME habitat/index below SAR 0.43 threshold (2009-2019),44,8,44,8,52,0,52,0
+nb of c-squares with closed VME habitat/index above SAR 0.43 threshold (2009-2019),5,7,5,7,5,7,2,10
+,,,,,,,,
+Fisheries footprint,,,,,,,,
+nb of c-squares part of fishing footprint,250,1472,275.25,1446.75,283,1439,257,1465
+,,,,,,,,
+Fisheries overlap (presence/absence) (2009-2011),,,,,,,,
+nb of c-squares with static bottom fishing (present),236,1273,261.25,1247.75,252,1257,233,1276
+nb of c-squares with mobile bottom fishing (SAR > 0),204,1151,204,1151,228,1127,203,1152
+,,,,,,,,
+Fisheries overlap (core fishing ground) (2009-2011),,,,,,,,
+nb of c-squares that form core fishing area based on SAR,55,541,55,541,60,536,47,549
+fraction of total SAR,0.09,0.91,0.09,0.91,0.1,0.9,0.07,0.93
+,,,,,,,,
+Fisheries consequences (presence/absence) (2012-2015),,,,,,,,
+nb of c-squares with static bottom fishing (present),228,1182,247.75,1162.25,240,1170,219,1191
+nb of c-squares with mobile bottom fishing (SAR > 0),187,887,187,887,194,880,172,902
+,,,,,,,,
+Fisheries consequences (core fishing ground) (2012-2015),,,,,,,,
+nb of c-squares that form core fishing area based on SAR ,47,358,47,358,47,358,39,366
+fraction of total SAR,0.11,0.89,0.11,0.89,0.12,0.88,0.09,0.91
+,,,,,,,,
+Fisheries consequences (presence/absence) (2016-2019),,,,,,,,
+nb of c-squares with static bottom fishing (present),221,1138,239,1120,232,1127,214,1145
+nb of c-squares with mobile bottom fishing (SAR > 0),178,942,178,942,193,927,171,949
+,,,,,,,,
+Fisheries consequences (core fishing ground) (2016-2019),,,,,,,,
+nb of c-squares that form core fishing area based on SAR,46,361,46,361,46,361,36,371
+fraction of total SAR,0.11,0.89,0.11,0.89,0.11,0.89,0.09,0.91
