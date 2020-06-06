@@ -39,7 +39,7 @@
   source(paste(pathdir,"6-Utilities/Scenario_2_option_2.R",sep="/"))
 
 ## get output per ecoregion
-  EcoReg <-  "Celtic Seas"  # "Celtic Seas" or "Bay of Biscay and the Iberian Coast"
+  EcoReg <-  "Bay of Biscay and the Iberian Coast"  # "Celtic Seas" or "Bay of Biscay and the Iberian Coast"
   
   # run to get output for plots and tables up to closure consequences
   source(paste(pathdir,"3-Data analysis/Code_to_get_data_figures_tables_per_ecoregion.R",sep="/"))
