@@ -5,4 +5,4 @@ The ICES workshop WKEUVME was tasked to produce the technical evidence base for 
 
 To start, open "Ecoregion_assessment.R". 
 
-The github folder contains the scripts to establish the closures, the closure polygons for each option and the scripts to assess the consequences of these closures on VME protection and fisheries. Shapefiles of area closures can be found in the output folder under closure options.     
+The github folder contains the scripts used to derive the fisheries footprint and the closure scenario options. The folder further contains scripts, figures and tables of the fishing footprint, VME locations and the assessment of the closures for VME protection and fisheries. Shapefiles of area closures can be found in the output folder under closure options.     
