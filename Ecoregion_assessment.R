@@ -49,3 +49,7 @@
 
   # run to assess consequences of closure options (warnings are okay!)
   source(paste(pathdir,"4-Code for figures and tables/Assessment of closures.R",sep="/"))
+
+  # run to assess consequences of closure options (table 4 - barplots and scatterplots)
+  source(paste(pathdir,"4-Code for figures and tables/Closure_consequences_barplot_scatterplot.R",sep="/"))
+  

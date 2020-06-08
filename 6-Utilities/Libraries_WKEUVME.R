@@ -26,3 +26,5 @@
   library(leaflet)
   library(htmlwidgets)
   library(smoothr)
+  library(stringr)
+  library(tidyr)
