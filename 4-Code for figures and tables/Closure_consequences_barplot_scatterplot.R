@@ -170,12 +170,12 @@ mtext("B)", side = 3, line = -1, outer = T)
 box()
 
 plot((new[c(1,3,5,7),"VMEhighq"])~new$fraction.of.total.SAR[c(1,3,5,7)],col="darkgreen",pch=1:4,ylab=
-       "Number of c-squares with VME in closures \n (habitats, high, medium, low) ",las=1,cex=2,xlim=c(xl1min,xl1max),ylim=c(yl2min,yl2max),xlab="Fraction of SAR in closures")
+       "Number of c-squares with VME in closures \n (habitats, high, medium) ",las=1,cex=2,xlim=c(xl1min,xl1max),ylim=c(yl2min,yl2max),xlab="Fraction of SAR in closures")
 points((new[c(1,3,5,7),"VMEhighq"])~new$fraction.of.total.SAR.1[c(1,3,5,7)],col="blue",pch=1:4,cex=2)                                 
 points(new[c(1,3,5,7),"VMEhighq"]~new$fraction.of.total.SAR.2[c(1,3,5,7)],col="red",pch=1:4,cex=2)   
 
 loc <- (new[c(1,3,5,7),"VMEhighq"])-move
-loc <- c(loc[1],loc[2]-move2,loc[3],loc[4])
+loc <- c(loc[1]+move+move2,loc[2]-move2,loc[3],loc[4])
 text(y=loc,x=colMeans(rbind(
   new$fraction.of.total.SAR[c(1,3,5,7)],
   new$fraction.of.total.SAR.1[c(1,3,5,7)],
@@ -210,7 +210,7 @@ box()
 
 plot((new[c(1,3,5,7),"totalVME"])~new$nb.of.c.squares.with.static.bottom.fishing..present.[c(1,3,5,7)],col="darkgreen",pch=1:4,ylab=
      "Number of c-squares with VME in closures \n (habitats, high, medium, low) ",las=1,cex=2,xlim=c(xl2min,xl2max),ylim=c(yl1min,yl1max),
-     xlab="Closed C-squares with static bottom fishing (SAR>0)")
+     xlab="Closed C-squares with static bottom fishing")
 points((new[c(1,3,5,7),"totalVME"])~new$nb.of.c.squares.with.static.bottom.fishing..present..1[c(1,3,5,7)],col="blue",pch=1:4,cex=2)                                 
 points(new[c(1,3,5,7),"totalVME"]~new$nb.of.c.squares.with.static.bottom.fishing..present..2[c(1,3,5,7)],col="red",pch=1:4,cex=2)   
 
