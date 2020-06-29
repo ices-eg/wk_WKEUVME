@@ -52,9 +52,8 @@
 
   # run to assess consequences of closure options (table 4 - barplots and scatterplots)
   source(paste(pathdir,"4-Code for figures and tables/Closure_consequences_barplot_scatterplot.R",sep="/"))
-  
-  # run to get closure table coordinates 
+
+# get closure coordinates csv and maps with closure numbers whole region
   source(paste(pathdir,"6-Utilities/Get csvtable with closure coordinates.R",sep="/"))
-  
-  
+  source(paste(pathdir,"6-Utilities/Get maps with closure numbers.R",sep="/"))
   
