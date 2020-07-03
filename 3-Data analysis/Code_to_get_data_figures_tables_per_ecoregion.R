@@ -46,7 +46,7 @@
   vmsreg$ref <- rowSums(vmsreg[indexcol])
   vmsreg$ref[vmsreg$ref > 0] <- 1
   
-  # total fishing footprint in period 2012-2018
+  # total fishing footprint in period 2012-2019
   nam <- c(paste("SAR_total",afteryear,sep="_"),paste(metier_static[1],afteryear, sep="_"))
   indexcol <- which(names(vmsreg) %in% nam) 
   vmsreg$after <- rowSums(vmsreg[indexcol])

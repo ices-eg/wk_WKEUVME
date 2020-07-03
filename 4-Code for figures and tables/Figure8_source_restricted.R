@@ -93,6 +93,7 @@ quat3 <- seq(0, 100, by=10)
 fig8b$cat3 <- cut(rev(fig8b$perc2),c(quat3))
 
 # do similar for 2016-2019 period
+fig8 <- IREG
 nam <- paste("SAR_Otter",afteryear,sep="_")
 indexcol <- which(names(vmsreg) %in% nam) 
 vmsreg$otafteryear <- rowMeans(vmsreg[indexcol],na.rm = T)  
