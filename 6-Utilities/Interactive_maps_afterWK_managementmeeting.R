@@ -106,6 +106,7 @@
 
 # closures that intersect with 400-800 meter boundary
   scedat <- c("Scenario1_option1","Scenario1_option2","Scenario2_option1","Scenario2_option2")
+  scedat_within <- c("Scenario1_option1_within","Scenario1_option2_within","Scenario2_option1_within","Scenario2_option2_within")
   
   for (p in 1:4){
     reg <- unionSpatialPolygons(depth,depth$within)
@@ -118,13 +119,15 @@
     # find all polygons that intersect
     overpol <- sf::st_intersection(scenar,reg)
     overpol <- as(overpol, 'Spatial')
+    assign(scedat_within[p],overpol)
     overpol <- rownames(overpol@data)
-    
+
     scea <- as(scenar, 'Spatial')
     scea@data$rown <- rownames(scea@data)
     scea <- subset(scea, scea@data$rown %in% c(overpol))
     assign(scedat[p],scea)
   }
+  
   
 # get SAR and 10/90 percentile
   EcoReg <- "Bay of Biscay and the Iberian Coast"
@@ -168,47 +171,60 @@
   #aftersar90 <- subset(sardat,sardat@data$cats == "(90,100]")
   
   # define few params
-  refyear <- 2016:2018
+  refyear <- 2016:2019
   
-  nam <- paste("SAR_Otter",refyear,sep="_")
+  nam <- paste("SAR_total",refyear,sep="_")
   indexcol <- which(names(vmsreg) %in% nam) 
   vmsreg$otrefyear <- rowMeans(vmsreg[indexcol])  
   sardat <- cbind(depth, vmsreg[match(depth$csquares,vmsreg$c_square), c("otrefyear")])
-  colnames(sardat@data)[ncol(sardat)] <- "Otter_intensity"
-  sardat@data$Otter_intensity[is.na(sardat@data$Otter_intensity)] <- 0
-  sardat <- subset(sardat,sardat@data$Otter_intensity > 0) # & fig8$adjacent.cells > 0)
-  sardat <- sardat[order(-sardat@data$Otter_intensity),]
-  sardat@data$perc <- cumsum(sardat@data$Otter_intensity) / sum(sardat@data$Otter_intensity)*100
+  colnames(sardat@data)[ncol(sardat)] <- "SAR_intensity"
+  sardat@data$SAR_intensity[is.na(sardat@data$SAR_intensity)] <- 0
+  sardat <- subset(sardat,sardat@data$SAR_intensity > 0) # & fig8$adjacent.cells > 0)
+  sardat <- sardat[order(-sardat@data$SAR_intensity),]
+  sardat@data$perc <- cumsum(sardat@data$SAR_intensity) / sum(sardat@data$SAR_intensity)*100
   
   cats <- c(0, 90,  100)
   sardat@data$cats <- cut(sardat@data$perc,c(cats))
   after2sar10 <- subset(sardat,sardat@data$cats == "(0,90]")
   after2sar90 <- subset(sardat,sardat@data$cats == "(90,100]")
   
+  mean2sar_low <- subset(sardat,sardat@data$SAR_intensity < 0.43)
+  mean2sar_int1 <- subset(sardat,sardat@data$SAR_intensity >= 0.43 & sardat@data$SAR_intensity < 1)
+  mean2sar_int2 <- subset(sardat,sardat@data$SAR_intensity >= 1 & sardat@data$SAR_intensity < 3)
+  mean2sar_high <- subset(sardat,sardat@data$SAR_intensity >= 3)
+  
   EcoReg <- "Celtic Seas"
   setwd(paste(pathdir_nogit,"VMS data repository",sep="/"))
   vmsreg <- readRDS(paste(EcoReg,"vms.rds",sep="_"))
   # define few params
-  refyear <- 2016:2018
+  refyear <- 2016:2019
   
-  nam <- paste("SAR_Otter",refyear,sep="_")
+  nam <- paste("SAR_total",refyear,sep="_")
   indexcol <- which(names(vmsreg) %in% nam) 
   vmsreg$otrefyear <- rowMeans(vmsreg[indexcol])  
   sardat <- cbind(depth, vmsreg[match(depth$csquares,vmsreg$c_square), c("otrefyear")])
-  colnames(sardat@data)[ncol(sardat)] <- "Otter_intensity"
-  sardat@data$Otter_intensity[is.na(sardat@data$Otter_intensity)] <- 0
-  sardat <- subset(sardat,sardat@data$Otter_intensity > 0) # & fig8$adjacent.cells > 0)
-  sardat <- sardat[order(-sardat@data$Otter_intensity),]
-  sardat@data$perc <- cumsum(sardat@data$Otter_intensity) / sum(sardat@data$Otter_intensity)*100
+  colnames(sardat@data)[ncol(sardat)] <- "SAR_intensity"
+  sardat@data$SAR_intensity[is.na(sardat@data$SAR_intensity)] <- 0
+  sardat <- subset(sardat,sardat@data$SAR_intensity > 0) # & fig8$adjacent.cells > 0)
+  sardat <- sardat[order(-sardat@data$SAR_intensity),]
+  sardat@data$perc <- cumsum(sardat@data$SAR_intensity) / sum(sardat@data$SAR_intensity)*100
   
   cats <- c(0, 90,  100)
   sardat@data$cats <- cut(sardat@data$perc,c(cats))
   after2sar102 <- subset(sardat,sardat@data$cats == "(0,90]")
   after2sar902 <- subset(sardat,sardat@data$cats == "(90,100]")
   
+  mean2sar_low2 <- subset(sardat,sardat@data$SAR_intensity < 0.43)
+  mean2sar_int12 <- subset(sardat,sardat@data$SAR_intensity >= 0.43 & sardat@data$SAR_intensity < 1)
+  mean2sar_int22 <- subset(sardat,sardat@data$SAR_intensity >= 1 & sardat@data$SAR_intensity < 3)
+  mean2sar_high2 <- subset(sardat,sardat@data$SAR_intensity >= 3)
+  
   aftersar10 <- rbind(after2sar10,after2sar102)
   aftersar90 <- rbind(after2sar90,after2sar902)
-  
+  mean2sar_low2 <- rbind(mean2sar_low,mean2sar_low2)
+  mean2sar_int12 <- rbind(mean2sar_int1,mean2sar_int12)
+  mean2sar_int22 <- rbind(mean2sar_int2,mean2sar_int22)
+  mean2sar_high2 <- rbind(mean2sar_high,mean2sar_high2)
   
   mfs <- leaflet() %>%
     #addTiles() %>%  # Add default OpenStreetMap map tiles
@@ -223,16 +239,16 @@
                 stroke = TRUE, fillOpacity = 0, smoothFactor = 0.5, opacity = 0.5, weight = 1, color = "white") %>%
     
     # fishing footprint
-    addPolygons(data = Footprint_all, group = "Footprint combined",
+    addPolygons(data = Footprint_all, group = "Footprint combined 2009-2011",
                 stroke = FALSE, fillOpacity = 0.5, smoothFactor = 0.5,fillColor =  "#c7e9c0") %>%
-    addPolygons(data = Footprint_static, group = "Footprint static",
+    addPolygons(data = Footprint_static, group = "Footprint static 2009-2011",
                 stroke = FALSE, fillOpacity = 0.5, smoothFactor = 0.5,fillColor =  "purple") %>%
-    addPolygons(data = Footprint_mobile, group = "Footprint MBCG",
+    addPolygons(data = Footprint_mobile, group = "Footprint MBCG 2009-2011",
                 stroke = FALSE, fillOpacity = 0.5, smoothFactor = 0.5,fillColor =  "orange") %>%
     
     # VME data
     addPolygons(data = VMEhabitat, group = "VME habitat",
-                stroke = FALSE, fillOpacity = 1, smoothFactor = 0.5,fillColor =  "purple") %>%
+                stroke = FALSE, fillOpacity = 1, smoothFactor = 0.5,fillColor =  "#cc00ff") %>%
     addPolygons(data = VMEindexH, group = "VME index high",
                 stroke = FALSE, fillOpacity = 1, smoothFactor = 0.5,fillColor =  "red") %>%
     addPolygons(data = VMEindexM, group = "VME index medium",
@@ -255,8 +271,8 @@
     
     # Layers control
     addLayersControl(
-      overlayGroups = c("Depth 400-800 m", "Ecoregion boundaries","Footprint combined", "Footprint static","Footprint MBCG",
-                        "VME habitat","VME index high", "VME index medium","VME index low",
+      overlayGroups = c("Depth 400-800 m", "Ecoregion boundaries","Footprint combined 2009-2011", "Footprint static 2009-2011",
+                        "Footprint MBCG 2009-2011", "VME habitat","VME index high", "VME index medium","VME index low",
                         "VME physical elements","Closure 1_1","Closure 1_2","Closure 2_1","Closure 2_2"),
       options = layersControlOptions(collapsed = FALSE)
     )
@@ -280,31 +296,42 @@
                 stroke = TRUE, fillOpacity = 0, smoothFactor = 0.5, opacity = 0.5, weight = 1, color = "white") %>%
     
     # fishing footprint
-    addPolygons(data = Footprint_mobile, group = "Footprint MBCG",
+    addPolygons(data = Footprint_mobile, group = "Footprint MBCG 2009-2011",
                 stroke = FALSE, fillOpacity = 0.5, smoothFactor = 0.5,fillColor =  "#74c476") %>%
     
     # closures
-    addPolygons(data = Scenario1_option1, group = "Closure 1_1",
+    addPolygons(data = Scenario1_option1_within, group = "Closure 1_1 within 400-800m",
                 stroke = FALSE, fillOpacity = 0.5, smoothFactor = 0.5,fillColor =  "#fd8d3c") %>%
-    addPolygons(data = Scenario1_option2, group = "Closure 1_2",
+    addPolygons(data = Scenario1_option2_within, group = "Closure 1_2 within 400-800m",
                 stroke = FALSE, fillOpacity = 0.5, smoothFactor = 0.5,fillColor =  "#feb24c") %>%
-    addPolygons(data = Scenario2_option1, group = "Closure 2_1",
+    addPolygons(data = Scenario2_option1_within, group = "Closure 2_1 within 400-800m",
                 stroke = FALSE, fillOpacity = 0.5, smoothFactor = 0.5,fillColor =  "#fed976") %>%
-    addPolygons(data = Scenario2_option2, group = "Closure 2_2",
+    addPolygons(data = Scenario2_option2_within, group = "Closure 2_2 within 400-800m",
                 stroke = FALSE, fillOpacity = 0.5, smoothFactor = 0.5,fillColor =  "#ffeda0") %>%
     
-    
     # 10-90 percentile
-    addPolygons(data = aftersar10, group = "MBCG 10-100% core fishing area 2016-2018",
+    addPolygons(data = aftersar10, group = "MBCG 10-100% core fishing area 2016-2019",
                 stroke = FALSE, fillOpacity = 0.5, smoothFactor = 0.5,fillColor =  "red") %>%
-    addPolygons(data = aftersar90, group = "MBCG 0-10% 2016-2018",
+    addPolygons(data = aftersar90, group = "MBCG 0-10% 2016-2019",
                 stroke = FALSE, fillOpacity = 0.5, smoothFactor = 0.5,fillColor =  "orange") %>%
 
+    # mean SAR 
+    addPolygons(data = mean2sar_low2, group = "Average SAR 0-0.43 in 2016-2019",
+                stroke = FALSE, fillOpacity = 0.5, smoothFactor = 0.5,fillColor =  "#feebe2") %>%
+    addPolygons(data = mean2sar_int12, group = "Average SAR 0.43-1 in 2016-2019",
+                stroke = FALSE, fillOpacity = 0.5, smoothFactor = 0.5,fillColor =  "#fbb4b9") %>%
+    addPolygons(data = mean2sar_int22, group = "Average SAR 1-3 in 2016-2019",
+                stroke = FALSE, fillOpacity = 0.5, smoothFactor = 0.5,fillColor =  "#f768a1") %>%
+    addPolygons(data = mean2sar_high2, group = "Average SAR >3 in 2016-2019",
+                stroke = FALSE, fillOpacity = 0.5, smoothFactor = 0.5,fillColor =  "#ae017e") %>% 
+    
     # Layers control
     addLayersControl(
-      overlayGroups = c("Depth 400-800 m", "Ecoregion boundaries","Footprint MBCG",
+      overlayGroups = c("Depth 400-800 m", "Ecoregion boundaries","Footprint MBCG 2009-2011",
                         "Closure 1_1","Closure 1_2","Closure 2_1","Closure 2_2",
-                        "MBCG 10-100% core fishing area 2016-2018","MBCG 0-10% 2016-2018"),
+                        "MBCG 10-100% core fishing area 2016-2019","MBCG 0-10% 2016-2019",
+                        "Average SAR 0-0.43 in 2016-2019","Average SAR 0.43-1 in 2016-2019",
+                        "Average SAR 1-3 in 2016-2019","Average SAR >3 in 2016-2019"),
       options = layersControlOptions(collapsed = FALSE)
     )
   
@@ -312,7 +339,4 @@
   outdir <- paste(pathdir,"5-Output",sep="/") 
   setwd(outdir)
   saveWidget(mfs, file="Interactive map MBCG.html")
-  
-  
-  
   
