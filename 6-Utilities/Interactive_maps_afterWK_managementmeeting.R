@@ -328,7 +328,8 @@
     # Layers control
     addLayersControl(
       overlayGroups = c("Depth 400-800 m", "Ecoregion boundaries","Footprint MBCG 2009-2011",
-                        "Closure 1_1","Closure 1_2","Closure 2_1","Closure 2_2",
+                        "Closure 1_1 within 400-800m","Closure 1_2 within 400-800m",
+                        "Closure 2_1 within 400-800m","Closure 2_2 within 400-800m",
                         "MBCG 10-100% core fishing area 2016-2019","MBCG 0-10% 2016-2019",
                         "Average SAR 0-0.43 in 2016-2019","Average SAR 0.43-1 in 2016-2019",
                         "Average SAR 1-3 in 2016-2019","Average SAR >3 in 2016-2019"),

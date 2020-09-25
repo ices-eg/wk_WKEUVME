@@ -1,36 +1,57 @@
 
+# get fishing footprints
+EcoReg <- "Celtic Seas"
+source(paste(pathdir,"6-Utilities/Get_fishing_footprint_gearsep_refperiod_afterWK.R", sep="/"))
+FootprintCS <- Footprint
+EcoReg <- "Bay of Biscay and the Iberian Coast"
+source(paste(pathdir,"6-Utilities/Get_fishing_footprint_gearsep_refperiod_afterWK.R", sep="/"))
+Footprint <- rbind(Footprint, FootprintCS)
 
-# plot all closures with information on VMEs that overlap with 400-800 meter range
-scedat <- c("Scenario1_option1","Scenario1_option2","Scenario2_option1","Scenario2_option2")
+Footprint2 <- cbind(depthall, Footprint[match(depthall@data$csquares,Footprint$csquares), c("Both_footprint")])
+colnames(Footprint2@data)[ncol(Footprint2)] <- "Both_footprint"
+Footprint_all <- subset(Footprint2,Footprint2@data$Both_footprint == 1)
+Freg <- unionSpatialPolygons(Footprint_all,Footprint_all$Both_footprint)
+Footprint_all <- gUnaryUnion(Freg)
+
+Footprint2 <- cbind(depthall, Footprint[match(depthall@data$csquares,Footprint$csquares), c("Static_footprint")])
+colnames(Footprint2@data)[ncol(Footprint2)] <- "Static_footprint"
+Footprint_static <- subset(Footprint2,Footprint2@data$Static_footprint == 1)
+Freg <- unionSpatialPolygons(Footprint_static,Footprint_static$Static_footprint)
+Footprint_static <- gUnaryUnion(Freg)
+
+Footprint2 <- cbind(depthall, Footprint[match(depthall@data$csquares,Footprint$csquares), c("MBCG_footprint")])
+colnames(Footprint2@data)[ncol(Footprint2)] <- "MBCG_footprint"
+Footprint_mobile <- subset(Footprint2,Footprint2@data$MBCG_footprint == 1)
+Freg <- unionSpatialPolygons(Footprint_mobile,Footprint_mobile$MBCG_footprint)
+Footprint_mobile <- gUnaryUnion(Freg)
+
+# plot all footprints
+scedat <- c("Footprint_all","Footprint_mobile","Footprint_static")
 
 # get depth data
 setwd(paste(pathdir,"1-Input data/csquares_ecoregions_depth",sep="/"))
 depthreg <- readRDS("Celtic Seas_depth.rds")
 depthreg2 <- readRDS("Bay of Biscay and the Iberian Coast_depth.rds")
 depthall <- rbind(depthreg,depthreg2)
+depth <- subset(depthall,depthall@data$within ==1)
+regdepth <- unionSpatialPolygons(depth,depth$within)
+regdepth <- gUnaryUnion(regdepth)
+regdepth   <- st_as_sf(regdepth)
+regdepth <- as(regdepth, 'Spatial')
 
-for (p in 1:4){
-  depth <- subset(depthall,depthall@data$within ==1)
-  reg <- unionSpatialPolygons(depth,depth$within)
-  reg <- gUnaryUnion(reg)
-  reg   <- st_as_sf(reg)
-  
-  scenar <- st_read(paste(pathdir,"2-Data processing",paste(scedat[p],"shp",sep="."),sep="/"))
-  scenar <- st_cast(scenar,"POLYGON")
-  
-  # find all polygons that intersect
-  overpol      <- sf::st_intersection(scenar,reg)
-  overpol <- as(overpol, 'Spatial')
-  overpol <- rownames(overpol@data)
-  
-  scea <- as(scenar, 'Spatial')
-  scea@data$rown <- rownames(scea@data)
-  scea <- subset(scea, scea@data$rown %in% c(overpol))
-  scea@data$FID <- 1:(nrow(scea@data))
-  
+for (p in 1:3){
+  reg <- get(scedat[p])
+  proj4string(reg) <- CRS(proj4string(depthreg)) 
+  reg <- spTransform(reg, CRS( "+init=epsg:3347" ) ) 
+  reg <- gBuffer(reg,width=0.0001)
+  reg <- spTransform( reg, CRS(proj4string(depthreg)) )
+  reg   <- st_as_sf(reg) # combine polygons that intersect
+  scenar <- st_cast(reg,"POLYGON") # create the polygon file
+  reg <- as(scenar, 'Spatial')     # convert back (results in fewer, but larger shapefiles)
+
   # Get the world map
   worldMap <- map_data("world")
-
+  
   # get polygons
   shapeEEZ <- readOGR(dsn = paste(pathdir,"1-Input data/EEZ_land_union_v2_201410",sep="/") ,layer="EEZ_land_v2_201410") 
   shapeEcReg <- readOGR(dsn = paste(pathdir,"1-Input data/ICES_ecoregions",sep="/") ,layer="ICES_ecoregions_20171207_erase_ESRI")
@@ -50,14 +71,12 @@ for (p in 1:4){
   fig_width  <- (maxlong-minlong)/2.5
   fig_length <- (maxlat-minlat)/2
   
-  reg <- as(reg, 'Spatial')
-
-  coordcsv <- read.csv(paste(pathdir,"5-Output/Closure options (region)",paste(scedat[p],"coords.csv",sep="_"),sep="/"),header=T)
+  coordcsv <- read.csv(paste(pathdir,"5-Output/Footprint (region)",paste(scedat[p],"coords.csv",sep="_"),sep="/"),header=T)
   coordcsv <- coordcsv[!duplicated(coordcsv[1]),]
   
   # plot closures
-  pdf(file = paste(pathdir,"5-Output/Closure options (region)",paste(scedat[p],"pdf",sep="."),sep="/"), width=8.5, height=14)
-  figmap <- ggplot() + geom_polygon(data=reg, aes(x = long, y = lat, group = group),color=NA,fill="lightblue")
+  pdf(file = paste(pathdir,"5-Output/Footprint (region)",paste(scedat[p],"pdf",sep="."),sep="/"), width=8.5, height=14)
+  figmap <- ggplot() + geom_polygon(data=regdepth, aes(x = long, y = lat, group = group),color= NA,fill="lightblue")
   figmap <- figmap +  geom_polygon(data = worldMap, aes(x = long, y = lat, group = group),color="grey",fill="grey")
   figmap <- figmap +  theme(plot.background=element_blank(),
                             panel.background=element_blank(),
@@ -76,15 +95,11 @@ for (p in 1:4){
   figmap  <- figmap +  geom_polygon(data = shapeEEZ, aes(x = long, y = lat, group = group),color="grey",fill=NA)
   figmap  <- figmap +  geom_polygon(data = shapeReg, aes(x = long, y = lat, group = group),color="black",fill=NA)
   
-  figmap <- figmap + geom_polypath(data= scea, aes(x = long, y = lat, group = group),color=NA,fill="orange")
- 
+  figmap <- figmap + geom_polypath(data= reg, aes(x = long, y = lat, group = group),color=NA,fill="orange")
+  
   figmap_scea <- figmap + annotate(geom="text", x=coordcsv$Longitude, y=coordcsv$Latitude, label=coordcsv$Poly_No, color="red", size = 2)
   print(figmap_scea) 
   
- dev.off()
+  dev.off()
   
 }
-
-  
-  
-  

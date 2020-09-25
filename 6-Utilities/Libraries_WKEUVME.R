@@ -14,6 +14,7 @@
   library(rgdal)
   library(sp)
   library(ggplot2)
+  library(ggpolypath)
   library(rgeos)
   library(RColorBrewer)
   library(rworldmap)

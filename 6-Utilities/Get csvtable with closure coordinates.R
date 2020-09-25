@@ -61,36 +61,59 @@ for (p in 1:4){
   VMobs$pol <- overVME$FID
   
   # now link all together
-  runpol <- as.data.frame(matrix(data=NA,nrow=1,ncol=7))
-  colnames(runpol) <- c("Poly_No","Coord_No","Longitude","Latitude","VME_Csquare","VME_Habitat","VME_Indicator")
+  runpol <- as.data.frame(matrix(data=NA,nrow=1,ncol=9))
+  colnames(runpol) <- c("Poly_No","Coord_order","Longitude","Latitude","Hole","Group","VME_Csquare","VME_Habitat","VME_Indicator")
 
-for(j in 1:nrow(scea@data)){
-  coords  <- scea@polygons[[j]]@Polygons[[1]]@coords
+  # get coords + holes
+  coords  <- ggplot2::fortify(scea)
   coords[,1] <- round(coords[,1],digits =3)
   coords[,2] <- round(coords[,2],digits =3)
-  coords <- unique(coords[ , 1:2 ] )
-  Poly_No <- rep(j,nrow(coords))
-  Coord_No <- paste(Poly_No,1:nrow(coords),sep="_")
- 
-  # get vme c-square data
-  tt <- subset(VME,VME$pol == j)
-  if(nrow(tt) > 0){
-    csq  <- paste(unique(tt$VME_Class_Name), collapse = '_ ')
-  } else{
-    csq <- c()
+  
+  # check now which rows match with the row above
+  datmatch <- c(1)
+  for (n in 1:(nrow(coords)-1)){
+    nbmatch <-  sum(match(coords[n,c(1,2,7)],coords[n+1,c(1,2,7)]),na.rm=T)
+    datmatch <- c(datmatch,nbmatch)
   }
+  
+  # bind with coords and remove rows that match
+  coords <- cbind(coords,datmatch)
+  coords <- subset(coords,!(coords$datmatch == 6))
+  coords <- coords[,-8]
+
+  # now re-order and combine to data frame
+  for (j in 1:nrow(scea@data)){
+    Poly_No <- c()
+    Coord_order <- c()
+    
+    sublen <- subset(coords,coords$id == unique(coords$id)[j])
+    Poly_No  <- c(Poly_No,rep(j,nrow(sublen)))
+    Coord_order <- c(Coord_order,paste(j,seq(1,nrow(sublen),1),sep="_"))
+    Longitude <- sublen[,1]
+    Latitude <- sublen[,2]
+    Hole <- sublen[,4]
+    Group <- paste(Poly_No,sublen[,5],sep=".")
+    
+  # get vme c-square data
+    tt <- subset(VME,VME$pol == j)
+    if(nrow(tt) > 0){
+      csq  <- paste(unique(tt$VME_Class_Name), collapse = '_ ')
+    } else{
+      csq <- c()
+    }
   
   # get vme habitat/indicator information
-  tt <- subset(VMobs,VMobs$pol == j)
-  if(nrow(tt) > 0){
-    obq  <- paste(unique(tt$VME_Indicator), collapse = '_ ')
-    obq_hab <- paste(unique(tt$HabitatType), collapse = '_ ')
-  } else{
-    obq <- c()
-    obq_hab <- c()
-  }
+    tt <- subset(VMobs,VMobs$pol == j)
+    if(nrow(tt) > 0){
+      obq  <- paste(unique(tt$VME_Indicator), collapse = '_ ')
+      obq_hab <- paste(unique(tt$HabitatType), collapse = '_ ')
+    } else{
+      obq <- c()
+      obq_hab <- c()
+    }
   
-  infor <- data.frame(Poly_No,Coord_No,Longitude = coords[,1], Latitude = coords[,2], VME_Csquare = rep(csq,length(Poly_No)),
+  infor <- data.frame(Poly_No,Coord_order,Longitude, Latitude, Hole, Group,
+                      VME_Csquare = rep(csq,length(Poly_No)),
                       VME_Habitat = rep(obq_hab,length(Poly_No)), VME_Indicator = rep(obq,length(Poly_No)))
   runpol <- rbind(runpol,infor)  
   
