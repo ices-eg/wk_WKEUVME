@@ -188,10 +188,10 @@
   after2sar10 <- subset(sardat,sardat@data$cats == "(0,90]")
   after2sar90 <- subset(sardat,sardat@data$cats == "(90,100]")
   
-  mean2sar_low <- subset(sardat,sardat@data$SAR_intensity < 0.43)
-  mean2sar_int1 <- subset(sardat,sardat@data$SAR_intensity >= 0.43 & sardat@data$SAR_intensity < 1)
-  mean2sar_int2 <- subset(sardat,sardat@data$SAR_intensity >= 1 & sardat@data$SAR_intensity < 3)
-  mean2sar_high <- subset(sardat,sardat@data$SAR_intensity >= 3)
+  mean2sar_low <- subset(sardat,sardat@data$SAR_intensity <= 0.43)
+  mean2sar_int1 <- subset(sardat,sardat@data$SAR_intensity > 0.43 & sardat@data$SAR_intensity <= 1)
+  mean2sar_int2 <- subset(sardat,sardat@data$SAR_intensity > 1 & sardat@data$SAR_intensity <= 3)
+  mean2sar_high <- subset(sardat,sardat@data$SAR_intensity > 3)
   
   EcoReg <- "Celtic Seas"
   setwd(paste(pathdir_nogit,"VMS data repository",sep="/"))
