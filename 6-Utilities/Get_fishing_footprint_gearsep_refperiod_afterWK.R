@@ -155,17 +155,17 @@
   colnames(Footprint)[ncol(Footprint)] <- "Both_footprint"
   
   
-  library(ggplot2)
-  ggplot () + geom_point(data=Footprint, aes(x = long,y = lat, col= as.factor(MBCG_footprint)))
-  ggplot () + geom_point(data=Footprint, aes(x = long,y = lat, col= as.factor(Static_footprint)))
-  ggplot () + geom_point(data=Footprint, aes(x = long,y = lat, col= as.factor(Both_footprint)))
+  #library(ggplot2)
+  #ggplot () + geom_point(data=Footprint, aes(x = long,y = lat, col= as.factor(MBCG_footprint)))
+  #ggplot () + geom_point(data=Footprint, aes(x = long,y = lat, col= as.factor(Static_footprint)))
+  #ggplot () + geom_point(data=Footprint, aes(x = long,y = lat, col= as.factor(Both_footprint)))
   
-  Footprint$test <- Footprint$MBCG_footprint + Footprint$Static_footprint
-  Footprint$test[Footprint$test > 0] <- 1
+  #Footprint$test <- Footprint$MBCG_footprint + Footprint$Static_footprint
+  #Footprint$test[Footprint$test > 0] <- 1
   
-  Footprint$test2 <- Footprint$Both_footprint - Footprint$test
-  subset(Footprint, Footprint$test2 == 1)
+  #Footprint$test2 <- Footprint$Both_footprint - Footprint$test
+  #subset(Footprint, Footprint$test2 == 1)
   
-  ggplot () + geom_point(data=Footprint, aes(x = long,y = lat, col= as.factor(test2)))
+  #ggplot () + geom_point(data=Footprint, aes(x = long,y = lat, col= as.factor(test2)))
   
 rm("dat","nam_footprint","indexcol_footprint","vmsreg_footprint","refyear_footprint")

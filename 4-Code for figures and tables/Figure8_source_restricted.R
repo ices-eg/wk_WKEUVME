@@ -18,7 +18,7 @@ vmsreg <- readRDS(paste(EcoReg,"vms.rds",sep="_"))
 
 # define few params
 refyear <- 2009:2011
-afteryear <- 2016:2019
+afteryear <- 2016:2018
 metier_mbcg  <- c("Otter","Beam","Dredge","Seine", 
                   "OT_CRU","OT_DMF","OT_MIX","OT_MIX_CRU_DMF",
                   "OT_MIX_DMF_BEN","OT_SPF")
@@ -92,12 +92,12 @@ fig8b$cat2 <- cut(fig8b$perc2,c(quat2))
 quat3 <- seq(0, 100, by=10)
 fig8b$cat3 <- cut(rev(fig8b$perc2),c(quat3))
 
-# do similar for 2016-2019 period
-fig8 <- IREG
+# do similar for 2016-2018 period
+fig8d <- IREG
 nam <- paste("SAR_Otter",afteryear,sep="_")
 indexcol <- which(names(vmsreg) %in% nam) 
 vmsreg$otafteryear <- rowMeans(vmsreg[indexcol],na.rm = T)  
-fig8d <- cbind(fig8, vmsreg[match(fig8$csquares,vmsreg$c_square), c("otafteryear")])
+fig8d <- cbind(fig8d, vmsreg[match(fig8d$csquares,vmsreg$c_square), c("otafteryear")])
 colnames(fig8d)[ncol(fig8d)] <- "Otter_intensity_after"
 fig8d$Otter_intensity_after[is.na(fig8d$Otter_intensity_after)] <- 0
 fig8d <- subset(fig8d,fig8d$Otter_intensity_after > 0) #& fig8$adjacent.cells > 0)

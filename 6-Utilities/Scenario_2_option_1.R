@@ -37,7 +37,7 @@
   VMEdepth <- subset(VMEdepth@data,!(is.na(VMEdepth@data$VME_Class)))
   
 # now check which low index VME index cells are unfished
-  refyear <- 2009:2019
+  refyear <- 2009:2018
 
   # get vms data Celtic Seas
   setwd(paste(pathdir_nogit,"VMS data repository",sep="/"))

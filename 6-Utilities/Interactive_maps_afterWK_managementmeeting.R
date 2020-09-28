@@ -171,7 +171,7 @@
   #aftersar90 <- subset(sardat,sardat@data$cats == "(90,100]")
   
   # define few params
-  refyear <- 2016:2019
+  refyear <- 2016:2018
   
   nam <- paste("SAR_total",refyear,sep="_")
   indexcol <- which(names(vmsreg) %in% nam) 
@@ -197,7 +197,7 @@
   setwd(paste(pathdir_nogit,"VMS data repository",sep="/"))
   vmsreg <- readRDS(paste(EcoReg,"vms.rds",sep="_"))
   # define few params
-  refyear <- 2016:2019
+  refyear <- 2016:2018
   
   nam <- paste("SAR_total",refyear,sep="_")
   indexcol <- which(names(vmsreg) %in% nam) 
@@ -310,19 +310,19 @@
                 stroke = FALSE, fillOpacity = 0.5, smoothFactor = 0.5,fillColor =  "#ffeda0") %>%
     
     # 10-90 percentile
-    addPolygons(data = aftersar10, group = "MBCG 10-100% core fishing area 2016-2019",
+    addPolygons(data = aftersar10, group = "MBCG 10-100% core fishing area 2016-2018",
                 stroke = FALSE, fillOpacity = 0.5, smoothFactor = 0.5,fillColor =  "red") %>%
-    addPolygons(data = aftersar90, group = "MBCG 0-10% 2016-2019",
+    addPolygons(data = aftersar90, group = "MBCG 0-10% 2016-2018",
                 stroke = FALSE, fillOpacity = 0.5, smoothFactor = 0.5,fillColor =  "orange") %>%
 
     # mean SAR 
-    addPolygons(data = mean2sar_low2, group = "Average SAR 0-0.43 in 2016-2019",
+    addPolygons(data = mean2sar_low2, group = "Average SAR 0-0.43 in 2016-2018",
                 stroke = FALSE, fillOpacity = 0.5, smoothFactor = 0.5,fillColor =  "#feebe2") %>%
-    addPolygons(data = mean2sar_int12, group = "Average SAR 0.43-1 in 2016-2019",
+    addPolygons(data = mean2sar_int12, group = "Average SAR 0.43-1 in 2016-2018",
                 stroke = FALSE, fillOpacity = 0.5, smoothFactor = 0.5,fillColor =  "#fbb4b9") %>%
-    addPolygons(data = mean2sar_int22, group = "Average SAR 1-3 in 2016-2019",
+    addPolygons(data = mean2sar_int22, group = "Average SAR 1-3 in 2016-2018",
                 stroke = FALSE, fillOpacity = 0.5, smoothFactor = 0.5,fillColor =  "#f768a1") %>%
-    addPolygons(data = mean2sar_high2, group = "Average SAR >3 in 2016-2019",
+    addPolygons(data = mean2sar_high2, group = "Average SAR >3 in 2016-2018",
                 stroke = FALSE, fillOpacity = 0.5, smoothFactor = 0.5,fillColor =  "#ae017e") %>% 
     
     # Layers control
@@ -330,9 +330,9 @@
       overlayGroups = c("Depth 400-800 m", "Ecoregion boundaries","Footprint MBCG 2009-2011",
                         "Closure 1_1 within 400-800m","Closure 1_2 within 400-800m",
                         "Closure 2_1 within 400-800m","Closure 2_2 within 400-800m",
-                        "MBCG 10-100% core fishing area 2016-2019","MBCG 0-10% 2016-2019",
-                        "Average SAR 0-0.43 in 2016-2019","Average SAR 0.43-1 in 2016-2019",
-                        "Average SAR 1-3 in 2016-2019","Average SAR >3 in 2016-2019"),
+                        "MBCG 10-100% core fishing area 2016-2018","MBCG 0-10% 2016-2018",
+                        "Average SAR 0-0.43 in 2016-2018","Average SAR 0.43-1 in 2016-2018",
+                        "Average SAR 1-3 in 2016-2018","Average SAR >3 in 2016-2018"),
       options = layersControlOptions(collapsed = FALSE)
     )
   

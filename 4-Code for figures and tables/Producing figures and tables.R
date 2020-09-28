@@ -265,7 +265,7 @@
   jpeg(file = paste(outdir,"Figure_8d.jpeg",sep="/"), width=fig_width, height=fig_length,units ='in', res = 300)
   
   figmap <- ggplot() + geom_point(data=fig8d, aes(x=long, y=lat , col=rev(cat4)),
-                                  shape=15,size=0.5,na.rm=T) + ggtitle("(d) fishing in 2016-2019")
+                                  shape=15,size=0.5,na.rm=T) + ggtitle("(d) fishing in 2016-2018")
   figmap <- figmap +  scale_color_manual(values = copl,name ="Percentiles",labels=labeltext)      
   figmap <- figmap +  geom_polygon(data = worldMap, aes(x = long, y = lat, group = group),color="grey",fill="grey")
   figmap <- figmap +  theme(plot.background=element_blank(),
@@ -318,15 +318,15 @@
   fig9$category[fig9$category =="none_1"] <- NA
   fig9 <- subset(fig9,!(is.na(fig9$category)))
   
-  if (EcoReg == "Celtic Seas"){
-    colfig9 <- c("#238b45","#bae4b3", "#e31a1c","#fdbe85","#bdd7e7")
-    labeltext <- c("high - unfished","high - fished","low - unfished","low - fished",
-                  "medium - fished")
-  } else{
+  #if (EcoReg == "Celtic Seas"){
+  #  colfig9 <- c("#238b45","#bae4b3", "#e31a1c","#fdbe85","#bdd7e7")
+  #  labeltext <- c("high - unfished","high - fished","low - unfished","low - fished",
+  #                "medium - fished")
+  #} else{
     colfig9 <- c("#238b45","#bae4b3", "#e31a1c","#fdbe85","#2171b5","#bdd7e7")
     labeltext <- c("high - unfished","high - fished","low - unfished","low - fished",
                  "medium - unfished", "medium - fished")
-  }
+  #}
   
   jpeg(file = paste(outdir,"Figure_9.jpeg",sep="/"), width=fig_width, height=fig_length,units ='in', res = 300)
   figmap <- ggplot() + geom_point(data=fig9, aes(x=long, y=lat , col=as.factor(category)),

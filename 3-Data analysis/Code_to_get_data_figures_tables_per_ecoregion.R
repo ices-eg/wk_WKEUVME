@@ -19,8 +19,8 @@
   
 # define few params
   refyear <- 2009:2011
-  afteryear <- 2012:2019
-  allyears <- 2009:2019
+  afteryear <- 2012:2018
+  allyears <- 2009:2018
   metier_mbcg  <- c("Otter","Beam","Dredge","Seine", 
                     "OT_CRU","OT_DMF","OT_MIX","OT_MIX_CRU_DMF",
                     "OT_MIX_DMF_BEN","OT_SPF")
@@ -46,7 +46,7 @@
   vmsreg$ref <- rowSums(vmsreg[indexcol])
   vmsreg$ref[vmsreg$ref > 0] <- 1
   
-  # total fishing footprint in period 2012-2019
+  # total fishing footprint in period 2012-2018
   nam <- c(paste("SAR_total",afteryear,sep="_"),paste(metier_static[1],afteryear, sep="_"))
   indexcol <- which(names(vmsreg) %in% nam) 
   vmsreg$after <- rowSums(vmsreg[indexcol])

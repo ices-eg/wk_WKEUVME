@@ -17,9 +17,9 @@ tab4$Theme <- c("VME protection", "VME protection", "VME protection", "VME prote
                 "Fisheries overlap (presence/absence) (2009-2011)", "Fisheries overlap (core fishing ground) (2009-2011)",
                 "Fisheries overlap (core fishing ground) (2009-2011)", "Fisheries consequences (presence/absence) (2012-2015)",   
                 "Fisheries consequences (presence/absence) (2012-2015)",  "Fisheries consequences (core fishing ground) (2012-2015)",
-                "Fisheries consequences (core fishing ground) (2012-2015)", "Fisheries consequences (presence/absence) (2016-2019)",   
-                "Fisheries consequences (presence/absence) (2016-2019)",  "Fisheries consequences (core fishing ground) (2016-2019)",
-                "Fisheries consequences (core fishing ground) (2016-2019)")
+                "Fisheries consequences (core fishing ground) (2012-2015)", "Fisheries consequences (presence/absence) (2016-2018)",   
+                "Fisheries consequences (presence/absence) (2016-2018)",  "Fisheries consequences (core fishing ground) (2016-2018)",
+                "Fisheries consequences (core fishing ground) (2016-2018)")
 tab4$Group <- c("A","A","A","A","B","B","B", "C", "C", "D" ,"D" ,"E" ,"E", "F", "F", "G", "G", "H", "H")
 
 for (i in 2:9){
@@ -93,13 +93,13 @@ F1 = ggplot(data=toplot[which(toplot$Group == "F"),], aes(x=Metric, y=Percentage
 
 G = ggplot(data=toplot[which(toplot$Group == "G"),], aes(x=Metric, y=Percentage, fill=scenario)) +
   geom_bar(stat="identity", position=position_dodge())+
-  ggtitle("g) Fisheries consequences (presence/absence) (2016-2019)") + xlab("") + ylab("% C-squares")+
+  ggtitle("g) Fisheries consequences (presence/absence) (2016-2018)") + xlab("") + ylab("% C-squares")+
   scale_x_discrete(labels=c("Mobile bottom gear \n fishing (SAR >0)","Static bottom fishing \n gears present")) +
   theme(legend.position = "none") + theme(plot.title = element_text(size=9))
 
 H = ggplot(data=toplot[which(toplot$Group == "H"),], aes(x=Metric, y=Percentage, fill=scenario)) +
   geom_bar(stat="identity", position=position_dodge())+
-  ggtitle("h) Fisheries consequences (core fishing ground) (2016-2019)") + xlab("") + ylab("%")+
+  ggtitle("h) Fisheries consequences (core fishing ground) (2016-2018)") + xlab("") + ylab("%")+
   scale_x_discrete(labels=c("Fraction of total SAR","Core fishing area \n C-squares")) +
   theme(legend.position = "none") + theme(plot.title = element_text(size=9))
 
@@ -163,7 +163,7 @@ text(y=loc,x=colMeans(rbind(
       new$fraction.of.total.SAR[c(1,3,5,7)],
       new$fraction.of.total.SAR.1[c(1,3,5,7)],
       new$fraction.of.total.SAR.2[c(1,3,5,7)])),labels=labels)
-legend(title="Period",legend=c("2016-2019","2012-2015","2009-2011"),col=c("red","blue","darkgreen"),pch=19,cex=1,"topleft", bty = "n")
+legend(title="Period",legend=c("2016-2018","2012-2015","2009-2011"),col=c("red","blue","darkgreen"),pch=19,cex=1,"topleft", bty = "n")
 legend(title="Scenario",legend=c(labels),pch=1:4,cex=1,"topright", bty = "n")
 mtext("A)",side=3,outer=T,adj=0,line=-1) 
 mtext("B)", side = 3, line = -1, outer = T)
@@ -181,7 +181,7 @@ text(y=loc,x=colMeans(rbind(
   new$fraction.of.total.SAR.1[c(1,3,5,7)],
   new$fraction.of.total.SAR.2[c(1,3,5,7)]))
   ,labels=labels)
-legend(title="Period",legend=c("2016-2019","2012-2015","2009-2011"),col=c("red","blue","darkgreen"),pch=19,cex=1,"topleft", bty = "n")
+legend(title="Period",legend=c("2016-2018","2012-2015","2009-2011"),col=c("red","blue","darkgreen"),pch=19,cex=1,"topleft", bty = "n")
 legend(title="Scenario",legend=c(labels),pch=1:4,cex=1,"topright", bty = "n")
 box()
 
@@ -202,7 +202,7 @@ text(y=loc,x=colMeans(rbind(
   new$nb.of.c.squares.with.mobile.bottom.fishing..SAR...0..1[c(1,3,5,7)],
   new$nb.of.c.squares.with.mobile.bottom.fishing..SAR...0..2[c(1,3,5,7)]))
   ,labels=labels)
-legend(title="Period",legend=c("2016-2019","2012-2015","2009-2011"),col=c("red","blue","darkgreen"),pch=19,cex=1,"topleft", bty = "n")
+legend(title="Period",legend=c("2016-2018","2012-2015","2009-2011"),col=c("red","blue","darkgreen"),pch=19,cex=1,"topleft", bty = "n")
 legend(title="Scenario",legend=c(labels),pch=1:4,cex=1,"topright", bty = "n")
 mtext("A)",side=3,outer=T,adj=0,line=-1) 
 mtext("B)", side = 3, line = -1, outer = T)
@@ -221,7 +221,7 @@ text(y=loc,x=colMeans(rbind(
   new$nb.of.c.squares.with.static.bottom.fishing..present..1[c(1,3,5,7)],
   new$nb.of.c.squares.with.static.bottom.fishing..present..2[c(1,3,5,7)]))
   ,labels=labels)
-legend(title="Period",legend=c("2016-2019","2012-2015","2009-2011"),col=c("red","blue","darkgreen"),pch=19,cex=1,"topleft", bty = "n")
+legend(title="Period",legend=c("2016-2018","2012-2015","2009-2011"),col=c("red","blue","darkgreen"),pch=19,cex=1,"topleft", bty = "n")
 legend(title="Scenario",legend=c(labels),pch=1:4,cex=1,"topright", bty = "n")
 mtext("A)",side=3,outer=T,adj=0,line=-1) 
 mtext("B)", side = 3, line = -1, outer = T)

@@ -158,8 +158,8 @@
 # define few params
   refyear <- 2009:2011
   afteryear1 <- 2012:2015
-  afteryear2 <- 2016:2019
-  allyears <- 2009:2019
+  afteryear2 <- 2016:2018
+  allyears <- 2009:2018
   metier_mbcg  <- c("Otter","Beam","Dredge","Seine", 
                     "OT_CRU","OT_DMF","OT_MIX","OT_MIX_CRU_DMF",
                     "OT_MIX_DMF_BEN","OT_SPF")
@@ -508,7 +508,7 @@
   tablenew [n,8] <- as.character(round(sum(depthwithin$afterSAR1[depthwithin$clos2b == 1],na.rm=T) / sum(depthwithin$afterSAR1,na.rm=T),digits = 2))
   tablenew [n,9] <- as.character(round(sum(depthwithin$afterSAR1[depthwithin$clos2b == 0],na.rm=T) / sum(depthwithin$afterSAR1,na.rm=T),digits = 2))
 
-## now for period 2016-2019
+## now for period 2016-2018
   n <- 33
   # c-squares part of static gears present
   tablenew [n,2] <- length(which(depthwithin$clos1a == 1 & depthwithin$afterStatic2 == 1))/4
@@ -557,8 +557,8 @@
 
   tablenew [,1] <- c("","","VME protection","nb of c-squares with VME habitat","nb of c-squares with VME index high",
                      "nb of c-squares with VME index medium","nb of c-squares with VME index low",
-                     "","VME protection and fishing impact threshold","nb of c-squares with VME habitat/index below SAR 0.43 threshold (2009-2019)",
-                     "nb of c-squares with closed VME habitat/index above SAR 0.43 threshold (2009-2019)",
+                     "","VME protection and fishing impact threshold","nb of c-squares with VME habitat/index below SAR 0.43 threshold (2009-2018)",
+                     "nb of c-squares with closed VME habitat/index above SAR 0.43 threshold (2009-2018)",
                      "","Fisheries footprint","nb of c-squares part of fishing footprint",
                      "", "Fisheries overlap (presence/absence) (2009-2011)",
                      "nb of c-squares with static bottom fishing (present)",
@@ -572,10 +572,10 @@
                      "","Fisheries consequences (core fishing ground) (2012-2015)",
                      "nb of c-squares that form core fishing area based on SAR ",
                      "fraction of total SAR",
-                     "", "Fisheries consequences (presence/absence) (2016-2019)",
+                     "", "Fisheries consequences (presence/absence) (2016-2018)",
                      "nb of c-squares with static bottom fishing (present)",
                      "nb of c-squares with mobile bottom fishing (SAR > 0)",
-                     "","Fisheries consequences (core fishing ground) (2016-2019)",
+                     "","Fisheries consequences (core fishing ground) (2016-2018)",
                      "nb of c-squares that form core fishing area based on SAR",
                      "fraction of total SAR")
   tablenew[1,] <- c("","Scenario 1 option 1","","Scenario 1 option 2","","Scenario 2 option 1","","Scenario 2 option 2","")

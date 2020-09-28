@@ -12,7 +12,7 @@
   setwd(paste(pathdir,"VMS data repository",sep="/"))
 
 # years/ regions 
-  year <- c(2009:2019)
+  year <- c(2009:2018)
   Ecoreg <- c("Celtic Seas","Bay of Biscay and the Iberian Coast") # ,"Greater North Sea")
 
 # metiers
@@ -82,7 +82,7 @@
     }
     
     Region <- dplyr::bind_rows(Region_2009, Region_2010, Region_2011, Region_2012, Region_2013,
-                               Region_2014, Region_2015, Region_2016, Region_2017, Region_2018, Region_2019)
+                               Region_2014, Region_2015, Region_2016, Region_2017, Region_2018)
     
     Region <- aggregate(Region[,c(1:2,8:ncol(Region))],
                         Region[,c(3:7)],FUN = sum,na.rm=TRUE)
