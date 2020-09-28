@@ -160,7 +160,7 @@
                                   shape=15,size=0.5,na.rm=T) 
   figmap <- figmap +  scale_color_manual(values = c("#bcbddc","#54278f","#b30000","#fcae91"),name ="",
                                          labels=c("unfished (both periods)","only fished in 2009-11",
-                                                  "only fished in 2012-19","fished (both periods)"))      
+                                                  "only fished in 2012-18","fished (both periods)"))      
   figmap <- figmap +  geom_polygon(data = worldMap, aes(x = long, y = lat, group = group),color="grey",fill="grey")
   figmap <- figmap +  theme(plot.background=element_blank(),
                             panel.background=element_blank(),
@@ -265,7 +265,7 @@
   jpeg(file = paste(outdir,"Figure_8d.jpeg",sep="/"), width=fig_width, height=fig_length,units ='in', res = 300)
   
   figmap <- ggplot() + geom_point(data=fig8d, aes(x=long, y=lat , col=rev(cat4)),
-                                  shape=15,size=0.5,na.rm=T) + ggtitle("(d) fishing in 2016-2018")
+                                  shape=15,size=0.5,na.rm=T) + ggtitle("(d) fishing in 2015-2018")
   figmap <- figmap +  scale_color_manual(values = copl,name ="Percentiles",labels=labeltext)      
   figmap <- figmap +  geom_polygon(data = worldMap, aes(x = long, y = lat, group = group),color="grey",fill="grey")
   figmap <- figmap +  theme(plot.background=element_blank(),

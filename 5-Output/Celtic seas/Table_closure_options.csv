@@ -2,38 +2,38 @@ X1,X2,X3,X4,X5,X6,X7,X8,X9
 ,Scenario 1 option 1,,Scenario 1 option 2,,Scenario 2 option 1,,Scenario 2 option 2,
 ,within closure,outside closures,within closure,outside closures,within closure,outside closures,within closure,outside closures
 VME protection,,,,,,,,
-nb of c-squares with VME habitat,78,0,78,0,78,0,68,10
+nb of c-squares with VME habitat,78,0,78,0,78,0,65,13
 nb of c-squares with VME index high,41,0,41,0,41,0,36,5
-nb of c-squares with VME index medium,30,0,30,0,30,0,21,9
-nb of c-squares with VME index low,27,219,27,219,108,138,81,165
+nb of c-squares with VME index medium,30,0,30,0,30,0,20,10
+nb of c-squares with VME index low,27,219,27,219,88,158,61,185
 ,,,,,,,,
 VME protection and fishing impact threshold,,,,,,,,
-nb of c-squares with VME habitat/index below SAR 0.43 threshold (2009-2018),137,43,137,43,179,1,177,3
-nb of c-squares with closed VME habitat/index above SAR 0.43 threshold (2009-2018),39,176,39,176,78,137,29,186
+nb of c-squares with VME habitat/index below SAR 0.43 threshold (2009-2018),127,27,127,27,153,1,151,3
+nb of c-squares with closed VME habitat/index above SAR 0.43 threshold (2009-2018),49,192,49,192,84,157,31,210
 ,,,,,,,,
 Fisheries footprint,,,,,,,,
-nb of c-squares part of fishing footprint,733,3150,963,2920,949,2934,742,3141
+nb of c-squares part of fishing footprint,769,3339,1001,3107,925,3183,687,3421
 ,,,,,,,,
 Fisheries overlap (presence/absence) (2009-2011),,,,,,,,
-nb of c-squares with static bottom fishing (present),552,2061,766,1847,717,1896,599,2014
-nb of c-squares with mobile bottom fishing (SAR > 0),422,2301,494.25,2228.75,622,2101,417,2306
+nb of c-squares with static bottom fishing (present),626,2387,842,2171,761,2252,580,2433
+nb of c-squares with mobile bottom fishing (SAR > 0),521,2630,596.5,2554.5,679,2472,443,2708
 ,,,,,,,,
 Fisheries overlap (core fishing ground) (2009-2011),,,,,,,,
-nb of c-squares that form core fishing area based on SAR,153,881,153,881,191,843,54,980
-fraction of total SAR,0.16,0.84,0.16,0.84,0.2,0.8,0.06,0.94
+nb of c-squares that form core fishing area based on SAR,182,1229,182,1229,232,1179,73,1338
+fraction of total SAR,0.12,0.88,0.12,0.88,0.15,0.85,0.05,0.95
 ,,,,,,,,
-Fisheries consequences (presence/absence) (2012-2015),,,,,,,,
-nb of c-squares with static bottom fishing (present),493,2126,583.25,2035.75,684,1935,551,2068
-nb of c-squares with mobile bottom fishing (SAR > 0),360,2122,365.25,2116.75,535,1947,335,2147
+Fisheries consequences (presence/absence) (2012-2014),,,,,,,,
+nb of c-squares with static bottom fishing (present),562,2420,675,2307,692,2290,501,2481
+nb of c-squares with mobile bottom fishing (SAR > 0),427,2350,432.25,2344.75,557,2220,335,2442
 ,,,,,,,,
-Fisheries consequences (core fishing ground) (2012-2015),,,,,,,,
-nb of c-squares that form core fishing area based on SAR ,137,903,137,903,182,858,48,992
-fraction of total SAR,0.12,0.88,0.12,0.88,0.16,0.84,0.05,0.95
+Fisheries consequences (core fishing ground) (2012-2014),,,,,,,,
+nb of c-squares that form core fishing area based on SAR ,152,1110,152,1110,173,1089,46,1216
+fraction of total SAR,0.09,0.91,0.09,0.91,0.11,0.89,0.04,0.96
 ,,,,,,,,
-Fisheries consequences (presence/absence) (2016-2018),,,,,,,,
-nb of c-squares with static bottom fishing (present),462,2107,570.25,1998.75,652,1917,482,2087
-nb of c-squares with mobile bottom fishing (SAR > 0),402,2203,412.75,2192.25,579,2026,376,2229
+Fisheries consequences (presence/absence) (2015-2018),,,,,,,,
+nb of c-squares with static bottom fishing (present),558,2436,667.25,2326.75,694,2300,496,2498
+nb of c-squares with mobile bottom fishing (SAR > 0),454,2420,464.75,2409.25,582,2292,348,2526
 ,,,,,,,,
-Fisheries consequences (core fishing ground) (2016-2018),,,,,,,,
-nb of c-squares that form core fishing area based on SAR,106,1012,106,1012,161,957,51,1067
-fraction of total SAR,0.07,0.93,0.07,0.93,0.12,0.88,0.05,0.95
+Fisheries consequences (core fishing ground) (2015-2018),,,,,,,,
+nb of c-squares that form core fishing area based on SAR,119,1103,119,1103,150,1072,43,1179
+fraction of total SAR,0.07,0.93,0.07,0.93,0.09,0.91,0.04,0.96

@@ -122,13 +122,13 @@
   figmap  <- figmap +  geom_polygon(data = shapeEEZ, aes(x = long, y = lat, group = group),color="grey",fill=NA)
   figmap  <- figmap +  geom_polygon(data = shapeReg, aes(x = long, y = lat, group = group),color="black",fill=NA)
   
-  figmap_sce1a <- figmap + geom_polygon(data= sce1a, aes(x = long, y = lat, group = group),color="orange",fill="orange") +
+  figmap_sce1a <- figmap + geom_polypath(data= sce1a, aes(x = long, y = lat, group = group),color=NA,fill="orange") +
     ggtitle("scenario 1 - option 1")
-  figmap_sce1b <- figmap + geom_polygon(data= sce1b, aes(x = long, y = lat, group = group),color="orange",fill="orange") +
+  figmap_sce1b <- figmap + geom_polypath(data= sce1b, aes(x = long, y = lat, group = group),color=NA,fill="orange") +
     ggtitle("scenario 1 - option 2")
-  figmap_sce2a <- figmap + geom_polygon(data= sce2a, aes(x = long, y = lat, group = group),color="orange",fill="orange") +
+  figmap_sce2a <- figmap + geom_polypath(data= sce2a, aes(x = long, y = lat, group = group),color=NA,fill="orange") +
     ggtitle("scenario 2 - option 1")
-  figmap_sce2b <- figmap + geom_polygon(data= sce2b, aes(x = long, y = lat, group = group),color="orange",fill="orange") +
+  figmap_sce2b <- figmap + geom_polypath(data= sce2b, aes(x = long, y = lat, group = group),color=NA,fill="orange") +
     ggtitle("scenario 2 - option 2")
   
   print(grid.arrange(figmap_sce1a,figmap_sce1b, figmap_sce2a,figmap_sce2b, nrow = 2))
@@ -137,10 +137,9 @@
 
 # now make table to calculate overlap
 # get footprint
-  source(paste(pathdir,"6-Utilities/Get_fishing_footprint_refperiod.R",sep="/"))
-  depthreg <- cbind(depthreg, Footprint[match(depthreg@data$csquares,Footprint$csquares), c("adjacent.cells")])
-  colnames(depthreg@data)[ncol(depthreg@data)] <- "adjacent.cells"
-  depthreg@data$adjacent.cells[depthreg@data$adjacent.cells > 0 ] <- 1
+  source(paste(pathdir,"6-Utilities/Get fishing footprint mbcg_static.R",sep="/"))
+  depthreg <- cbind(depthreg, Footprint[match(depthreg@data$csquares,Footprint$csquares), c("Both_footprint")])
+  colnames(depthreg@data)[ncol(depthreg@data)] <- "Both_footprint"
 
 # get VME
   VME <- read.csv(paste(pathdir_nogit,
@@ -157,8 +156,8 @@
 
 # define few params
   refyear <- 2009:2011
-  afteryear1 <- 2012:2015
-  afteryear2 <- 2016:2018
+  afteryear1 <- 2012:2014
+  afteryear2 <- 2015:2018
   allyears <- 2009:2018
   metier_mbcg  <- c("Otter","Beam","Dredge","Seine", 
                     "OT_CRU","OT_DMF","OT_MIX","OT_MIX_CRU_DMF",
@@ -180,7 +179,7 @@
   vmsreg$refSAR <- rowMeans(vmsreg[indexcol])
   depthreg <- cbind(depthreg, vmsreg[match(depthreg@data$csquares,vmsreg$c_square), c("refSAR")])
   colnames(depthreg@data)[ncol(depthreg@data)] <- "refSAR"
-  depthreg@data$refSAR[depthreg@data$adjacent.cells == 0] <- 0
+  depthreg@data$refSAR[depthreg@data$Both_footprint == 0] <- 0
 
 # SAR trawling in after period 1
   nam <- paste("SAR_total",afteryear1,sep="_")
@@ -188,7 +187,7 @@
   vmsreg$afterSAR1 <- rowMeans(vmsreg[indexcol])
   depthreg <- cbind(depthreg, vmsreg[match(depthreg@data$csquares,vmsreg$c_square), c("afterSAR1")])
   colnames(depthreg@data)[ncol(depthreg@data)] <- "afterSAR1"
-  depthreg@data$afterSAR1[depthreg@data$adjacent.cells == 0] <- 0
+  depthreg@data$afterSAR1[depthreg@data$Both_footprint == 0] <- 0
 
 # SAR trawling in ref period
   nam <- paste("SAR_total",afteryear2,sep="_")
@@ -196,7 +195,7 @@
   vmsreg$afterSAR2 <- rowMeans(vmsreg[indexcol])
   depthreg <- cbind(depthreg, vmsreg[match(depthreg@data$csquares,vmsreg$c_square), c("afterSAR2")])
   colnames(depthreg@data)[ncol(depthreg@data)] <- "afterSAR2"
-  depthreg@data$afterSAR2[depthreg@data$adjacent.cells == 0] <- 0
+  depthreg@data$afterSAR2[depthreg@data$Both_footprint == 0] <- 0
 
 # Static in ref period
   nam <- paste("Static",refyear, sep="_")
@@ -205,7 +204,7 @@
   vmsreg$refStatic[vmsreg$refStatic > 0] <- 1
   depthreg <- cbind(depthreg, vmsreg[match(depthreg@data$csquares,vmsreg$c_square), c("refStatic")])
   colnames(depthreg@data)[ncol(depthreg@data)] <- "refStatic"
-  depthreg@data$refStatic[depthreg@data$adjacent.cells == 0] <- 0
+  depthreg@data$refStatic[depthreg@data$Both_footprint == 0] <- 0
 
   nam <- paste("Static",afteryear1, sep="_")
   indexcol <- which(names(vmsreg) %in% nam) 
@@ -213,7 +212,7 @@
   vmsreg$afterStatic1[vmsreg$afterStatic1 > 0] <- 1
   depthreg <- cbind(depthreg, vmsreg[match(depthreg@data$csquares,vmsreg$c_square), c("afterStatic1")])
   colnames(depthreg@data)[ncol(depthreg@data)] <- "afterStatic1"
-  depthreg@data$afterStatic1[depthreg@data$adjacent.cells == 0] <- 0
+  depthreg@data$afterStatic1[depthreg@data$Both_footprint == 0] <- 0
   
   nam <- paste("Static",afteryear2, sep="_")
   indexcol <- which(names(vmsreg) %in% nam) 
@@ -221,7 +220,7 @@
   vmsreg$afterStatic2[vmsreg$afterStatic2 > 0] <- 1
   depthreg <- cbind(depthreg, vmsreg[match(depthreg@data$csquares,vmsreg$c_square), c("afterStatic2")])
   colnames(depthreg@data)[ncol(depthreg@data)] <- "afterStatic2"
-  depthreg@data$afterStatic2[depthreg@data$adjacent.cells == 0] <- 0
+  depthreg@data$afterStatic2[depthreg@data$Both_footprint == 0] <- 0
 
 # SAR trawling threshold in ref period
   nam <- paste("SAR_total",c(refyear, allyears),sep="_")
@@ -231,7 +230,7 @@
   depthreg <- cbind(depthreg, vmsreg[match(depthreg@data$csquares,vmsreg$c_square), c("threshold")])
   colnames(depthreg@data)[ncol(depthreg@data)] <- "threshold"
   depthreg@data$threshold[is.na(depthreg@data$threshold)] <- 0
-  depthreg@data$threshold[depthreg@data$adjacent.cells == 0] <- 0
+  depthreg@data$threshold[depthreg@data$Both_footprint == 0] <- 0
 
 # get core fishing ground otter trawling
   # get region within 400-800 meter
@@ -244,7 +243,7 @@
   fig8 <- cbind(fig8, vmsreg[match(fig8$csquares,vmsreg$c_square), c("otrefyear")])
   colnames(fig8)[ncol(fig8)] <- "Otter_intensity"
   fig8$Otter_intensity[is.na(fig8$Otter_intensity)] <- 0
-  fig8 <- subset(fig8,fig8$Otter_intensity > 0 & fig8$adjacent.cells > 0)
+  fig8 <- subset(fig8,fig8$Otter_intensity > 0 & fig8$Both_footprint > 0)
   fig8 <- fig8[order(fig8$Otter_intensity),]
   fig8$perc <- cumsum(fig8$Otter_intensity) / sum(fig8$Otter_intensity)*100
   quat <- c(0, 10,  100)
@@ -258,7 +257,7 @@
   fig8 <- cbind(fig8, vmsreg[match(fig8$csquares,vmsreg$c_square), c("otafteryear1")])
   colnames(fig8)[ncol(fig8)] <- "otafteryear1"
   fig8$otafteryear1[is.na(fig8$otafteryear1)] <- 0
-  fig8 <- subset(fig8,fig8$otafteryear1 > 0 & fig8$adjacent.cells > 0)
+  fig8 <- subset(fig8,fig8$otafteryear1 > 0 & fig8$Both_footprint > 0)
   fig8 <- fig8[order(fig8$otafteryear1),]
   fig8$perc1 <- cumsum(fig8$otafteryear1) / sum(fig8$otafteryear1)*100
   quat <- c(0, 10,  100)
@@ -272,7 +271,7 @@
   fig8 <- cbind(fig8, vmsreg[match(fig8$csquares,vmsreg$c_square), c("otafteryear2")])
   colnames(fig8)[ncol(fig8)] <- "otafteryear2"
   fig8$otafteryear2[is.na(fig8$otafteryear2)] <- 0
-  fig8 <- subset(fig8,fig8$otafteryear2 > 0 & fig8$adjacent.cells > 0)
+  fig8 <- subset(fig8,fig8$otafteryear2 > 0 & fig8$Both_footprint > 0)
   fig8 <- fig8[order(fig8$otafteryear2),]
   fig8$perc2 <- cumsum(fig8$otafteryear2) / sum(fig8$otafteryear2)*100
   quat <- c(0, 10,  100)
@@ -412,14 +411,14 @@
   tablenew [11,9] <- length(which(depthwithin$clos2b == 0 & depthwithin$threshold == 1 & !(is.na(depthwithin$VME_Class))))/4
 
 # c-squares part of fishing footprint
-  tablenew [14,2] <- length(which(depthwithin$clos1a == 1 & depthwithin$adjacent.cells == 1 ))/4
-  tablenew [14,3] <- length(which(depthwithin$clos1a == 0 & depthwithin$adjacent.cells == 1 ))/4
-  tablenew [14,4] <- length(which(depthwithin$clos1b == 1 & depthwithin$adjacent.cells == 1 ))/4
-  tablenew [14,5] <- length(which(depthwithin$clos1b == 0 & depthwithin$adjacent.cells == 1 ))/4
-  tablenew [14,6] <- length(which(depthwithin$clos2a == 1 & depthwithin$adjacent.cells == 1 ))/4
-  tablenew [14,7] <- length(which(depthwithin$clos2a == 0 & depthwithin$adjacent.cells == 1 ))/4
-  tablenew [14,8] <- length(which(depthwithin$clos2b == 1 & depthwithin$adjacent.cells == 1 ))/4
-  tablenew [14,9] <- length(which(depthwithin$clos2b == 0 & depthwithin$adjacent.cells == 1 ))/4
+  tablenew [14,2] <- length(which(depthwithin$clos1a == 1 & depthwithin$Both_footprint == 1 ))/4
+  tablenew [14,3] <- length(which(depthwithin$clos1a == 0 & depthwithin$Both_footprint == 1 ))/4
+  tablenew [14,4] <- length(which(depthwithin$clos1b == 1 & depthwithin$Both_footprint == 1 ))/4
+  tablenew [14,5] <- length(which(depthwithin$clos1b == 0 & depthwithin$Both_footprint == 1 ))/4
+  tablenew [14,6] <- length(which(depthwithin$clos2a == 1 & depthwithin$Both_footprint == 1 ))/4
+  tablenew [14,7] <- length(which(depthwithin$clos2a == 0 & depthwithin$Both_footprint == 1 ))/4
+  tablenew [14,8] <- length(which(depthwithin$clos2b == 1 & depthwithin$Both_footprint == 1 ))/4
+  tablenew [14,9] <- length(which(depthwithin$clos2b == 0 & depthwithin$Both_footprint == 1 ))/4
 
 # c-squares part of static gears present
   tablenew [17,2] <- length(which(depthwithin$clos1a == 1 & depthwithin$refStatic == 1))/4
@@ -462,7 +461,7 @@
   tablenew [22,8] <- as.character(round(sum(depthwithin$refSAR[depthwithin$clos2b == 1],na.rm=T) / sum(depthwithin$refSAR,na.rm=T),digits = 2))
   tablenew [22,9] <- as.character(round(sum(depthwithin$refSAR[depthwithin$clos2b == 0],na.rm=T) / sum(depthwithin$refSAR,na.rm=T),digits = 2))
 
-## now for period 2012-2015
+## now for period 2012-2014
   n <- 25
   # c-squares part of static gears present
   tablenew [n,2] <- length(which(depthwithin$clos1a == 1 & depthwithin$afterStatic1 == 1))/4
@@ -508,7 +507,7 @@
   tablenew [n,8] <- as.character(round(sum(depthwithin$afterSAR1[depthwithin$clos2b == 1],na.rm=T) / sum(depthwithin$afterSAR1,na.rm=T),digits = 2))
   tablenew [n,9] <- as.character(round(sum(depthwithin$afterSAR1[depthwithin$clos2b == 0],na.rm=T) / sum(depthwithin$afterSAR1,na.rm=T),digits = 2))
 
-## now for period 2016-2018
+## now for period 2015-2018
   n <- 33
   # c-squares part of static gears present
   tablenew [n,2] <- length(which(depthwithin$clos1a == 1 & depthwithin$afterStatic2 == 1))/4
@@ -566,16 +565,16 @@
                      "","Fisheries overlap (core fishing ground) (2009-2011)",
                      "nb of c-squares that form core fishing area based on SAR",
                      "fraction of total SAR",
-                     "", "Fisheries consequences (presence/absence) (2012-2015)",
+                     "", "Fisheries consequences (presence/absence) (2012-2014)",
                      "nb of c-squares with static bottom fishing (present)",
                      "nb of c-squares with mobile bottom fishing (SAR > 0)",
-                     "","Fisheries consequences (core fishing ground) (2012-2015)",
+                     "","Fisheries consequences (core fishing ground) (2012-2014)",
                      "nb of c-squares that form core fishing area based on SAR ",
                      "fraction of total SAR",
-                     "", "Fisheries consequences (presence/absence) (2016-2018)",
+                     "", "Fisheries consequences (presence/absence) (2015-2018)",
                      "nb of c-squares with static bottom fishing (present)",
                      "nb of c-squares with mobile bottom fishing (SAR > 0)",
-                     "","Fisheries consequences (core fishing ground) (2016-2018)",
+                     "","Fisheries consequences (core fishing ground) (2015-2018)",
                      "nb of c-squares that form core fishing area based on SAR",
                      "fraction of total SAR")
   tablenew[1,] <- c("","Scenario 1 option 1","","Scenario 1 option 2","","Scenario 2 option 1","","Scenario 2 option 2","")

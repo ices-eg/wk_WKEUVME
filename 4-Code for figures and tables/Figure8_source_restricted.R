@@ -18,7 +18,7 @@ vmsreg <- readRDS(paste(EcoReg,"vms.rds",sep="_"))
 
 # define few params
 refyear <- 2009:2011
-afteryear <- 2016:2018
+afteryear <- 2015:2018
 metier_mbcg  <- c("Otter","Beam","Dredge","Seine", 
                   "OT_CRU","OT_DMF","OT_MIX","OT_MIX_CRU_DMF",
                   "OT_MIX_DMF_BEN","OT_SPF")
@@ -92,7 +92,7 @@ fig8b$cat2 <- cut(fig8b$perc2,c(quat2))
 quat3 <- seq(0, 100, by=10)
 fig8b$cat3 <- cut(rev(fig8b$perc2),c(quat3))
 
-# do similar for 2016-2018 period
+# do similar for 2015-2018 period
 fig8d <- IREG
 nam <- paste("SAR_Otter",afteryear,sep="_")
 indexcol <- which(names(vmsreg) %in% nam) 

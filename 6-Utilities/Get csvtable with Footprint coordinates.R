@@ -3,10 +3,10 @@
 
 # get fishing footprints
 EcoReg <- "Celtic Seas"
-source(paste(pathdir,"6-Utilities/Get_fishing_footprint_gearsep_refperiod_afterWK.R", sep="/"))
+source(paste(pathdir,"6-Utilities/Get fishing footprint mbcg_static.R", sep="/"))
 FootprintCS <- Footprint
 EcoReg <- "Bay of Biscay and the Iberian Coast"
-source(paste(pathdir,"6-Utilities/Get_fishing_footprint_gearsep_refperiod_afterWK.R", sep="/"))
+source(paste(pathdir,"6-Utilities/Get fishing footprint mbcg_static.R", sep="/"))
 Footprint <- rbind(Footprint, FootprintCS)
 
 Footprint2 <- cbind(depthall, Footprint[match(depthall@data$csquares,Footprint$csquares), c("Both_footprint")])
