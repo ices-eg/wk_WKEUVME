@@ -6,7 +6,7 @@
   dir.create(paste(pathdir_nogit,"VMS data repository",sep="/"))
   fisheries_path <- paste(pathdir_nogit,"VMS data repository",sep="/")
   
-  fnames <- spfiles("2020 Meeting Docs/06. Data/Fisheries Data", full = TRUE)
+  fnames <- spfiles("2020 Meeting Docs/06. Data/Technical workshop files/Fisheries Data", full = TRUE)
   for (fname in fnames) {
     spgetfile(fname, destdir = fisheries_path)
   }
@@ -16,7 +16,7 @@
   dir.create(paste(pathdir_nogit,"VME data repository/VME observations and csquares",sep="/"))
   VME_path <- paste(pathdir_nogit,"VME data repository/VME observations and csquares",sep="/")
   
-  fnames <- spfiles("2020 Meeting Docs/06. Data/VME Data", full = TRUE)
+  fnames <- spfiles("2020 Meeting Docs/06. Data/Technical workshop files/VME Data", full = TRUE)
   for (fname in fnames) {
     spgetfile(fname, destdir = VME_path)
   }
@@ -24,7 +24,7 @@
   dir.create(paste(pathdir_nogit,"VME data repository/VME elements",sep="/"))
   VME_element_path <- paste(pathdir_nogit,"VME data repository/VME elements",sep="/")
   
-  fnames <- spfiles("2020 Meeting Docs/06. Data/VME elements", full = TRUE)
+  fnames <- spfiles("2020 Meeting Docs/06. Data/Technical workshop files/VME elements", full = TRUE)
   for (fname in fnames) {
     spgetfile(fname, destdir = VME_element_path)
   }
