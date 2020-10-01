@@ -63,9 +63,12 @@
   # run to assess consequences of closure options (warnings are okay!)
   source(paste(pathdir,"4-Code for figures and tables/Assessment of closures.R",sep="/"))
 
-  # run to assess consequences of closure options (table 4 - barplots and scatterplots)
+  # run to assess consequences of closure options with barplots and scatterplots
   source(paste(pathdir,"4-Code for figures and tables/Closure_consequences_barplot_scatterplot.R",sep="/"))
 
+  # run to assess consequences of closure options for VME habitat and indicator species
+  source(paste(pathdir,"4-Code for figures and tables/Assessment_closures_VME_habs_indicatorSpec.R",sep="/"))
+  
 ## get assessment of closures per ecoregion (ADG report)
   source(paste(pathdir,"4-Code for figures and tables/Assessment of closures ADG table.R",sep="/"))
   

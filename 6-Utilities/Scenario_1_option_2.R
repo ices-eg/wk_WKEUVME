@@ -5,7 +5,7 @@
 
 # load VMEs
   VMEobs <- read.csv(paste(pathdir_nogit,
-                         "VME data repository/VME observations and csquares/VME_Extraction_of_precenses_25052020_v2.csv",sep="/"),
+                         "VME data repository/VME observations and csquares/VME_Extraction_of_precenses_25052020.csv",sep="/"),
                    header=T,sep=",",row.names = NULL)
   VMEobs <- subset(VMEobs,VMEobs$StartLongitude > -20)
 
