@@ -61,15 +61,17 @@
   vmsreg$afterSAR2 <- rowMeans(vmsreg[indexcol])
   depthreg <- cbind(depthreg, vmsreg[match(depthreg@data$csquares,vmsreg$c_square), c("afterSAR2")])
   colnames(depthreg@data)[ncol(depthreg@data)] <- "afterSAR2"
-  depthreg@data$afterSAR2[depthreg@data$Both_footprint == 0] <- 0
   
-  # get core fishing ground otter trawling
+  # get core fishing ground within 400-800 meter
   IREG <- subset(depthreg@data,depthreg@data$within == 1)
+  # if NA change to zero == no fishing
   IREG$afterSAR2[is.na(IREG$afterSAR2)] <- 0
-  IREG <- subset(IREG,IREG$afterSAR2 > 0 & IREG$MBCG_footprint > 0)
+  
+  # subset to the MBCG footprint only NOTE: not needed, we define the core area for the entire region irrespective of the footprint
+  # IREG <- subset(IREG, IREG$MBCG_footprint > 0)
   IREG <- IREG[order(IREG$afterSAR2),]
   IREG$perc2 <- cumsum(IREG$afterSAR2) / sum(IREG$afterSAR2)*100
-  quat <- c(0, 10,  100)
+  quat <- c(-1, 0, 10,  101)
   IREG$cat2 <- cut(IREG$perc2,c(quat))
   depthreg <- cbind(depthreg, IREG[match(depthreg@data$csquares,IREG$csquares), c("cat2")])
   colnames(depthreg@data)[ncol(depthreg@data)] <- "core_area_after2"
@@ -134,245 +136,214 @@
   depthwithin@data$clos2b[!(is.na(depthwithin@data$clos2b))]  <- 1 
   depthwithin@data$clos2b[is.na(depthwithin@data$clos2b)] <- 0 
   
-  # make table per row
+  # create dataframe
   depthwithin <- depthwithin@data
   
   # add last option from stakeholder meeting
   depthwithin$clos1b2a <- depthwithin$clos1b + depthwithin$clos2a
   depthwithin$clos1b2a[depthwithin$clos1b2a >1] <- 1
 
-  # create table for c-squares
-  tablenew <- data.frame(matrix(data=NA,nrow = 10, ncol= 6))
-  
-  colnames(tablenew) <- c("","S1O1","S1O2","S2O1","S2O2","S1O2_S2O1")
+## create table closure consequences
+  tablenew <- data.frame(matrix(data=NA,nrow = 6, ncol= 10))
   
   # within combined footprint
-  tablenew [1,2] <- length(which(depthwithin$clos1a == 1 & depthwithin$Both_footprint == 1 ))/4
-  tablenew [1,3] <- length(which(depthwithin$clos1b == 1 & depthwithin$Both_footprint == 1 ))/4
-  tablenew [1,4] <- length(which(depthwithin$clos2a == 1 & depthwithin$Both_footprint == 1 ))/4
-  tablenew [1,5] <- length(which(depthwithin$clos2b == 1 & depthwithin$Both_footprint == 1 ))/4
-  tablenew [1,6] <- length(which(depthwithin$clos1b2a == 1 & depthwithin$Both_footprint == 1 ))/4
+  tablenew [1,1] <- sum(depthwithin$area_sqkm[depthwithin$clos1a == 1 & depthwithin$Both_footprint == 1 ],na.rm=T)/4 
+  tablenew [1,2] <- sum(depthwithin$area_sqkm[depthwithin$clos1a == 1 & depthwithin$Both_footprint == 1 ],na.rm=T)/4 /
+    (sum(depthwithin$area_sqkm[depthwithin$Both_footprint == 1 ],na.rm=T)/4)*100
   
-  # within static footprint
-  tablenew [2,2] <- length(which(depthwithin$clos1a == 1 & depthwithin$Static_footprint == 1 ))/4
-  tablenew [2,3] <- length(which(depthwithin$clos1b == 1 & depthwithin$Static_footprint == 1 ))/4
-  tablenew [2,4] <- length(which(depthwithin$clos2a == 1 & depthwithin$Static_footprint == 1 ))/4
-  tablenew [2,5] <- length(which(depthwithin$clos2b == 1 & depthwithin$Static_footprint == 1 ))/4
-  tablenew [2,6] <- length(which(depthwithin$clos1b2a == 1 & depthwithin$Static_footprint == 1 ))/4
+  tablenew [1,3] <- sum(depthwithin$area_sqkm[depthwithin$clos1b == 1 & depthwithin$Both_footprint == 1 ],na.rm=T)/4 
+  tablenew [1,4] <- sum(depthwithin$area_sqkm[depthwithin$clos1b == 1 & depthwithin$Both_footprint == 1 ],na.rm=T)/4 /
+    (sum(depthwithin$area_sqkm[depthwithin$Both_footprint == 1 ],na.rm=T)/4)*100
   
-  # within MBCG footprint
-  tablenew [3,2] <- length(which(depthwithin$clos1a == 1 & depthwithin$MBCG_footprint == 1 ))/4
-  tablenew [3,3] <- length(which(depthwithin$clos1b == 1 & depthwithin$MBCG_footprint == 1 ))/4
-  tablenew [3,4] <- length(which(depthwithin$clos2a == 1 & depthwithin$MBCG_footprint == 1 ))/4
-  tablenew [3,5] <- length(which(depthwithin$clos2b == 1 & depthwithin$MBCG_footprint == 1 ))/4
-  tablenew [3,6] <- length(which(depthwithin$clos1b2a == 1 & depthwithin$MBCG_footprint == 1 ))/4
+  tablenew [1,5] <- sum(depthwithin$area_sqkm[depthwithin$clos2a == 1 & depthwithin$Both_footprint == 1 ],na.rm=T)/4 
+  tablenew [1,6] <- sum(depthwithin$area_sqkm[depthwithin$clos2a == 1 & depthwithin$Both_footprint == 1 ],na.rm=T)/4 /
+    (sum(depthwithin$area_sqkm[depthwithin$Both_footprint == 1 ],na.rm=T)/4)*100
   
-  # core footprint based on SAR
-  tablenew [4,2] <- length(which(depthwithin$clos1a == 1 & depthwithin$core_area_after2 == "(10,100]" 
-                                 & depthwithin$MBCG_footprint == 1 ))/4
-  tablenew [4,3] <- length(which(depthwithin$clos1b == 1 & depthwithin$core_area_after2 == "(10,100]"
-                                 & depthwithin$MBCG_footprint == 1 ))/4
-  tablenew [4,4] <- length(which(depthwithin$clos2a == 1 & depthwithin$core_area_after2 == "(10,100]"
-                                 & depthwithin$MBCG_footprint == 1 ))/4
-  tablenew [4,5] <- length(which(depthwithin$clos2b == 1 & depthwithin$core_area_after2 == "(10,100]"
-                                 & depthwithin$MBCG_footprint == 1 ))/4
-  tablenew [4,6] <- length(which(depthwithin$clos1b2a == 1 & depthwithin$core_area_after2 == "(10,100]"
-                                 & depthwithin$MBCG_footprint == 1 ))/4
+  tablenew [1,7] <- sum(depthwithin$area_sqkm[depthwithin$clos2b == 1 & depthwithin$Both_footprint == 1 ],na.rm=T)/4
+  tablenew [1,8] <- sum(depthwithin$area_sqkm[depthwithin$clos2b == 1 & depthwithin$Both_footprint == 1 ],na.rm=T)/4 /
+    (sum(depthwithin$area_sqkm[depthwithin$Both_footprint == 1 ],na.rm=T)/4)*100
   
-  # less important area based on SAR
-  tablenew [5,2] <- length(which(depthwithin$clos1a == 1 & depthwithin$core_area_after2 == "(0,10]" 
-                                 & depthwithin$MBCG_footprint == 1 ))/4
-  tablenew [5,3] <- length(which(depthwithin$clos1b == 1 & depthwithin$core_area_after2 == "(0,10]"
-                                 & depthwithin$MBCG_footprint == 1 ))/4
-  tablenew [5,4] <- length(which(depthwithin$clos2a == 1 & depthwithin$core_area_after2 == "(0,10]"
-                                 & depthwithin$MBCG_footprint == 1 ))/4
-  tablenew [5,5] <- length(which(depthwithin$clos2b == 1 & depthwithin$core_area_after2 == "(0,10]"
-                                 & depthwithin$MBCG_footprint == 1 ))/4
-  tablenew [5,6] <- length(which(depthwithin$clos1b2a == 1 & depthwithin$core_area_after2 == "(0,10]"
-                                 & depthwithin$MBCG_footprint == 1 ))/4
-  
-  # SAR 0-0.43
-  tablenew [6,2] <- length(which(depthwithin$clos1a == 1 & depthwithin$afterSAR2 > 0 & 
-                                   depthwithin$afterSAR2 <= 0.43 & depthwithin$MBCG_footprint == 1 ))/4
-  tablenew [6,3] <- length(which(depthwithin$clos1b == 1 & depthwithin$afterSAR2 > 0 & 
-                                   depthwithin$afterSAR2 <= 0.43 & depthwithin$MBCG_footprint == 1 ))/4
-  tablenew [6,4] <- length(which(depthwithin$clos2a == 1 & depthwithin$afterSAR2 > 0 & 
-                                   depthwithin$afterSAR2 <= 0.43 & depthwithin$MBCG_footprint == 1 ))/4
-  tablenew [6,5] <- length(which(depthwithin$clos2b == 1 & depthwithin$afterSAR2 > 0 & 
-                                   depthwithin$afterSAR2 <= 0.43 & depthwithin$MBCG_footprint == 1 ))/4
-  tablenew [6,6] <- length(which(depthwithin$clos1b2a == 1 & depthwithin$afterSAR2 > 0 & 
-                                   depthwithin$afterSAR2 <= 0.43 & depthwithin$MBCG_footprint == 1 ))/4
-  
-  # SAR 0.43 - 1
-  tablenew [7,2] <- length(which(depthwithin$clos1a == 1 & depthwithin$afterSAR2 > 0.43 & 
-                                   depthwithin$afterSAR2 <= 1 & depthwithin$MBCG_footprint == 1 ))/4
-  tablenew [7,3] <- length(which(depthwithin$clos1b == 1 & depthwithin$afterSAR2 > 0.43 & 
-                                   depthwithin$afterSAR2 <= 1 & depthwithin$MBCG_footprint == 1 ))/4
-  tablenew [7,4] <- length(which(depthwithin$clos2a == 1 & depthwithin$afterSAR2 > 0.43 & 
-                                   depthwithin$afterSAR2 <= 1 & depthwithin$MBCG_footprint == 1 ))/4
-  tablenew [7,5] <- length(which(depthwithin$clos2b == 1 & depthwithin$afterSAR2 > 0.43 & 
-                                   depthwithin$afterSAR2 <= 1 & depthwithin$MBCG_footprint == 1 ))/4
-  tablenew [7,6] <- length(which(depthwithin$clos1b2a == 1 & depthwithin$afterSAR2 > 0.43 & 
-                                   depthwithin$afterSAR2 <= 1 & depthwithin$MBCG_footprint == 1 ))/4
-  
-  # SAR 1-3
-  tablenew [8,2] <- length(which(depthwithin$clos1a == 1 & depthwithin$afterSAR2 > 1 & 
-                                   depthwithin$afterSAR2 <= 3 & depthwithin$MBCG_footprint == 1 ))/4
-  tablenew [8,3] <- length(which(depthwithin$clos1b == 1 & depthwithin$afterSAR2 > 1 & 
-                                   depthwithin$afterSAR2 <= 3 & depthwithin$MBCG_footprint == 1 ))/4
-  tablenew [8,4] <- length(which(depthwithin$clos2a == 1 & depthwithin$afterSAR2 > 1 & 
-                                   depthwithin$afterSAR2 <= 3 & depthwithin$MBCG_footprint == 1 ))/4
-  tablenew [8,5] <- length(which(depthwithin$clos2b == 1 & depthwithin$afterSAR2 > 1 & 
-                                   depthwithin$afterSAR2 <= 3 & depthwithin$MBCG_footprint == 1 ))/4
-  tablenew [8,6] <- length(which(depthwithin$clos1b2a == 1 & depthwithin$afterSAR2 > 1 & 
-                                   depthwithin$afterSAR2 <= 3 & depthwithin$MBCG_footprint == 1 ))/4
-  
-  # SAR >3
-  tablenew [9,2] <- length(which(depthwithin$clos1a == 1 & depthwithin$afterSAR2 > 3 
-                                 & depthwithin$MBCG_footprint == 1 ))/4
-  tablenew [9,3] <- length(which(depthwithin$clos1b == 1 & depthwithin$afterSAR2 > 3 
-                                 & depthwithin$MBCG_footprint == 1 ))/4
-  tablenew [9,4] <- length(which(depthwithin$clos2a == 1 & depthwithin$afterSAR2 > 3 
-                                 & depthwithin$MBCG_footprint == 1 ))/4
-  tablenew [9,5] <- length(which(depthwithin$clos2b == 1 & depthwithin$afterSAR2 > 3
-                                 & depthwithin$MBCG_footprint == 1 ))/4
-  tablenew [9,6] <- length(which(depthwithin$clos1b2a == 1 & depthwithin$afterSAR2 > 3
-                                 & depthwithin$MBCG_footprint == 1 ))/4
-  
-  # SAR 0-1
-  tablenew [10,2] <- length(which(depthwithin$clos1a == 1 & depthwithin$afterSAR2 > 0 & 
-                                    depthwithin$afterSAR2 <= 1 & depthwithin$MBCG_footprint == 1 ))/4
-  tablenew [10,3] <- length(which(depthwithin$clos1b == 1 & depthwithin$afterSAR2 > 0 & 
-                                    depthwithin$afterSAR2 <= 1 & depthwithin$MBCG_footprint == 1 ))/4
-  tablenew [10,4] <- length(which(depthwithin$clos2a == 1 & depthwithin$afterSAR2 > 0 & 
-                                    depthwithin$afterSAR2 <= 1 & depthwithin$MBCG_footprint == 1 ))/4
-  tablenew [10,5] <- length(which(depthwithin$clos2b == 1 & depthwithin$afterSAR2 > 0 & 
-                                    depthwithin$afterSAR2 <= 1 & depthwithin$MBCG_footprint == 1 ))/4
-  tablenew [10,6] <- length(which(depthwithin$clos1b2a == 1 & depthwithin$afterSAR2 > 0 & 
-                                    depthwithin$afterSAR2 <= 1 & depthwithin$MBCG_footprint == 1 ))/4
-  
-## now do the same for surface area
-  # create table for c-squares
-  tablenew <- data.frame(matrix(data=NA,nrow = 10, ncol= 5))
-  
-  # within combined footprint
-  tablenew [1,1] <- sum(depthwithin$area_sqkm[depthwithin$clos1a == 1 & depthwithin$Both_footprint == 1 ],na.rm=T)/4
-  tablenew [1,2] <- sum(depthwithin$area_sqkm[depthwithin$clos1b == 1 & depthwithin$Both_footprint == 1 ],na.rm=T)/4
-  tablenew [1,3] <- sum(depthwithin$area_sqkm[depthwithin$clos2a == 1 & depthwithin$Both_footprint == 1 ],na.rm=T)/4
-  tablenew [1,4] <- sum(depthwithin$area_sqkm[depthwithin$clos2b == 1 & depthwithin$Both_footprint == 1 ],na.rm=T)/4
-  tablenew [1,5] <- sum(depthwithin$area_sqkm[depthwithin$clos1b2a == 1 & depthwithin$Both_footprint == 1 ],na.rm=T)/4
+  tablenew [1,9] <- sum(depthwithin$area_sqkm[depthwithin$clos1b2a == 1 & depthwithin$Both_footprint == 1 ],na.rm=T)/4
+  tablenew [1,10] <- sum(depthwithin$area_sqkm[depthwithin$clos1b2a == 1 & depthwithin$Both_footprint == 1 ],na.rm=T)/4 /
+    (sum(depthwithin$area_sqkm[depthwithin$Both_footprint == 1 ],na.rm=T)/4)*100
   
   # within static footprint
   tablenew [2,1] <- sum(depthwithin$area_sqkm[depthwithin$clos1a == 1 & depthwithin$Static_footprint == 1 ],na.rm=T)/4
-  tablenew [2,2] <- sum(depthwithin$area_sqkm[depthwithin$clos1b == 1 & depthwithin$Static_footprint == 1 ],na.rm=T)/4
-  tablenew [2,3] <- sum(depthwithin$area_sqkm[depthwithin$clos2a == 1 & depthwithin$Static_footprint == 1 ],na.rm=T)/4
-  tablenew [2,4] <- sum(depthwithin$area_sqkm[depthwithin$clos2b == 1 & depthwithin$Static_footprint == 1 ],na.rm=T)/4
-  tablenew [2,5] <- sum(depthwithin$area_sqkm[depthwithin$clos1b2a == 1 & depthwithin$Static_footprint == 1 ],na.rm=T)/4
+  tablenew [2,2] <- sum(depthwithin$area_sqkm[depthwithin$clos1a == 1 & depthwithin$Static_footprint == 1 ],na.rm=T)/4 /
+    (sum(depthwithin$area_sqkm[depthwithin$Static_footprint == 1 ],na.rm=T)/4)*100
+  
+  tablenew [2,3] <- sum(depthwithin$area_sqkm[depthwithin$clos1b == 1 & depthwithin$Static_footprint == 1 ],na.rm=T)/4  
+  tablenew [2,4] <- sum(depthwithin$area_sqkm[depthwithin$clos1b == 1 & depthwithin$Static_footprint == 1 ],na.rm=T)/4  /
+    (sum(depthwithin$area_sqkm[depthwithin$Static_footprint == 1 ],na.rm=T)/4)*100
+    
+  tablenew [2,5] <- sum(depthwithin$area_sqkm[depthwithin$clos2a == 1 & depthwithin$Static_footprint == 1 ],na.rm=T)/4 
+  tablenew [2,6] <- sum(depthwithin$area_sqkm[depthwithin$clos2a == 1 & depthwithin$Static_footprint == 1 ],na.rm=T)/4 /
+    (sum(depthwithin$area_sqkm[depthwithin$Static_footprint == 1 ],na.rm=T)/4)*100
+  
+  tablenew [2,7] <- sum(depthwithin$area_sqkm[depthwithin$clos2b == 1 & depthwithin$Static_footprint == 1 ],na.rm=T)/4  
+  tablenew [2,8] <- sum(depthwithin$area_sqkm[depthwithin$clos2b == 1 & depthwithin$Static_footprint == 1 ],na.rm=T)/4 /
+    (sum(depthwithin$area_sqkm[depthwithin$Static_footprint == 1 ],na.rm=T)/4)*100 
+  
+  tablenew [2,9] <- sum(depthwithin$area_sqkm[depthwithin$clos1b2a == 1 & depthwithin$Static_footprint == 1 ],na.rm=T)/4  
+  tablenew [2,10] <- sum(depthwithin$area_sqkm[depthwithin$clos1b2a == 1 & depthwithin$Static_footprint == 1 ],na.rm=T)/4 /
+    (sum(depthwithin$area_sqkm[depthwithin$Static_footprint == 1 ],na.rm=T)/4)*100 
   
   # within MBCG footprint
-  tablenew [3,1] <- sum(depthwithin$area_sqkm[depthwithin$clos1a == 1 & depthwithin$MBCG_footprint == 1 ],na.rm=T)/4
-  tablenew [3,2] <- sum(depthwithin$area_sqkm[depthwithin$clos1b == 1 & depthwithin$MBCG_footprint == 1 ],na.rm=T)/4
-  tablenew [3,3] <- sum(depthwithin$area_sqkm[depthwithin$clos2a == 1 & depthwithin$MBCG_footprint == 1 ],na.rm=T)/4
-  tablenew [3,4] <- sum(depthwithin$area_sqkm[depthwithin$clos2b == 1 & depthwithin$MBCG_footprint == 1 ],na.rm=T)/4
-  tablenew [3,5] <- sum(depthwithin$area_sqkm[depthwithin$clos1b2a == 1 & depthwithin$MBCG_footprint == 1 ],na.rm=T)/4
+  tablenew [3,1] <- sum(depthwithin$area_sqkm[depthwithin$clos1a == 1 & depthwithin$MBCG_footprint == 1 ],na.rm=T)/4  
+  tablenew [3,2] <- sum(depthwithin$area_sqkm[depthwithin$clos1a == 1 & depthwithin$MBCG_footprint == 1 ],na.rm=T)/4 /
+    (sum(depthwithin$area_sqkm[depthwithin$MBCG_footprint == 1 ],na.rm=T)/4)*100 
+  
+  tablenew [3,3] <- sum(depthwithin$area_sqkm[depthwithin$clos1b == 1 & depthwithin$MBCG_footprint == 1 ],na.rm=T)/4 
+  tablenew [3,4] <- sum(depthwithin$area_sqkm[depthwithin$clos1b == 1 & depthwithin$MBCG_footprint == 1 ],na.rm=T)/4  /
+    (sum(depthwithin$area_sqkm[depthwithin$MBCG_footprint == 1 ],na.rm=T)/4)*100
+  
+  tablenew [3,5] <- sum(depthwithin$area_sqkm[depthwithin$clos2a == 1 & depthwithin$MBCG_footprint == 1 ],na.rm=T)/4 
+  tablenew [3,6] <- sum(depthwithin$area_sqkm[depthwithin$clos2a == 1 & depthwithin$MBCG_footprint == 1 ],na.rm=T)/4  /
+    (sum(depthwithin$area_sqkm[depthwithin$MBCG_footprint == 1 ],na.rm=T)/4)*100
+  
+  tablenew [3,7] <- sum(depthwithin$area_sqkm[depthwithin$clos2b == 1 & depthwithin$MBCG_footprint == 1 ],na.rm=T)/4
+  tablenew [3,8] <- sum(depthwithin$area_sqkm[depthwithin$clos2b == 1 & depthwithin$MBCG_footprint == 1 ],na.rm=T)/4 /
+    (sum(depthwithin$area_sqkm[depthwithin$MBCG_footprint == 1 ],na.rm=T)/4)*100
+  
+  tablenew [3,9] <- sum(depthwithin$area_sqkm[depthwithin$clos1b2a == 1 & depthwithin$MBCG_footprint == 1 ],na.rm=T)/4
+  tablenew [3,10] <- sum(depthwithin$area_sqkm[depthwithin$clos1b2a == 1 & depthwithin$MBCG_footprint == 1 ],na.rm=T)/4 /
+    (sum(depthwithin$area_sqkm[depthwithin$MBCG_footprint == 1 ],na.rm=T)/4)*100
   
   # core footprint based on SAR
-  tablenew [4,1] <- sum(depthwithin$area_sqkm[depthwithin$clos1a == 1 & depthwithin$core_area_after2 == "(10,100]" 
+  tablenew [4,1] <- sum(depthwithin$area_sqkm[depthwithin$clos1a == 1 & depthwithin$core_area_after2 == "(10,101]" 
                                  & depthwithin$MBCG_footprint == 1],na.rm=T)/4
-  tablenew [4,2] <- sum(depthwithin$area_sqkm[depthwithin$clos1b == 1 & depthwithin$core_area_after2 == "(10,100]"
+  tablenew [4,2] <- sum(depthwithin$area_sqkm[depthwithin$clos1a == 1 & depthwithin$core_area_after2 == "(10,101]" 
+                                              & depthwithin$MBCG_footprint == 1],na.rm=T)/4 /
+    (sum(depthwithin$area_sqkm[depthwithin$core_area_after2 == "(10,101]" & depthwithin$MBCG_footprint == 1],na.rm=T)/4) * 100
+  
+  tablenew [4,3] <- sum(depthwithin$area_sqkm[depthwithin$clos1b == 1 & depthwithin$core_area_after2 == "(10,101]"
                                  & depthwithin$MBCG_footprint == 1],na.rm=T)/4
-  tablenew [4,3] <- sum(depthwithin$area_sqkm[depthwithin$clos2a == 1 & depthwithin$core_area_after2 == "(10,100]"
+  tablenew [4,4] <- sum(depthwithin$area_sqkm[depthwithin$clos1b == 1 & depthwithin$core_area_after2 == "(10,101]"
+                                              & depthwithin$MBCG_footprint == 1],na.rm=T)/4 /
+    (sum(depthwithin$area_sqkm[depthwithin$core_area_after2 == "(10,101]" & depthwithin$MBCG_footprint == 1],na.rm=T)/4) * 100
+  
+  tablenew [4,5] <- sum(depthwithin$area_sqkm[depthwithin$clos2a == 1 & depthwithin$core_area_after2 == "(10,101]"
                                  & depthwithin$MBCG_footprint == 1],na.rm=T)/4
-  tablenew [4,4] <- sum(depthwithin$area_sqkm[depthwithin$clos2b == 1 & depthwithin$core_area_after2 == "(10,100]"
+  tablenew [4,6] <- sum(depthwithin$area_sqkm[depthwithin$clos2a == 1 & depthwithin$core_area_after2 == "(10,101]"
+                                              & depthwithin$MBCG_footprint == 1],na.rm=T)/4 /
+    (sum(depthwithin$area_sqkm[depthwithin$core_area_after2 == "(10,101]" & depthwithin$MBCG_footprint == 1],na.rm=T)/4) * 100
+  
+  tablenew [4,7] <- sum(depthwithin$area_sqkm[depthwithin$clos2b == 1 & depthwithin$core_area_after2 == "(10,101]"
                                  & depthwithin$MBCG_footprint == 1],na.rm=T)/4
-  tablenew [4,5] <- sum(depthwithin$area_sqkm[depthwithin$clos1b2a == 1 & depthwithin$core_area_after2 == "(10,100]"
+  tablenew [4,8] <- sum(depthwithin$area_sqkm[depthwithin$clos2b == 1 & depthwithin$core_area_after2 == "(10,101]"
+                                              & depthwithin$MBCG_footprint == 1],na.rm=T)/4 /
+    (sum(depthwithin$area_sqkm[depthwithin$core_area_after2 == "(10,101]" & depthwithin$MBCG_footprint == 1],na.rm=T)/4) * 100
+  
+  tablenew [4,9] <- sum(depthwithin$area_sqkm[depthwithin$clos1b2a == 1 & depthwithin$core_area_after2 == "(10,101]"
                                  & depthwithin$MBCG_footprint == 1],na.rm=T)/4
+  tablenew [4,10] <- sum(depthwithin$area_sqkm[depthwithin$clos1b2a == 1 & depthwithin$core_area_after2 == "(10,101]"
+                                              & depthwithin$MBCG_footprint == 1],na.rm=T)/4 /
+    (sum(depthwithin$area_sqkm[depthwithin$core_area_after2 == "(10,101]" & depthwithin$MBCG_footprint == 1],na.rm=T)/4) * 100
   
   # less important area based on SAR
   tablenew [5,1] <- sum(depthwithin$area_sqkm[depthwithin$clos1a == 1 & depthwithin$core_area_after2 == "(0,10]" 
                                  & depthwithin$MBCG_footprint == 1],na.rm=T)/4
-  tablenew [5,2] <- sum(depthwithin$area_sqkm[depthwithin$clos1b == 1 & depthwithin$core_area_after2 == "(0,10]"
+  tablenew [5,2] <- sum(depthwithin$area_sqkm[depthwithin$clos1a == 1 & depthwithin$core_area_after2 == "(0,10]" 
+                                              & depthwithin$MBCG_footprint == 1],na.rm=T)/4 / 
+    (sum(depthwithin$area_sqkm[depthwithin$core_area_after2 == "(0,10]" & depthwithin$MBCG_footprint == 1],na.rm=T)/4) * 100
+  
+  tablenew [5,3] <- sum(depthwithin$area_sqkm[depthwithin$clos1b == 1 & depthwithin$core_area_after2 == "(0,10]"
                                  & depthwithin$MBCG_footprint == 1],na.rm=T)/4
-  tablenew [5,3] <- sum(depthwithin$area_sqkm[depthwithin$clos2a == 1 & depthwithin$core_area_after2 == "(0,10]"
+  tablenew [5,4] <- sum(depthwithin$area_sqkm[depthwithin$clos1b == 1 & depthwithin$core_area_after2 == "(0,10]"
+                                              & depthwithin$MBCG_footprint == 1],na.rm=T)/4 / 
+    (sum(depthwithin$area_sqkm[depthwithin$core_area_after2 == "(0,10]" & depthwithin$MBCG_footprint == 1],na.rm=T)/4) * 100
+  
+  tablenew [5,5] <- sum(depthwithin$area_sqkm[depthwithin$clos2a == 1 & depthwithin$core_area_after2 == "(0,10]"
                                  & depthwithin$MBCG_footprint == 1],na.rm=T)/4
-  tablenew [5,4] <- sum(depthwithin$area_sqkm[depthwithin$clos2b == 1 & depthwithin$core_area_after2 == "(0,10]"
+  tablenew [5,6] <- sum(depthwithin$area_sqkm[depthwithin$clos2a == 1 & depthwithin$core_area_after2 == "(0,10]"
+                                              & depthwithin$MBCG_footprint == 1],na.rm=T)/4 / 
+    (sum(depthwithin$area_sqkm[depthwithin$core_area_after2 == "(0,10]" & depthwithin$MBCG_footprint == 1],na.rm=T)/4) * 100
+  
+  tablenew [5,7] <- sum(depthwithin$area_sqkm[depthwithin$clos2b == 1 & depthwithin$core_area_after2 == "(0,10]"
                                  & depthwithin$MBCG_footprint == 1],na.rm=T)/4
-  tablenew [5,5] <- sum(depthwithin$area_sqkm[depthwithin$clos1b2a == 1 & depthwithin$core_area_after2 == "(0,10]"
+  tablenew [5,8] <- sum(depthwithin$area_sqkm[depthwithin$clos2b == 1 & depthwithin$core_area_after2 == "(0,10]"
+                                              & depthwithin$MBCG_footprint == 1],na.rm=T)/4 / 
+    (sum(depthwithin$area_sqkm[depthwithin$core_area_after2 == "(0,10]" & depthwithin$MBCG_footprint == 1],na.rm=T)/4) * 100
+  
+  tablenew [5,9] <- sum(depthwithin$area_sqkm[depthwithin$clos1b2a == 1 & depthwithin$core_area_after2 == "(0,10]"
                                  & depthwithin$MBCG_footprint == 1],na.rm=T)/4
+  tablenew [5,10] <- sum(depthwithin$area_sqkm[depthwithin$clos1b2a == 1 & depthwithin$core_area_after2 == "(0,10]"
+                                              & depthwithin$MBCG_footprint == 1],na.rm=T)/4 / 
+    (sum(depthwithin$area_sqkm[depthwithin$core_area_after2 == "(0,10]" & depthwithin$MBCG_footprint == 1],na.rm=T)/4) * 100
   
-  # SAR 0-0.43
-  tablenew [6,1] <- sum(depthwithin$area_sqkm[depthwithin$clos1a == 1 & depthwithin$afterSAR2 > 0 & 
-                                   depthwithin$afterSAR2 <= 0.43 & depthwithin$MBCG_footprint == 1],na.rm=T)/4
-  tablenew [6,2] <- sum(depthwithin$area_sqkm[depthwithin$clos1b == 1 & depthwithin$afterSAR2 > 0 & 
-                                   depthwithin$afterSAR2 <= 0.43 & depthwithin$MBCG_footprint == 1],na.rm=T)/4
-  tablenew [6,3] <- sum(depthwithin$area_sqkm[depthwithin$clos2a == 1 & depthwithin$afterSAR2 > 0 & 
-                                   depthwithin$afterSAR2 <= 0.43 & depthwithin$MBCG_footprint == 1],na.rm=T)/4
-  tablenew [6,4] <- sum(depthwithin$area_sqkm[depthwithin$clos2b == 1 & depthwithin$afterSAR2 > 0 & 
-                                   depthwithin$afterSAR2 <= 0.43 & depthwithin$MBCG_footprint == 1],na.rm=T)/4
-  tablenew [6,5] <- sum(depthwithin$area_sqkm[depthwithin$clos1b2a == 1 & depthwithin$afterSAR2 > 0 & 
-                                   depthwithin$afterSAR2 <= 0.43 & depthwithin$MBCG_footprint == 1],na.rm=T)/4
+  # unfished area based on SAR
+  tablenew [6,1] <- sum(depthwithin$area_sqkm[depthwithin$clos1a == 1 & depthwithin$core_area_after2 == "(-1,0]" 
+                                              & depthwithin$MBCG_footprint == 1],na.rm=T)/4
+  tablenew [6,2] <- sum(depthwithin$area_sqkm[depthwithin$clos1a == 1 & depthwithin$core_area_after2 == "(-1,0]" 
+                                              & depthwithin$MBCG_footprint == 1],na.rm=T)/4 / 
+    (sum(depthwithin$area_sqkm[depthwithin$core_area_after2 == "(-1,0]" & depthwithin$MBCG_footprint == 1],na.rm=T)/4) * 100
   
-  # SAR 0.43 - 1
-  tablenew [7,1] <- sum(depthwithin$area_sqkm[depthwithin$clos1a == 1 & depthwithin$afterSAR2 > 0.43 & 
-                                   depthwithin$afterSAR2 <= 1 & depthwithin$MBCG_footprint == 1],na.rm=T)/4
-  tablenew [7,2] <- sum(depthwithin$area_sqkm[depthwithin$clos1b == 1 & depthwithin$afterSAR2 > 0.43 & 
-                                   depthwithin$afterSAR2 <= 1 & depthwithin$MBCG_footprint == 1],na.rm=T)/4
-  tablenew [7,3] <- sum(depthwithin$area_sqkm[depthwithin$clos2a == 1 & depthwithin$afterSAR2 > 0.43 & 
-                                   depthwithin$afterSAR2 <= 1 & depthwithin$MBCG_footprint == 1],na.rm=T)/4
-  tablenew [7,4] <- sum(depthwithin$area_sqkm[depthwithin$clos2b == 1 & depthwithin$afterSAR2 > 0.43 & 
-                                   depthwithin$afterSAR2 <= 1 & depthwithin$MBCG_footprint == 1],na.rm=T)/4
-  tablenew [7,5] <- sum(depthwithin$area_sqkm[depthwithin$clos1b2a == 1 & depthwithin$afterSAR2 > 0.43 & 
-                                   depthwithin$afterSAR2 <= 1 & depthwithin$MBCG_footprint == 1],na.rm=T)/4
+  tablenew [6,3] <- sum(depthwithin$area_sqkm[depthwithin$clos1b == 1 & depthwithin$core_area_after2 == "(-1,0]"
+                                              & depthwithin$MBCG_footprint == 1],na.rm=T)/4
+  tablenew [6,4] <- sum(depthwithin$area_sqkm[depthwithin$clos1b == 1 & depthwithin$core_area_after2 == "(-1,0]"
+                                              & depthwithin$MBCG_footprint == 1],na.rm=T)/4 / 
+    (sum(depthwithin$area_sqkm[depthwithin$core_area_after2 == "(-1,0]" & depthwithin$MBCG_footprint == 1],na.rm=T)/4) * 100
   
-  # SAR 1-3
-  tablenew [8,1] <- sum(depthwithin$area_sqkm[depthwithin$clos1a == 1 & depthwithin$afterSAR2 > 1 & 
-                                   depthwithin$afterSAR2 <= 3 & depthwithin$MBCG_footprint == 1],na.rm=T)/4
-  tablenew [8,2] <- sum(depthwithin$area_sqkm[depthwithin$clos1b == 1 & depthwithin$afterSAR2 > 1 & 
-                                   depthwithin$afterSAR2 <= 3 & depthwithin$MBCG_footprint == 1],na.rm=T)/4
-  tablenew [8,3] <- sum(depthwithin$area_sqkm[depthwithin$clos2a == 1 & depthwithin$afterSAR2 > 1 & 
-                                   depthwithin$afterSAR2 <= 3 & depthwithin$MBCG_footprint == 1],na.rm=T)/4
-  tablenew [8,4] <- sum(depthwithin$area_sqkm[depthwithin$clos2b == 1 & depthwithin$afterSAR2 > 1 & 
-                                   depthwithin$afterSAR2 <= 3 & depthwithin$MBCG_footprint == 1],na.rm=T)/4
-  tablenew [8,5] <- sum(depthwithin$area_sqkm[depthwithin$clos1b2a == 1 & depthwithin$afterSAR2 > 1 & 
-                                   depthwithin$afterSAR2 <= 3 & depthwithin$MBCG_footprint == 1],na.rm=T)/4
+  tablenew [6,5] <- sum(depthwithin$area_sqkm[depthwithin$clos2a == 1 & depthwithin$core_area_after2 == "(-1,0]"
+                                              & depthwithin$MBCG_footprint == 1],na.rm=T)/4
+  tablenew [6,6] <- sum(depthwithin$area_sqkm[depthwithin$clos2a == 1 & depthwithin$core_area_after2 == "(-1,0]"
+                                              & depthwithin$MBCG_footprint == 1],na.rm=T)/4 / 
+    (sum(depthwithin$area_sqkm[depthwithin$core_area_after2 == "(-1,0]" & depthwithin$MBCG_footprint == 1],na.rm=T)/4) * 100
   
-  # SAR >3
-  tablenew [9,1] <- sum(depthwithin$area_sqkm[depthwithin$clos1a == 1 & depthwithin$afterSAR2 > 3 
-                                  & depthwithin$MBCG_footprint == 1],na.rm=T)/4
-  tablenew [9,2] <- sum(depthwithin$area_sqkm[depthwithin$clos1b == 1 & depthwithin$afterSAR2 > 3 
-                                  & depthwithin$MBCG_footprint == 1],na.rm=T)/4
-  tablenew [9,3] <- sum(depthwithin$area_sqkm[depthwithin$clos2a == 1 & depthwithin$afterSAR2 > 3 
-                                  & depthwithin$MBCG_footprint == 1],na.rm=T)/4
-  tablenew [9,4] <- sum(depthwithin$area_sqkm[depthwithin$clos2b == 1 & depthwithin$afterSAR2 > 3
-                                  & depthwithin$MBCG_footprint == 1],na.rm=T)/4
-  tablenew [9,5] <- sum(depthwithin$area_sqkm[depthwithin$clos1b2a == 1 & depthwithin$afterSAR2 > 3
-                                  & depthwithin$MBCG_footprint == 1],na.rm=T)/4
+  tablenew [6,7] <- sum(depthwithin$area_sqkm[depthwithin$clos2b == 1 & depthwithin$core_area_after2 == "(-1,0]"
+                                              & depthwithin$MBCG_footprint == 1],na.rm=T)/4
+  tablenew [6,8] <- sum(depthwithin$area_sqkm[depthwithin$clos2b == 1 & depthwithin$core_area_after2 == "(-1,0]"
+                                              & depthwithin$MBCG_footprint == 1],na.rm=T)/4 / 
+    (sum(depthwithin$area_sqkm[depthwithin$core_area_after2 == "(-1,0]" & depthwithin$MBCG_footprint == 1],na.rm=T)/4) * 100
   
-  # SAR 0-1
-  tablenew [10,1] <- sum(depthwithin$area_sqkm[depthwithin$clos1a == 1 & depthwithin$afterSAR2 > 0 & 
-                                    depthwithin$afterSAR2 <= 1 & depthwithin$MBCG_footprint == 1],na.rm=T)/4
-  tablenew [10,2] <- sum(depthwithin$area_sqkm[depthwithin$clos1b == 1 & depthwithin$afterSAR2 > 0 & 
-                                    depthwithin$afterSAR2 <= 1 & depthwithin$MBCG_footprint == 1],na.rm=T)/4
-  tablenew [10,3] <- sum(depthwithin$area_sqkm[depthwithin$clos2a == 1 & depthwithin$afterSAR2 > 0 & 
-                                    depthwithin$afterSAR2 <= 1 & depthwithin$MBCG_footprint == 1],na.rm=T)/4
-  tablenew [10,4] <- sum(depthwithin$area_sqkm[depthwithin$clos2b == 1 & depthwithin$afterSAR2 > 0 & 
-                                    depthwithin$afterSAR2 <= 1 & depthwithin$MBCG_footprint == 1],na.rm=T)/4
-  tablenew [10,5] <- sum(depthwithin$area_sqkm[depthwithin$clos1b2a == 1 & depthwithin$afterSAR2 > 0 & 
-                                    depthwithin$afterSAR2 <= 1 & depthwithin$MBCG_footprint == 1],na.rm=T)/4
+  tablenew [6,9] <- sum(depthwithin$area_sqkm[depthwithin$clos1b2a == 1 & depthwithin$core_area_after2 == "(-1,0]"
+                                              & depthwithin$MBCG_footprint == 1],na.rm=T)/4
+  tablenew [6,10] <- sum(depthwithin$area_sqkm[depthwithin$clos1b2a == 1 & depthwithin$core_area_after2 == "(-1,0]"
+                                              & depthwithin$MBCG_footprint == 1],na.rm=T)/4 / 
+    (sum(depthwithin$area_sqkm[depthwithin$core_area_after2 == "(-1,0]" & depthwithin$MBCG_footprint == 1],na.rm=T)/4) * 100
   
-  tablenew <- tablenew/1000
+  tablenew[,c(1,3,5,7,9)] <- tablenew[,c(1,3,5,7,9)]/1000
   tablenew <- round(tablenew,digits = 2)
   
-  colnames(tablenew) <- c("S1O1","S1O2","S2O1","S2O2","S1O2_S2O1")
-  rownames(tablenew) <- c("Combined footprint", "Static footprint", "Mobile bottom contacting gear (MBCG) footprint",
-                          "The core MBCG fishing area (10-100% of SAR) in 2015-2018 within the MBCG footprint",
-                          "The less important MBCG fishing area (0-10% of SAR) in 2015-2018 within the MBCG footprint",
-                          "The area fished with average SAR >0 to ???0.43 in 2015-2018 within the MBCG footprint",
-                          "The area fished with average SAR >0.43 to ???1 in 2015-2018 within the MBCG footprint",
-                          "The area fished with average SAR >1 to ???3 in 2015-2018 within the MBCG footprint",
-                          "The area fished with average SAR >3 in 2015-2018 within the MBCG footprint",
-                          "The area fished with average SAR >0 to ???1 in 2015-2018 within the MBCG footprint")
+  colnames(tablenew) <- c("S1O1_area", "S1O1_perc","S1O2_area", "S1O2_perc","S2O1_area","S2O1_perc",
+                          "S2O2_area", "S2O2_perc","S1O2_S2O1_area", "S1O2_S2O1_perc")
+  rownames(tablenew) <- c("Combined footprint","Static footprint", 
+                          "MBCG footprint", "Core MBCG area 2015-18 within the MBCG footprint",
+                          "Less important MBCG area 2015-18 within the MBCG footprint",
+                          "Unfished MBCG area 2015-18 within the MBCG footprint")
   
-  write.csv(tablenew, paste(outdir,"Table_ADG_report.csv",sep="/")) 
+  write.csv(tablenew, paste(outdir,"Table_ADG_report_closure_consequences.csv",sep="/")) 
   
   
+# table 2
+  
+  ## create table for footprint consequences
+  tablenew <- data.frame(matrix(data=NA,nrow = 3, ncol= 2))
+  
+  # core based on SAR outside MBCG footprint
+  tablenew [1,1] <- sum(depthwithin$area_sqkm[depthwithin$core_area_after2 == "(10,101]" 
+                                              & depthwithin$MBCG_footprint == 0],na.rm=T)/4
+  tablenew [1,2] <- sum(depthwithin$area_sqkm[depthwithin$core_area_after2 == "(10,101]" 
+                                              & depthwithin$MBCG_footprint == 0],na.rm=T)/4 /
+              (sum(depthwithin$area_sqkm[depthwithin$core_area_after2 == "(10,101]"],na.rm=T)/4) * 100
+  
+  # less important based on SAR outside MBCG footprint
+  tablenew [2,1] <- sum(depthwithin$area_sqkm[depthwithin$core_area_after2 == "(0,10]" 
+                                              & depthwithin$MBCG_footprint == 0],na.rm=T)/4
+  tablenew [2,2] <- sum(depthwithin$area_sqkm[depthwithin$core_area_after2 == "(0,10]" 
+                                              & depthwithin$MBCG_footprint == 0],na.rm=T)/4 /
+    (sum(depthwithin$area_sqkm[depthwithin$core_area_after2 == "(10,101]"],na.rm=T)/4) * 100
+  
+  tablenew [3,1] <- sum(depthwithin$area_sqkm[depthwithin$core_area_after2 == "(-1,0]" 
+                                              & depthwithin$MBCG_footprint == 0],na.rm=T)/4
+  tablenew [3,2] <- sum(depthwithin$area_sqkm[depthwithin$core_area_after2 == "(-1,0]" 
+                                              & depthwithin$MBCG_footprint == 0],na.rm=T)/4 /
+                   (sum(depthwithin$area_sqkm[depthwithin$core_area_after2 == "(-1,0]"],na.rm=T)/4) * 100
+  
+  
+  colnames(tablenew) <- c("area", "perc")
+  rownames(tablenew) <- c("Core MBCG area 2015-18 outside the MBCG footprint",
+                          "Less important MBCG area 2015-18 outside the MBCG footprint",
+                          "Unfished MBCG area 2015-18 outside the MBCG footprint")
+  
+  write.csv(tablenew, paste(outdir,"Table_ADG_report_footprint_consequences.csv",sep="/")) 

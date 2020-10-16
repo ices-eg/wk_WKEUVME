@@ -1,6 +1,12 @@
 
 # code to derive fishing footprint shapefiles, maps and coordinates
 
+# get depth data
+setwd(paste(pathdir,"1-Input data/csquares_ecoregions_depth",sep="/"))
+depthreg <- readRDS("Celtic Seas_depth.rds")
+depthreg2 <- readRDS("Bay of Biscay and the Iberian Coast_depth.rds")
+depthall <- rbind(depthreg,depthreg2)
+
 # get fishing footprints
 EcoReg <- "Celtic Seas"
 source(paste(pathdir,"6-Utilities/Get fishing footprint mbcg_static.R", sep="/"))
