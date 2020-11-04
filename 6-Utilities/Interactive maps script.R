@@ -259,13 +259,13 @@
                 stroke = FALSE, fillOpacity = 0.5, smoothFactor = 0.5,fillColor =  "brown") %>%
     
     # closures
-    addPolygons(data = Scenario1_option1, group = "Closure 1_1",
+    addPolygons(data = Scenario1_option1, group = "Scenario 1 Option 1",
                 stroke = FALSE, fillOpacity = 0.5, smoothFactor = 0.5,fillColor =  "#fd8d3c") %>%
-    addPolygons(data = Scenario1_option2, group = "Closure 1_2",
+    addPolygons(data = Scenario1_option2, group = "Scenario 1 Option 2",
                 stroke = FALSE, fillOpacity = 0.5, smoothFactor = 0.5,fillColor =  "#feb24c") %>%
-    addPolygons(data = Scenario2_option1, group = "Closure 2_1",
+    addPolygons(data = Scenario2_option1, group = "Scenario 2 Option 1",
                 stroke = FALSE, fillOpacity = 0.5, smoothFactor = 0.5,fillColor =  "#fed976") %>%
-    addPolygons(data = Scenario2_option2, group = "Closure 2_2",
+    addPolygons(data = Scenario2_option2, group = "Scenario 2 Option 2",
                 stroke = FALSE, fillOpacity = 0.5, smoothFactor = 0.5,fillColor =  "#ffeda0") %>%
     
     
@@ -273,14 +273,15 @@
     addLayersControl(
       overlayGroups = c("Depth 400-800 m", "Ecoregion boundaries","Footprint combined 2009-2011", "Footprint static 2009-2011",
                         "Footprint MBCG 2009-2011", "VME habitat","VME index high", "VME index medium","VME index low",
-                        "VME physical elements","Closure 1_1","Closure 1_2","Closure 2_1","Closure 2_2"),
+                        "VME physical elements","Scenario 1 Option 1","Scenario 1 Option 2",
+                        "Scenario 2 Option 1","Scenario 2 Option 2"),
       options = layersControlOptions(collapsed = FALSE)
     )
   
   # save output
   outdir <- paste(pathdir,"5-Output",sep="/") 
   setwd(outdir)
-  saveWidget(mfs, file="Interactive maps.html")
+  saveWidget(mfs, file="Interactive Map 1.html")
   
 
   mfs <- leaflet() %>%
@@ -300,13 +301,13 @@
                 stroke = FALSE, fillOpacity = 0.5, smoothFactor = 0.5,fillColor =  "#74c476") %>%
     
     # closures
-    addPolygons(data = Scenario1_option1_within, group = "Closure 1_1 within 400-800m",
+    addPolygons(data = Scenario1_option1_within, group = "Scenario 1 Option 1 within 400-800m",
                 stroke = FALSE, fillOpacity = 0.5, smoothFactor = 0.5,fillColor =  "#fd8d3c") %>%
-    addPolygons(data = Scenario1_option2_within, group = "Closure 1_2 within 400-800m",
+    addPolygons(data = Scenario1_option2_within, group = "Scenario 1 Option 2 within 400-800m",
                 stroke = FALSE, fillOpacity = 0.5, smoothFactor = 0.5,fillColor =  "#feb24c") %>%
-    addPolygons(data = Scenario2_option1_within, group = "Closure 2_1 within 400-800m",
+    addPolygons(data = Scenario2_option1_within, group = "Scenario 2 Option 1 within 400-800m",
                 stroke = FALSE, fillOpacity = 0.5, smoothFactor = 0.5,fillColor =  "#fed976") %>%
-    addPolygons(data = Scenario2_option2_within, group = "Closure 2_2 within 400-800m",
+    addPolygons(data = Scenario2_option2_within, group = "Scenario 2 Option 2 within 400-800m",
                 stroke = FALSE, fillOpacity = 0.5, smoothFactor = 0.5,fillColor =  "#ffeda0") %>%
     
     # 10-90 percentile
@@ -328,8 +329,8 @@
     # Layers control
     addLayersControl(
       overlayGroups = c("Depth 400-800 m", "Ecoregion boundaries","Footprint MBCG 2009-2011",
-                        "Closure 1_1 within 400-800m","Closure 1_2 within 400-800m",
-                        "Closure 2_1 within 400-800m","Closure 2_2 within 400-800m",
+                        "Scenario 1 Option 1 within 400-800m","Scenario 1 Option 2 within 400-800m",
+                        "Scenario 2 Option 1 within 400-800m","Scenario 2 Option 2 within 400-800m",
                         "MBCG 10-100% core fishing area 2015-2018","MBCG 0-10% 2015-2018",
                         "Average SAR 0-0.43 in 2015-2018","Average SAR 0.43-1 in 2015-2018",
                         "Average SAR 1-3 in 2015-2018","Average SAR >3 in 2015-2018"),
@@ -339,5 +340,5 @@
   # save output
   outdir <- paste(pathdir,"5-Output",sep="/") 
   setwd(outdir)
-  saveWidget(mfs, file="Interactive map MBCG.html")
+  saveWidget(mfs, file="Interactive Map 2.html")
   

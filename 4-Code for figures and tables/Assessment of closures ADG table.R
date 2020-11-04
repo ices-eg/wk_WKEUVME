@@ -48,6 +48,11 @@
   depthreg <- cbind(depthreg, Footprint[match(depthreg@data$csquares,Footprint$csquares), c("Static_footprint")])
   colnames(depthreg@data)[ncol(depthreg@data)] <- "Static_footprint"
   
+## get footprint area
+  sum(depthreg@data$area_sqkm[depthreg@data$Both_footprint == 1],na.rm=T)
+  sum(depthreg@data$area_sqkm[depthreg@data$Static_footprint == 1],na.rm=T)
+  sum(depthreg@data$area_sqkm[depthreg@data$MBCG_footprint == 1],na.rm=T)
+  
  ## get VMS and check fisheries consequences 2015:2018
   setwd(paste(pathdir_nogit,"VMS data repository",sep="/"))
   vmsreg <- readRDS(paste(EcoReg,"vms.rds",sep="_"))
