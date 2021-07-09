@@ -37,35 +37,45 @@
   areasce2b  <- sf::st_area(sce2b)/1000000
 
 # make histogram
-  idx <- ifelse (EcoReg == "Bay of Biscay and the Iberian Coast", 10,11) # make plotting nice
+  idx <- ifelse (EcoReg == "Bay of Biscay and the Iberian Coast", 20, 40) # make plotting nice
 
-  jpeg(file = paste(outdir,"Figure_histogram_closures.jpeg",sep="/"), width=7, height=6,units ='in', res = 300)
-  par(mfrow=c(2,2))
+  xbreak <-  c("10","100","1000")
+  tt <- log10(unclass(areasce1a)+1)
+  tt <- as.data.frame(tt)
   
-  hist(log10(unclass(areasce1a)),xlab="closure area (km2)",ylab="Frequency", xaxt="n", yaxt="n",main="scenario 1 option 1"
-       ,ylim=c(0,24),xlim = c(1,3.6), breaks = idx)
-  axis(1,c(1,2,3,3.54), c("10","100","1000","3500"))
-  axis(2,c(0,12,24),las = 1)
-  text(3,20,paste("n =",length(areasce1a),sep=" "))
+  hist1 <- ggplot(tt, aes(x=tt)) + geom_histogram(binwidth = 0.3)+ scale_color_grey() + theme_classic() +
+    labs(x="Closure area (km2)", y = "Frequency") +
+    scale_y_continuous(limits=c(0,idx), breaks=seq(0,idx, by=idx/2)) +
+    scale_x_continuous(labels=xbreak ,limits=c(0.5,3.55), breaks=c(1,2,3))+
+    annotate("text", x=3, y=36, label=paste("n =",nrow(tt),sep=" "))
   
-  hist(log10(unclass(areasce1b)),xlab="closure area (km2)",ylab="Frequency", xaxt="n", yaxt="n",las=1,main="scenario 1 option 2"
-       ,ylim=c(0,24),xlim = c(1,3.6), breaks = 11)
-  axis(1,c(1,2,3,3.54), c("10","100","1000","3500"))
-  axis(2,c(0,12,24),las = 1)
-  text(3,20,paste("n =", length(areasce1b),sep=" "))
+  tt <- log10(unclass(areasce1b)+1)
+  tt <- as.data.frame(tt)
   
-  hist(log10(unclass(areasce2a)),xlab="closure area (km2)",ylab="Frequency", xaxt="n", yaxt="n",las=1,main="scenario 2 option 1"
-       ,ylim=c(0,24),xlim = c(1,3.6), breaks = 11)
-  axis(1,c(1,2,3,3.54), c("10","100","1000","3500"))
-  axis(2,c(0,12,24),las = 1)
-  text(3,20,paste("n =", length(areasce2a),sep=" "))
+  hist2 <- ggplot(tt, aes(x=tt)) + geom_histogram(binwidth = 0.3)+ scale_color_grey() + theme_classic() +
+    labs(x="Closure area (km2)", y = "") +
+    scale_y_continuous(limits=c(0,idx), breaks=seq(0,idx, by=idx/2)) +
+    scale_x_continuous(labels=xbreak ,limits=c(0.5,3.55), breaks=c(1,2,3))+
+    annotate("text", x=3, y=36, label=paste("n =",nrow(tt),sep=" "))
   
-  hist(log10(unclass(areasce2b)),xlab="closure area (km2)",ylab="Frequency", xaxt="n", yaxt="n",las=1,main="scenario 2 option 2"
-       ,ylim=c(0,24),xlim = c(1,3.6), breaks = 11)
-  axis(1,c(1,2,3,3.54), c("10","100","1000","3500"))
-  axis(2,c(0,12,24),las = 1)
-  text(3,20,paste("n =", length(areasce2b),sep=" "))
-  dev.off()
+  tt <- log10(unclass(areasce2a)+1)
+  tt <- as.data.frame(tt)
+  
+  hist3 <- ggplot(tt, aes(x=tt)) + geom_histogram(binwidth = 0.3)+ scale_color_grey() + theme_classic() +
+    labs(x="Closure area (km2)", y = "Frequency") +
+    scale_y_continuous(limits=c(0,idx), breaks=seq(0,idx, by=idx/2)) +
+    scale_x_continuous(labels=xbreak ,limits=c(0.5,3.55), breaks=c(1,2,3)) +
+    annotate("text", x=3, y=36, label=paste("n =",nrow(tt),sep=" "))
+  
+  
+  tt <- log10(unclass(areasce2b)+1)
+  tt <- as.data.frame(tt)
+  
+  hist4 <- ggplot(tt, aes(x=tt)) + geom_histogram(binwidth = 0.3)+ scale_color_grey() + theme_classic() +
+    labs(x="Closure area (km2)", y = "") +
+    scale_y_continuous(limits=c(0,idx), breaks=seq(0,idx, by=idx/2)) +
+    scale_x_continuous(labels=xbreak ,limits=c(0.5,3.55), breaks=c(1,2,3)) +
+    annotate("text", x=3, y=36, label=paste("n =",nrow(tt),sep=" "))
 
 # now plot closures that fall in the 400-800 meter depth range
   sce1a <- as(sce1a, 'Spatial')
@@ -100,40 +110,47 @@
   fig_length <- (maxlat-minlat)/2
   
 # plot closures
-  jpeg(file = paste(outdir,"Figure_map_closures.jpeg",sep="/"), width=fig_width*2, height=fig_length*2,units ='in', res = 300)
   figmap <- ggplot() + geom_point(data=fig1, aes(x=long, y=lat , col=as.factor(within)),
                                   shape=15,size=0.5,na.rm=T) 
   figmap <- figmap +  scale_color_manual(values = c("white","lightblue"),name ="",labels=c("","depth 400-800 m"))      
   figmap <- figmap +  geom_polygon(data = worldMap, aes(x = long, y = lat, group = group),color="grey",fill="grey")
   figmap <- figmap +  theme(plot.background=element_blank(),
                             panel.background=element_blank(),
-                            axis.text.y   = element_text(size=16),
-                            axis.text.x   = element_text(size=16),
-                            axis.title.y  = element_text(size=16),
-                            axis.title.x  = element_text(size=16),
+                            axis.text.y   = element_text(size=10),
+                            axis.text.x   = element_text(size=10),
+                            axis.title.y  = element_text(size=10),
+                            axis.title.x  = element_text(size=10),
                             panel.border  = element_rect(colour = "grey", size=.5,fill=NA),
-                            legend.text   = element_text(size=11),
-                            legend.title  = element_text(size=11),
-                            legend.position ="bottom") +
-    scale_x_continuous(breaks=coordxmap, name = "longitude") +
-    scale_y_continuous(breaks=coordymap, name = "latitude")  +
+                            legend.text   = element_text(size=10),
+                            legend.title  = element_text(size=10),
+                            legend.position ="none") +
+    scale_x_continuous(breaks=coordxmap, name = "Longitude") +
+    scale_y_continuous(breaks=coordymap, name = "Latitude")  +
     coord_cartesian(xlim=c(coordslim[1], coordslim[2]), ylim=c(coordslim[3],coordslim[4]))
   figmap<- figmap +   guides(colour = guide_legend(override.aes = list(size=5),nrow=2,byrow=TRUE))
   figmap  <- figmap +  geom_polygon(data = shapeEEZ, aes(x = long, y = lat, group = group),color="grey",fill=NA)
   figmap  <- figmap +  geom_polygon(data = shapeReg, aes(x = long, y = lat, group = group),color="black",fill=NA)
   
-  figmap_sce1a <- figmap + geom_polypath(data= sce1a, aes(x = long, y = lat, group = group),color=NA,fill="orange") +
+  figmap_sce1a <- figmap + geom_polypath(data= sce1a, aes(x = long, y = lat, group = group),color=NA,fill="red") +
     ggtitle("scenario 1 - option 1")
-  figmap_sce1b <- figmap + geom_polypath(data= sce1b, aes(x = long, y = lat, group = group),color=NA,fill="orange") +
+  figmap_sce1b <- figmap + geom_polypath(data= sce1b, aes(x = long, y = lat, group = group),color=NA,fill="red") +
     ggtitle("scenario 1 - option 2")
-  figmap_sce2a <- figmap + geom_polypath(data= sce2a, aes(x = long, y = lat, group = group),color=NA,fill="orange") +
+  figmap_sce2a <- figmap + geom_polypath(data= sce2a, aes(x = long, y = lat, group = group),color=NA,fill="red") +
     ggtitle("scenario 2 - option 1")
-  figmap_sce2b <- figmap + geom_polypath(data= sce2b, aes(x = long, y = lat, group = group),color=NA,fill="orange") +
+  figmap_sce2b <- figmap + geom_polypath(data= sce2b, aes(x = long, y = lat, group = group),color=NA,fill="red") +
     ggtitle("scenario 2 - option 2")
   
-  print(grid.arrange(figmap_sce1a,figmap_sce1b, figmap_sce2a,figmap_sce2b, nrow = 2))
   
-  dev.off() 
+  #pdf(file = paste(outdir,"Figure_map_closures.pdf",sep="/"), width=fig_width*2, height=fig_length*0.8)
+  #grid.arrange(figmap_sce1a,figmap_sce1b, figmap_sce2a,figmap_sce2b,
+  #             hist1,hist2, hist3,hist4, nrow = 6,ncol=2,
+  #             layout_matrix = cbind(c(1,1,5), c(2,2,6),c(3,3,7),c(4,4,8)))
+  
+  pdf(file = paste(outdir,"Figure_map_closures.pdf",sep="/"), width=7.5, height=12)
+  grid.arrange(figmap_sce1a,figmap_sce1b, figmap_sce2a,figmap_sce2b,
+               hist1,hist2, hist3,hist4, nrow = 6,ncol=2,
+               layout_matrix = cbind(c(1,1,5,3,3,7), c(2,2,6,4,4,8)))
+  dev.off()
 
 # now make table to calculate overlap
 # get footprint
