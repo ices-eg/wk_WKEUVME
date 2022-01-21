@@ -34,8 +34,10 @@ EEZ_Portugal <- subset(EEZ,EEZ@data$UNION %in% c("Portugal"))
 EEZ_Spain <- subset(EEZ,EEZ@data$UNION %in% c("Spain"))
 
 # create new depth intersection
+sf_use_s2(FALSE)
 new_reg <- st_intersection(reg,EEZ_EUVME)
-new_reg <- as_Spatial(new_reg)
+new_reg <- new_reg %>% st_collection_extract(type="POLYGON")
+reg_sp <- as_Spatial(new_reg)
 
 # load Ecoregion
 #shapeEcReg <- readOGR(dsn = paste(pathdir,"1-Input data/ICES_ecoregions",sep="/") ,layer="ICES_ecoregions_20171207_erase_ESRI")

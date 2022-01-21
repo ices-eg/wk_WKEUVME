@@ -32,6 +32,7 @@
   reg <- unionSpatialPolygons(depth,depth$within)
   reg <- rgeos::gUnaryUnion(reg)
   reg   <- st_as_sf(reg)
+  reg <-  st_transform(reg, "EPSG:4326")  
 
 # load EEZs
   EEZ <- readOGR(dsn = paste(pathdir, "1-Input data/EEZ_land_union_v3_202003",sep="/"), layer = "EEZ_Land_v3_202030")
@@ -40,10 +41,11 @@
   EEZ_EUVME   <- st_as_sf(EEZ_EUVME)
   EEZ_EUVME
   
-  reg <-  st_transform(reg, "EPSG:4326")  
+  sf_use_s2(FALSE)
   reg <- st_intersection(reg,EEZ_EUVME)
+  reg <- reg %>% st_collection_extract(type="POLYGON")
   reg_sp <- as_Spatial(reg)
-  
+
 # load data for pdf plot
   worldMap <- map_data("world")   # Get the world map
   shapeEcReg <- readOGR(dsn = paste(pathdir,"1-Input data/ICES_ecoregions",sep="/") ,layer="ICES_ecoregions_20171207_erase_ESRI")
@@ -92,6 +94,7 @@
     overpol <- sf::st_intersects(scenar,reg)
     overp   <- as.data.frame(overpol)
     sce_int <- scenar[overp$row.id,] 
+    sce_int <- sce_int[!duplicated(sce_int$geometry), ]
     
     # get the final closures
     new_clos <- st_intersection(sce_int,EEZ_EUVME)
@@ -116,6 +119,8 @@
       coord <- rbind(coord,datclos)
     }
     coord <- coord[-1,]
+    coord$Longitude <- round(coord$Longitude, digits=3)
+    coord$Latitude <- round(coord$Latitude, digits=3)
     write.csv(coord,paste(outdir,paste(scedat[sce],"coords.csv",sep="_"),sep="/"), row.names=FALSE)
     
 # make pdf map

@@ -65,9 +65,10 @@
     for (clos in 1:nrow(report2)){
          report2[clos,2] <- paste(coords_in$coords[coords_in$X1 == report2[clos,1]], collapse="; ")
     }
-    report[,1] == report2[,1]  
-    report$Coordinates_included <- report2$Coordinates_included
-    
+
+    report <- cbind(report,report2[match(report$Poly_No,report2$Poly_No),c(2)]) 
+    colnames(report)[3] <- "Coordinates_included"
+
     write.csv(report,paste(outdir_TS2,paste(scedat[sce],"coordinates_inout.csv",sep="_"),sep="/"), row.names=FALSE)
     
     }  
