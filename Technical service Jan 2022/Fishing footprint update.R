@@ -19,7 +19,17 @@
   source(paste(pathdir,"6-Utilities/Get fishing footprint mbcg_static.R", sep="/"))
   Footprint <- rbind(Footprint, FootprintCS)
   
-  # 17 missed C-squares between CS and BoBIC (need to be checked with VMS data)
+  # get fishing footprint update
+  load(paste(pathdir_nogit,"VMS data repository/csquares_update.RData",sep="/"))
+  dat_up$ref_sar <- NA
+  dat_up$ref_static <- NA
+  dat_up$ref <- NA
+  colnames(dat_up)[4]<- "MBCG_footprint"
+  colnames(dat_up)[5]<- "Static_footprint"
+  dat_up$Both_footprint <- rowSums(dat_up[,c("MBCG_footprint","Static_footprint")])
+  dat_up$Both_footprint <- ifelse(dat_up$Both_footprint > 0, 1, 0)
+  
+  # 17 missed C-squares between CS and BoBIC (now checked with VMS data)
   setwd(paste(pathdir,"1-Input data/csquares_ecoregions_depth",sep="/"))
   depthreg  <- readRDS("Celtic Seas_depth.rds")
   depthreg2 <- readRDS("Bay of Biscay and the Iberian Coast_depth.rds")
@@ -35,15 +45,25 @@
   depth     <- subset(depth, depth$lat > 47 & depth$lat < 50)
   depth     <- subset(depth,depth$Both_footprint ==0)
   miscsq    <- subset(depthall@data,depthall@data$csquares %in% depth$csquares)
-  miscsq[,c("ref_sar","MBCG_footprint","ref_static","Static_footprint", "ref", "Both_footprint")] <- 0 
+  miscsq     <- cbind(miscsq,dat_up[match(miscsq$csquares,dat_up$csquares),
+                                    c("ref_sar","MBCG_footprint","ref_static","Static_footprint", "ref", "Both_footprint")]) 
+
+  # remove the c-squares with missing information
+  Footprint <- subset(Footprint,!(Footprint$csquares %in% miscsq$csquares))
   
   # Get depth data 400 - 800 m tip of Portugal
   setwd(paste(pathdir,"1-Input data/csquares_ecoregions_depth",sep="/"))
   Port <- readRDS("Tip of portugal_depth.rds")
   Port <- subset(Port,is.na(Port@data$Ecoregion) & !(is.na(Port@data$mean_depth_emodnet)))
   Port <- subset(Port@data,Port@data$within ==1)
-  Port[,c("ref_sar","MBCG_footprint","ref_static","Static_footprint", "ref", "Both_footprint")] <- 0 
-
+  Port <- cbind(Port,dat_up[match(Port$csquares,dat_up$csquares),
+                            c("ref_sar","MBCG_footprint","ref_static","Static_footprint", "ref", "Both_footprint")]) 
+  
+  # remove one isolated c-square as part of the footprint rule
+  Port$Static_footprint <- ifelse(Port$csquares =="7301:141:499:2",0,Port$Static_footprint)
+  Port$Both_footprint <- ifelse(Port$csquares =="7301:141:499:2",0,Port$Both_footprint)
+  
+  # combine all c-squares
   Footprint <- rbind(Footprint,miscsq,Port)  
   
 ### now get footprint for static, mobile and both in EU waters
