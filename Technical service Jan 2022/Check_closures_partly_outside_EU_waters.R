@@ -8,6 +8,7 @@ library(htmlwidgets)
 
 # Set path
 pathdir <- "C:/Users/danie/Documents/Online for git/wk_WKEUVME"
+pathdir_nogit <- "C:/Users/danie/Documents/Online for git/WKEUVME_noGIT" # stores the data from sharepoint
 
 ## get libraries
 source(paste(pathdir,"6-Utilities/Libraries_WKEUVME.R",sep="/"))
@@ -48,8 +49,15 @@ new_reg <- st_intersection(reg,EEZ_EUVME)
 new_reg <- new_reg %>% st_collection_extract(type="POLYGON")
 
 # load Ecoregion
-#shapeEcReg <- readOGR(dsn = paste(pathdir,"1-Input data/ICES_ecoregions",sep="/") ,layer="ICES_ecoregions_20171207_erase_ESRI")
-#shapeReg  <- subset(shapeEcReg, Ecoregion== "Bay of Biscay and the Iberian Coast" | Ecoregion== "Celtic Seas")
+shapeEcReg <- readOGR(dsn = paste(pathdir,"1-Input data/ICES_ecoregions",sep="/") ,layer="ICES_ecoregions_20171207_erase_ESRI")
+shapeReg  <- subset(shapeEcReg, Ecoregion== "Western Mediterranean Sea")
+shapeReg   <- st_as_sf(shapeReg)
+EEZ_France   <- st_as_sf(EEZ_France)
+EEZ_France2 <- st_difference(EEZ_France,shapeReg)
+EEZ_France <- as_Spatial(EEZ_France2)
+EEZ_Spain   <- st_as_sf(EEZ_Spain)
+EEZ_Spain2 <- st_difference(EEZ_Spain,shapeReg) 
+EEZ_Spain <- as_Spatial(EEZ_Spain2)
 
 # get closures
 closedir <- paste(pathdir,"Technical service Jan 2022/Output/VME update",sep="/")
@@ -105,7 +113,7 @@ sce_int <- sce_int[!duplicated(sce_int$geometry), ]
 new_clos <- st_intersects(sce_int,EEZ_EUVME)
 new_clos   <- as.data.frame(new_clos)
 sce_int <- sce_int[new_clos$row.id,] 
-n11 <- sce_int[which(closid_Scenario1_option1 == 80),]
+n11 <- sce_int[which(closid_Scenario1_option1 %in% c(41, 43, 77, 80, 82)),]
 
 scenar <- st_read(paste(pathdir,"2-Data processing",paste(scedat[2],"shp",sep="."),sep="/"))
 scenar <- st_cast(scenar,"POLYGON")
@@ -117,7 +125,7 @@ sce_int <- sce_int[!duplicated(sce_int$geometry), ]
 new_clos <- st_intersects(sce_int,EEZ_EUVME)
 new_clos   <- as.data.frame(new_clos)
 sce_int <- sce_int[new_clos$row.id,] 
-n12 <- sce_int[which(closid_Scenario1_option2 == 79),]
+n12 <- sce_int[which(closid_Scenario1_option2 %in% c(39,41,76,79,81)),]
 
 scenar <- st_read(paste(pathdir,"2-Data processing",paste(scedat[3],"shp",sep="."),sep="/"))
 scenar <- st_cast(scenar,"POLYGON")
@@ -129,7 +137,7 @@ sce_int <- sce_int[!duplicated(sce_int$geometry), ]
 new_clos <- st_intersects(sce_int,EEZ_EUVME)
 new_clos   <- as.data.frame(new_clos)
 sce_int <- sce_int[new_clos$row.id,] 
-n21 <- sce_int[which(closid_Scenario2_option1 == 91),]
+n21 <- sce_int[which(closid_Scenario2_option1 %in% c(49,51,88,91,94)),]
 
 scenar <- st_read(paste(pathdir,"2-Data processing",paste(scedat[4],"shp",sep="."),sep="/"))
 scenar <- st_cast(scenar,"POLYGON")
@@ -141,7 +149,7 @@ sce_int <- sce_int[!duplicated(sce_int$geometry), ]
 new_clos <- st_intersects(sce_int,EEZ_EUVME)
 new_clos   <- as.data.frame(new_clos)
 sce_int <- sce_int[new_clos$row.id,] 
-n22 <- sce_int[which(closid_Scenario2_option2 == 123),]
+n22 <- sce_int[which(closid_Scenario2_option2 %in% c(48,79,83,123)),]
 
 mfs <- leaflet() %>%
   #addTiles() %>%  # Add default OpenStreetMap map tiles
@@ -167,38 +175,39 @@ mfs <- leaflet() %>%
   addPolygons(data = EEZ_UK, group="EEZ UK",
               stroke = TRUE, fillOpacity = 0, smoothFactor = 0.5, opacity = 0.5, weight = 1, color = "white") %>%
   
-  addPolygons(data = scen11, group="scenario 1 option 1",
-              stroke = TRUE, fillOpacity = 0.1, smoothFactor = 0.5, opacity = 0.5, weight = 1, color = "red") %>%
-  addPolygons(data = scen12, group="scenario 1 option 2",
-              stroke = TRUE, fillOpacity = 0.1, smoothFactor = 0.5, opacity = 0.5, weight = 1, color = "orange") %>%
-  addPolygons(data = scen21, group="scenario 2 option 1",
-              stroke = TRUE, fillOpacity = 0.1, smoothFactor = 0.5, opacity = 0.5, weight = 1, color = "#bcbddc") %>%
-  addPolygons(data = scen22, group="scenario 2 option 2",
-              stroke = TRUE, fillOpacity = 0.1, smoothFactor = 0.5, opacity = 0.5, weight = 1, color = "#c7e9c0") %>%
+  #addPolygons(data = scen11, group="scenario 1 option 1",
+  #            stroke = TRUE, fillOpacity = 0.1, smoothFactor = 0.5, opacity = 0.5, weight = 1, color = "red") %>%
+  #addPolygons(data = scen12, group="scenario 1 option 2",
+  #            stroke = TRUE, fillOpacity = 0.1, smoothFactor = 0.5, opacity = 0.5, weight = 1, color = "orange") %>%
+  #addPolygons(data = scen21, group="scenario 2 option 1",
+  #            stroke = TRUE, fillOpacity = 0.1, smoothFactor = 0.5, opacity = 0.5, weight = 1, color = "#bcbddc") %>%
+  #addPolygons(data = scen22, group="scenario 2 option 2",
+  #            stroke = TRUE, fillOpacity = 0.1, smoothFactor = 0.5, opacity = 0.5, weight = 1, color = "#c7e9c0") %>%
   
-  addPolygons(data = VMEhabitat, group="Habitat",
-              stroke = FALSE, fillOpacity = 1, smoothFactor = 0.5,fillColor =  "#c7e9c0") %>%
-  addPolygons(data = VMEindexH, group="indexH",
+  addPolygons(data = VMEhabitat, group="VME Habitat",
+              stroke = FALSE, fillOpacity = 1, smoothFactor = 0.5,fillColor =  "#cc00ff") %>%
+  addPolygons(data = VMEindexH, group="VME Index High",
+              stroke = FALSE, fillOpacity = 1, smoothFactor = 0.5,fillColor =  "red")  %>%
+  addPolygons(data = VMEindexM, group="VME Index Medium",
               stroke = FALSE, fillOpacity = 1, smoothFactor = 0.5,fillColor =  "orange")  %>%
-  addPolygons(data = VMEindexM, group="indexM",
-              stroke = FALSE, fillOpacity = 1, smoothFactor = 0.5,fillColor =  "purple")  %>%
-  addPolygons(data = VMEindexL, group="indexL",
-              stroke = FALSE, fillOpacity = 1, smoothFactor = 0.5,fillColor =  "green")  %>%
+  addPolygons(data = VMEindexL, group="VME Index Low",
+              stroke = FALSE, fillOpacity = 1, smoothFactor = 0.5,fillColor =  "yellow")  %>%
   
-  addPolygons(data = n11, group="Old11",
+  addPolygons(data = n11, group="Sce1 - Opt1",
               stroke = FALSE, fillOpacity = 0.5, smoothFactor = 0.5,fillColor =  "green") %>%
-  addPolygons(data = n12, group="Old12",
+  addPolygons(data = n12, group="Sce1 - Opt2",
               stroke = FALSE, fillOpacity = 0.5, smoothFactor = 0.5,fillColor =  "orange") %>%
-  addPolygons(data = n21, group="Old21",
+  addPolygons(data = n21, group="Sce2 - Opt1",
               stroke = FALSE, fillOpacity = 0.5, smoothFactor = 0.5,fillColor =  "red") %>%
-  addPolygons(data = n22, group="Old22",
+  addPolygons(data = n22, group="Sce2 - Opt2",
               stroke = FALSE, fillOpacity = 0.5, smoothFactor = 0.5,fillColor =  "purple") %>%
   
   addLayersControl(
-    overlayGroups = c("400-800 depth","EEZ Ireland","EEZ France","EEZ Spain","EEZ Portugal","EEZ UK",
-                      "scenario 1 option 1","scenario 1 option 2","scenario 2 option 1",
-                      "scenario 2 option 2","Habitat","indexH","indexM","indexL","Old11",
-                      "Old12","Old21","Old22"),
+    overlayGroups = c("400-800 depth","EEZ Ireland","EEZ France","EEZ Spain","EEZ Portugal","EEZ UK"
+                      ,"VME Habitat","VME Index High","VME Index Medium","VME Index Low","Sce1 - Opt1",
+                      "Sce1 - Opt2","Sce2 - Opt1","Sce2 - Opt2"),
     options = layersControlOptions(collapsed = FALSE)
   )
 
+#"scenario 1 option 1","scenario 1 option 2","scenario 2 option 1",
+#"scenario 2 option 2"

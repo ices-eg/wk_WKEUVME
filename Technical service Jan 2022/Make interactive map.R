@@ -42,8 +42,15 @@ new_reg <- st_intersection(reg,EEZ_EUVME)
 new_reg <- new_reg %>% st_collection_extract(type="POLYGON")
 
 # load Ecoregion
-#shapeEcReg <- readOGR(dsn = paste(pathdir,"1-Input data/ICES_ecoregions",sep="/") ,layer="ICES_ecoregions_20171207_erase_ESRI")
-#shapeReg  <- subset(shapeEcReg, Ecoregion== "Bay of Biscay and the Iberian Coast" | Ecoregion== "Celtic Seas")
+shapeEcReg <- readOGR(dsn = paste(pathdir,"1-Input data/ICES_ecoregions",sep="/") ,layer="ICES_ecoregions_20171207_erase_ESRI")
+shapeReg  <- subset(shapeEcReg, Ecoregion== "Western Mediterranean Sea")
+shapeReg   <- st_as_sf(shapeReg)
+EEZ_France   <- st_as_sf(EEZ_France)
+EEZ_France2 <- st_difference(EEZ_France,shapeReg)
+EEZ_France <- as_Spatial(EEZ_France2)
+EEZ_Spain   <- st_as_sf(EEZ_Spain)
+EEZ_Spain2 <- st_difference(EEZ_Spain,shapeReg) 
+EEZ_Spain <- as_Spatial(EEZ_Spain2)
 
 # get closures
 closedir <- paste(pathdir,"Technical service Jan 2022/Output/VME update",sep="/")
@@ -97,20 +104,20 @@ mfs <- leaflet() %>%
   # EEZ boundaries
   addPolygons(data = EEZ_Ireland, group="EEZ Ireland",
               stroke = TRUE, fillOpacity = 0, smoothFactor = 0.5, opacity = 0.5, weight = 1, color = "white") %>%
-  addPolygons(data = EEZ_France, group="EEZ France",
+  addPolygons(data = EEZ_France, group="EEZ France in NE-Atlantic",
               stroke = TRUE, fillOpacity = 0, smoothFactor = 0.5, opacity = 0.5, weight = 1, color = "white") %>%
-  addPolygons(data = EEZ_Spain, group="EEZ Spain",
+  addPolygons(data = EEZ_Spain, group="EEZ Spain in NE-Atlantic",
               stroke = TRUE, fillOpacity = 0, smoothFactor = 0.5, opacity = 0.5, weight = 1, color = "white") %>%
   addPolygons(data = EEZ_Portugal, group="EEZ Portugal",
               stroke = TRUE, fillOpacity = 0, smoothFactor = 0.5, opacity = 0.5, weight = 1, color = "white") %>%
   
-  addPolygons(data = scen11, group="scenario 1 option 1",
+  addPolygons(data = scen11, group="Scenario 1 Option 1",
               stroke = TRUE, fillOpacity = 0.1, smoothFactor = 0.5, opacity = 0.5, weight = 1, color = "red") %>%
-  addPolygons(data = scen12, group="scenario 1 option 2",
+  addPolygons(data = scen12, group="Scenario 1 Option 2",
               stroke = TRUE, fillOpacity = 0.1, smoothFactor = 0.5, opacity = 0.5, weight = 1, color = "orange") %>%
-  addPolygons(data = scen21, group="scenario 2 option 1",
+  addPolygons(data = scen21, group="Scenario 2 Option 1",
               stroke = TRUE, fillOpacity = 0.1, smoothFactor = 0.5, opacity = 0.5, weight = 1, color = "#bcbddc") %>%
-  addPolygons(data = scen22, group="scenario 2 option 2",
+  addPolygons(data = scen22, group="Scenario 2 Option 2",
               stroke = TRUE, fillOpacity = 0.1, smoothFactor = 0.5, opacity = 0.5, weight = 1, color = "#c7e9c0") %>%
 
   addPolygons(data = footall, group="Footprint combined",
@@ -121,13 +128,13 @@ mfs <- leaflet() %>%
               stroke = FALSE, fillOpacity = 0.5, smoothFactor = 0.5,fillColor =  "purple")  %>%
     
   addLayersControl(
-    overlayGroups = c("400-800 depth","EEZ Ireland","EEZ France","EEZ Spain","EEZ Portugal",
-                      "scenario 1 option 1","scenario 1 option 2","scenario 2 option 1",
-                      "scenario 2 option 2","Footprint combined","Footprint MBCG","Footprint static"),
+    overlayGroups = c("400-800 depth","EEZ Ireland","EEZ France in NE-Atlantic","EEZ Spain in NE-Atlantic","EEZ Portugal",
+                      "Scenario 1 Option 1","Scenario 1 Option 2","Scenario 2 Option 1",
+                      "Scenario 2 Option 2","Footprint combined","Footprint MBCG","Footprint static"),
     options = layersControlOptions(collapsed = FALSE)
   )
 
 # save output
 setwd(outdir)
-saveWidget(mfs, file="Leaflet EUVME updated.html")
+saveWidget(mfs, file="Interactive map EUVME updated.html")
 
