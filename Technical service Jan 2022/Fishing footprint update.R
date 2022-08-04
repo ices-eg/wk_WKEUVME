@@ -158,10 +158,6 @@
   #figmap  <- figmap +  geom_polygon(data = shapeReg, aes(x = long, y = lat, group = group),color="black",fill=NA)
 
   scedat <- c("Footprint_all","Footprint_mobile","Footprint_static")
-  id_Footprint_all <- c(1:12)
-  id_Footprint_mobile <- c(1:28)
-  id_Footprint_static <- c(1:29)
-
   outdir <- paste(pathdir,"Technical service Jan 2022/Output/Fishing footprint update",sep="/")
   
   for(p in 1:3){
@@ -175,12 +171,13 @@
     
     # save as .shp file
     scenar$Poly_no <- 1:nrow(scenar) # eval(parse(text = paste("id",scedat[p],sep="_")))
+    scenar <- st_set_precision(scenar,precision = 10000)
     write_sf(scenar, paste(outdir,paste(scedat[p],"shp", sep="."),sep="/"))
     
     # get coords + holes
     coords  <- ggplot2::fortify(reg)
-    coords[,1] <- round(coords[,1],digits =3)
-    coords[,2] <- round(coords[,2],digits =3)
+    coords[,1] <- round(coords[,1],digits =4)
+    coords[,2] <- round(coords[,2],digits =4)
     
     # check now which rows match with the row above
     datmatch <- c(1)
@@ -205,8 +202,13 @@
     }  
     
     runpol <- data.frame(Poly_No,Coord_order,Longitude = coords[,1], Latitude = coords[,2], Hole = coords[,4],Group = coords[,7])
+    spec_dec    <- function(x, k) trimws(format(round(x, k), nsmall=k))
+    
+    runpol$Longitude <- as.character(spec_dec(runpol$Longitude ,4))
+    runpol$Latitude <- as.character(spec_dec(runpol$Latitude ,4))
+    runpol$Group <-gsub('[.]', '_', as.character(runpol$Group))
     write.csv(runpol,paste(outdir,paste(scedat[p],"coords.csv",sep="_"),sep="/"), row.names=FALSE)
-  
+
     # make pdf map
     coordcsv <- runpol[!duplicated(runpol[1]),]  # get one coordinate per closure 
     scea <- reg 

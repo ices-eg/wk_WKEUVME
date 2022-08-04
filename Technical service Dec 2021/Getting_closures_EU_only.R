@@ -108,6 +108,20 @@
     
     for (iclos in 1:nrow(new_clos)){
       cd_output <- st_coordinates(new_clos$geometry[iclos])  
+      cd_output[,1] <- round(cd_output[,1], digits=4)
+      cd_output[,2] <- round(cd_output[,2], digits=4)
+      
+      # check now which rows match with the row above
+      datmatch <- c(1)
+      for (n in 1:(nrow(cd_output)-1)){
+        nbmatch <-  sum(match(cd_output[n,c(1,2,4)],cd_output[n+1,c(1,2,4)]),na.rm=T)
+        datmatch <- c(datmatch,nbmatch)
+      }
+      
+      # bind with coords and remove rows that match the previous row
+      cd_output <- cbind(cd_output,datmatch)
+      cd_output <- subset(cd_output,!(cd_output[,5] == 6))
+      cd_output <- cd_output[,-5]
       nb  <- rep(new_clos$FID[iclos],nrow(cd_output))
       ord <- paste(nb,1:nrow(cd_output),sep="_") 
       lon <- cd_output[,1]  
@@ -119,8 +133,7 @@
       coord <- rbind(coord,datclos)
     }
     coord <- coord[-1,]
-    coord$Longitude <- round(coord$Longitude, digits=3)
-    coord$Latitude <- round(coord$Latitude, digits=3)
+    
     write.csv(coord,paste(outdir,paste(scedat[sce],"coords.csv",sep="_"),sep="/"), row.names=FALSE)
     
 # make pdf map

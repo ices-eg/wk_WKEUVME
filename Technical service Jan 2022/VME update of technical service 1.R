@@ -22,14 +22,15 @@
     dat_Ad <-   read.csv(paste(paste(outdir_Ad,scedat[sce],sep="/"),"coords.csv",sep="_"),header=T,sep=",")
     dat_TS <- cbind(dat_TS,dat_Ad[match(dat_TS$Poly_no,dat_Ad$Poly_No),c("VME_Csquare","VME_Habitat","VME_Indicator","VME_Elements")]) 
     colnames(dat_TS)[1] <- "Poly_No"
-    #dat_TS$Longitude <- round(dat_TS$Longitude,digits = 3)
-    #dat_TS$Latitude  <- round(dat_TS$Latitude ,digits = 3)
+    dat_TS$Group <-gsub('[.]', '_', as.character(dat_TS$Group))
+    dat_TS$Hole <- FALSE
     write.csv(dat_TS,paste(outdir_TS2,paste(scedat[sce],"coords.csv",sep="_"),sep="/"), row.names=FALSE) 
     
     # combine for shapefile  
     scen_sf <- st_read(paste(outdir_TS,paste(scedat[sce],"shp",sep="."),sep="/"))
     scen_sf <- cbind(scen_sf,dat_Ad[match(scen_sf$FID,dat_Ad$Poly_No),c("VME_Csquare","VME_Habitat","VME_Indicator","VME_Elements")]) 
     colnames(scen_sf) <- c("Poly_No","VME_Csq","VME_Hab","VME_Ind","VME_Ele","geometry")
+    scen_sf <- st_set_precision(scen_sf,precision = 10000)
     write_sf(scen_sf, paste(outdir_TS2,paste(scedat[sce],"shp", sep="."),sep="/"))
   }  
 
@@ -45,8 +46,9 @@
     write.csv(excluded_report,paste(outdir_TS2,paste(scedat[sce],"closures_excluded.csv",sep="_"),sep="/"), row.names=FALSE)
     
     dat_Ad <- subset(dat_Ad,!(dat_Ad$Poly_No %in% excluded))
-    dat_TS2$uni <- paste(dat_TS2$Poly_No,dat_TS2$Longitude,dat_TS2$Latitude,sep="_")
-    dat_Ad$uni <- paste(dat_Ad$Poly_No,dat_Ad$Longitude,dat_Ad$Latitude,sep="_")
+    spec_dec    <- function(x, k) trimws(format(round(x, k), nsmall=k))
+    dat_TS2$uni <- paste(dat_TS2$Poly_No,spec_dec(dat_TS2$Longitude,4),spec_dec(dat_TS2$Latitude,4),sep="_")
+    dat_Ad$uni  <- paste(dat_Ad$Poly_No,spec_dec(dat_Ad$Longitude,4),spec_dec(dat_Ad$Latitude,4),sep="_")
     
     # get all closures with removed coords
     coords_out <-  dat_Ad$uni[!(dat_Ad$uni %in% dat_TS2$uni)]
